@@ -5,7 +5,7 @@ import { Login, LoginFormState } from './types'
 import { validateLogin } from './validation'
 import { redirect } from 'next/dist/server/api-utils';
 
-export default async function LoginFormAction(
+export default async function loginFormAction(
   initialState: LoginFormState,
   formData: FormData
 ): Promise<LoginFormState> {

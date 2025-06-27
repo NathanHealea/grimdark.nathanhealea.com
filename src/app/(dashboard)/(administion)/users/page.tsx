@@ -12,6 +12,40 @@ export default async function UsersPage({
 
   const { data, error } = await supabase.from('users').select('*').order('id', { ascending: true })
 
+  // Get users roles if users have been fetched.
+  if (data && data.length != 0 && !error) {
+    for (const user of data) {
+      user.roles = [] // Initialize roles as an empty array
+      try {
+        // Fetch roles for each user using their user_id.
+        if (user.user_id) {
+          const { data, error } = await supabase.from('user_roles').select('*').eq('user_id', user.user_id)
+
+          if (error) {
+            throw error
+          }
+
+          // If roles are found, assign them to the user object.
+          if (data && data.length > 0) {
+            user.roles = data
+          } else {
+            user.roles = ['No roles assigned']
+          }
+        }
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error(`Error fetching roles for user ${user.id}:`, error.message)
+        } else {
+          console.error(`Unknown error fetching roles for user ${user.id}:`, error)
+        }
+
+        user.roles = ['Error fetching roles']
+      }
+    }
+  }
+
+  console.log(data)
+
   return (
     <main className="flex-1 flex min-h-screen flex-col gap-4 p-8 -mt-20 pt-28 relative">
       {/* User Action Error  */}
@@ -108,7 +142,12 @@ export default async function UsersPage({
                       <tr key={user.id}>
                         <td>{user.id}</td>
                         <td>{user.email}</td>
-                        <td>{user.roles}</td>
+                        <td>
+                          <ul className='list'>
+                            {user.roles.map(role => (<li className='list-item' key={role.id}>{role.role}</li>))}
+                            {user.roles.length === 0 && <li className='list-tiem text-gray-500'>No roles assigned</li>}
+                          </ul>
+                        </td>
                         <td>{new Date(user.created_at).toLocaleString()}</td>
                         <td>
                           <div className="flex gap-2">

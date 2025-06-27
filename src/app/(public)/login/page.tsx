@@ -1,5 +1,5 @@
 import DiscordButton from '@/components/buttons/DiscordButton/DiscordButton'
-import LoginFormAction from './action'
+import loginFormAction from './action'
 import LoginForm from './form'
 
 interface LoginPageProps {}
@@ -12,7 +12,7 @@ export default function LoginPage(props: LoginPageProps) {
           <h1 className="card-title text-3xl font-bold justify-center">Login</h1>
           <div className="card-body w-full max-w-xl">
             <LoginForm
-              action={LoginFormAction}
+              action={loginFormAction}
               displayAbove={
                 <>
                   <DiscordButton />

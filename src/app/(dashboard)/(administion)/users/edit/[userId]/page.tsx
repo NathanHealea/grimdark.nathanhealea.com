@@ -1,7 +1,8 @@
+import { RolesForm } from '@/components/forms/RolesForm'
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
+import editUserFormAction from './action'
 import UserEditForm from './form'
-import editUserFormAction from './action';
 
 export default async function EditUserPage({ params }: { params: { userId: string } }) {
   const { userId } = await params
@@ -16,9 +17,12 @@ export default async function EditUserPage({ params }: { params: { userId: strin
   }
 
   const supabase = await createClient()
-  const { data: user, error } = await supabase.from('users').select('*').eq('id', userId).single()
+  const { data: user, error: userError } = await supabase.from('users').select('*').eq('id', userId).single()
+  const { data: roles, error: rolesError } = await supabase.from('user_roles').select('*').eq('user_id', user.user_id)
 
-  if (error) {
+  console.log('User Roles:', roles, rolesError);
+
+  if (userError) {
     return (
       <main className="flex-1 flex min-h-screen flex-col gap-4 p-8 -mt-20 pt-28 relative">
         <h1 className="text-3xl font-bold">Edit User</h1>
@@ -58,7 +62,9 @@ export default async function EditUserPage({ params }: { params: { userId: strin
 
       <section>
         <div className="container mx-auto">
-          <UserEditForm action={editUserFormAction} user={user} />
+          <UserEditForm action={editUserFormAction} user={user}>
+            <RolesForm  userId={user.user_id} roles={roles}/>
+          </UserEditForm>
         </div>
       </section>
     </main>

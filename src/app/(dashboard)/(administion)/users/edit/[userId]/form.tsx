@@ -194,7 +194,7 @@ export default function EditUserForm(props: EditUserFormProps) {
           )}
         </div>
 
-        {/* {children} */}
+        {children}
 
         {/* Submit Button */}
         <button type="submit" className="btn btn-primary w-full" disabled={isPending}>
