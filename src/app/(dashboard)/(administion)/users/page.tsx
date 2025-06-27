@@ -2,10 +2,8 @@ import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 
 export default async function UsersPage({
-  params,
   searchParams,
 }: {
-  params: any
   searchParams: Promise<{ message: string; status: string }>
 }) {
   const { message: userActionMessage, status: userActionStatus } = await searchParams

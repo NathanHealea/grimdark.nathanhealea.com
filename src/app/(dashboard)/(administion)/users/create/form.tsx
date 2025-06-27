@@ -1,7 +1,6 @@
 'use client'
 
 import { FormAction } from '@/types'
-import Link from 'next/link'
 import { useActionState } from 'react'
 import { CreateUser, CreateUserFormState } from './types'
 
@@ -14,21 +13,6 @@ export default function CreateUserForm(props: CreateUserFormProps) {
   const { action } = props
 
   const [state, formAction, isPending] = useActionState(action, {} as CreateUserFormState)
-
-  if (state.success) {
-    return (
-      <div className="card bg-success text-success-content">
-        <div className="card-body text-center">
-          <h3 className="card-title justify-center">User Successfully Created!</h3>
-          <div className="card-actions justify-center">
-            <Link href="/users" className="btn btn-success btn-link">
-              Go to Users
-            </Link>
-          </div>
-        </div>
-      </div>
-    )
-  }
 
   return (
     <>

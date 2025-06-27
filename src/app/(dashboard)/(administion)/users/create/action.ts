@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { Errors } from '@/types';
 import { CreateUser, CreateUserFormState } from './types';
 import { validateCreate } from './validation';
+import { redirect } from 'next/navigation';
 
 export default async function createFormAction(
   initialState: CreateUserFormState,
@@ -63,6 +64,10 @@ export default async function createFormAction(
     } else {
       state.errors.form = ['An unknown error occurred.'];
     }
+  }
+
+  if(state.success) {
+    redirect('/users?message=User created successfully&status=success');
   }
 
   return state;

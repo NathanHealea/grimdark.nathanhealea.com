@@ -22,9 +22,8 @@ export default async function UsersRoutesLayout({ children }: { children: React.
   const roles = await supabase
     .from('user_roles')
     .select('role')
-    .eq('user_id', user?.id).then(({data, error}) => data?.map((item) => item.role))
-    
-  console.log('User Roles:', roles)
+    .eq('user_id', user?.id)
+    .then(({ data, error }) => data?.map((item) => item.role))
 
   // Check if the user has the 'admin' role
   if (!roles || (!roles.includes('admin') && !roles.includes('superadmin'))) {

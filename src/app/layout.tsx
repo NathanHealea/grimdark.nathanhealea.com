@@ -1,10 +1,8 @@
 import type { Metadata } from 'next'
 
-import LogoutButton from '@/components/buttons/LogoutButton'
 import { createClient } from '@/lib/supabase/server'
-import Link from 'next/dist/client/link'
 import './globals.css'
-import Navigation from './navigation';
+import Navigation from './navigation'
 
 export const metadata: Metadata = {
   title: 'Grimdark League',
@@ -19,14 +17,14 @@ export type RootLayout = {
 export default async function RootLayout({ children }: RootLayout) {
   const supabase = await createClient()
 
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
-  console.log('User:', user)
- 
   return (
     <html lang="en">
       <body>
-        <Navigation/>
+        <Navigation />
         {children}
       </body>
     </html>
