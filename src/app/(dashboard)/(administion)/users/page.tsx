@@ -143,9 +143,13 @@ export default async function UsersPage({
                         <td>{user.id}</td>
                         <td>{user.email}</td>
                         <td>
-                          <ul className='list'>
-                            {user.roles.map(role => (<li className='list-item' key={role.id}>{role.role}</li>))}
-                            {user.roles.length === 0 && <li className='list-tiem text-gray-500'>No roles assigned</li>}
+                          <ul className="list">
+                            {user.roles.map((role) => (
+                              <li className="list-item" key={role.id}>
+                                {role.role}
+                              </li>
+                            ))}
+                            {user.roles.length === 0 && <li className="list-tiem text-gray-500">No roles assigned</li>}
                           </ul>
                         </td>
                         <td>{new Date(user.created_at).toLocaleString()}</td>
@@ -154,9 +158,11 @@ export default async function UsersPage({
                             <Link href={`/users/edit/${user.id}`} className="btn btn-sm btn-primary">
                               Edit
                             </Link>
-                            <Link href={`/users/delete/${user.id}`} className="btn btn-sm btn-error">
-                              Delete
-                            </Link>
+                            {user.id !== 1 && (
+                              <Link href={`/users/delete/${user.id}`} className="btn btn-sm btn-error">
+                                Delete
+                              </Link>
+                            )}
                           </div>
                         </td>
                       </tr>

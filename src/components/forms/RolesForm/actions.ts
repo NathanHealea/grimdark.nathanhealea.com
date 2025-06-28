@@ -1,6 +1,7 @@
 'use server';
 import { createClient } from '@/lib/supabase/server';
 import { RolesFormState } from './types';
+import { error } from 'console';
 
 
 
@@ -12,34 +13,143 @@ export default async function roleFormAction(initialState: RolesFormState, formD
     success: false,
   };
 
+  // Return the inital state if no formData is provided.
+  if (!formData) {
+    return state;
+  }
+
+  const userId = formData.get('userId')?.toString() || '';
+  const role = formData.get('role')?.toString() || '';
+  const action = formData.get('action')?.toString() as 'add' | 'remove';
+
   const supabase = await createClient();
 
-  console.log('Role Form Action', initialState, formData);
-
+  // Validate that the current user is authenticated and has the necessary roles.
   try {
-    const userId = formData.get('userId')?.toString() || '';
-    const role = formData.get('role')?.toString() || '';
-    const action = formData.get('action')?.toString() as 'add' | 'remove';
 
-    console.log('Parsed Data', { userId, role, action });
+    // Validate that the current user is authenticated.
+    const { data: { user: currentUser }, error: userError } = await supabase.auth.getUser();
 
+    if (userError) {
+      throw new Error(`Failed to get current user: ${userError.message}`);
+    }
+
+    if (!currentUser) {
+      throw new Error('You must be logged in to perform this action.');
+    }
+    else if (!currentUser.id) {
+      throw new Error('Current user does not have an authenticated user ID.');
+    }
+
+
+    // Validate that the current user has the necessary roles to add or remove roles.
+    const { data: currentUserRoles, error: currentUserRolesErrors } = await supabase.from('user_roles').select('role').eq('user_id', currentUser.id);
+
+    if (currentUserRolesErrors) {
+      throw error;
+    }
+    else if (!currentUserRoles || currentUserRoles.length === 0) {
+      throw new Error('You do not have any roles assigned.');
+    }
+    else if (!currentUserRoles.some(role => role.role === 'admin' || role.role === 'superadmin')) {
+      throw new Error('You do not have permission to add or remove roles.');
+    }
+
+
+    if ((role === 'superadmin') && !(currentUserRoles.some(role => role.role === 'superadmin'))) {
+      throw new Error(`You do not have permission to add or remove the role ${role}.`);
+    }
+    // Only Superadmins and Admins can add roles.
+    else if ((role !== 'superadmin') && !(currentUserRoles.some(role => role.role === 'admin' || role.role === 'superadmin'))) {
+      throw new Error(`You do not have permission to add or remove the role ${role}.`);
+    }
+
+
+  }
+  catch (error) {
+    if (error instanceof Error) {
+      state.errors.form = [error.message];
+    } else if (typeof error === 'string') {
+      state.errors.form = [error];
+    } else {
+      state.errors.form = ['An unknown error occurred'];
+    }
+    return state;
+  }
+
+
+  // Process action: Add or Remove Role
+  // This is where the main logic for adding or removing roles
+  try {
+
+    // Validate form data.
+    if (!userId) {
+      throw new Error('User ID is required.');
+    }
+    if (!role) {
+      throw new Error('Role is required.');
+    }
+    if (!action || (action !== 'add' && action !== 'remove')) {
+      throw new Error('Action must be either "add" or "remove".');
+    }
+
+    // Handle logic for adding a role.
     if (action === 'add') {
-      // Add role logic
-      const { data, error } = await supabase
-        .from('user_roles')
-        .insert({ user_id: userId, role })
-        .select()
-        .single();
 
-      if (error) {
-        throw new Error(`Failed to add role: ${error.message}`);
+      const { data: existingRoles, error: existingRolesError } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', userId)
+        .eq('role', role).maybeSingle();
+
+      if (existingRolesError) {
+        throw new Error(`Failed to check existing roles: ${existingRolesError.message}`);
+      }
+
+      if (existingRoles && existingRoles.length > 0) {
+        throw new Error(`User already has the role: ${role}`);
+      }
+
+      const { error: addError } = await supabase
+        .from('user_roles')
+        .insert({ user_id: userId, role });
+
+
+      // validate no errors occure while adding the role.
+      if (addError) {
+        console.error('Error adding role:', addError.message);
+        throw new Error(`Failed to add role`);
       }
 
     }
 
-
+    // Handle logic for removing a role
     if (action === 'remove') {
-      // Remove role logic
+      const { data: existingRoles, error: existingRolesError } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', userId)
+        .eq('role', role).maybeSingle();
+
+      if (existingRolesError) {
+        throw new Error(`Failed to check existing roles: ${existingRolesError.message}`);
+      }
+
+      if (existingRoles && existingRoles.length > 0) {
+        throw new Error(`User already has the role: ${role}`);
+      }
+
+      const { error: addError } = await supabase
+        .from('user_roles')
+        .delete()
+        .eq('user_id', userId)
+        .eq('role', role);
+
+      // validate no errors occure while removing the role.
+      if (addError) {
+        console.error('Error removing role:', addError.message);
+        throw new Error(`Failed to remove role`);
+      }
     }
 
     // Simulate success for now

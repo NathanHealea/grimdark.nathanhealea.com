@@ -1,4 +1,4 @@
-import RolesForm from './RolesForm';
+import RolesForm from './form';
 
 
 

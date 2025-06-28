@@ -18,9 +18,6 @@ export default async function EditUserPage({ params }: { params: { userId: strin
 
   const supabase = await createClient()
   const { data: user, error: userError } = await supabase.from('users').select('*').eq('id', userId).single()
-  const { data: roles, error: rolesError } = await supabase.from('user_roles').select('*').eq('user_id', user.user_id)
-
-  console.log('User Roles:', roles, rolesError);
 
   if (userError) {
     return (
@@ -63,7 +60,7 @@ export default async function EditUserPage({ params }: { params: { userId: strin
       <section>
         <div className="container mx-auto">
           <UserEditForm action={editUserFormAction} user={user}>
-            <RolesForm  userId={user.user_id} roles={roles}/>
+            <RolesForm userId={user.user_id} />
           </UserEditForm>
         </div>
       </section>
