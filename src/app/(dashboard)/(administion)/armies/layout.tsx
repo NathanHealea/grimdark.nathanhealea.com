@@ -23,7 +23,7 @@ export default async function ArmiesRoutesLayout({ children }: { children: React
     .from('user_roles')
     .select('role')
     .eq('user_id', user?.id)
-    .then(({ data, error }) => data?.map((item) => item.role))
+    .then(({ data }) => data?.map((item) => item.role))
 
   // Check if the user has the 'admin' role
   if (!roles || (!roles.includes('admin') && !roles.includes('superadmin'))) {

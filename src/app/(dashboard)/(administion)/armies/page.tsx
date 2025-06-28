@@ -14,10 +14,7 @@ export default async function ArmysPage({
     .from('armies')
     .select('*')
     .is('parent_army_id', null)
-  const { data: childArmies, error: childArmiesErrors } = await supabase
-    .from('armies')
-    .select('*')
-    .not('parent_army_id', 'is', null)
+  const { data: childArmies } = await supabase.from('armies').select('*').not('parent_army_id', 'is', null)
 
   // Add child armies to their parent armies
   if (parentArmies && childArmies) {
@@ -127,7 +124,7 @@ export default async function ArmysPage({
                           </Link>
                         </div>
                       </li>
-                      {/* Child Armies */ }
+                      {/* Child Armies */}
                       {army.list && army.list.length > 0 && (
                         <ul className="list list-inside list-disc pl-4">
                           {army.list.map((childArmy) => (

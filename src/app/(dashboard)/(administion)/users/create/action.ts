@@ -34,17 +34,6 @@ export default async function createFormAction(
     if (validationResponse.success) {
       const supabase = await createClient();
 
-      // Attempt to create user the user in the database
-      // const { data, error } = await supabase.auth.signUp({
-      //   email: createuser.email,
-      //   password: createuser.password,
-      //   options: {
-      //     data: {
-      //       username: createuser.username,
-      //     },
-      //   },
-      // })
-
       const { data, error } = await supabase.from('users').insert({
         username: createUser.username,
         email: createUser.email,

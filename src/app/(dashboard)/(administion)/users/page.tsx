@@ -131,6 +131,7 @@ export default async function UsersPage({
                   <thead>
                     <tr>
                       <th>ID</th>
+                      <th>Profile Picture</th>
                       <th>Email</th>
                       <th>Role</th>
                       <th>Created At</th>
@@ -141,6 +142,15 @@ export default async function UsersPage({
                     {data.map((user) => (
                       <tr key={user.id}>
                         <td>{user.id}</td>
+                        <td>
+                          {user.profile_url && (
+                            <img
+                              src={user.profile_url}
+                              alt={`${user.email}'s profile picture`}
+                              className="h-10 w-10 rounded-full"
+                            />
+                          )}
+                        </td>
                         <td>{user.email}</td>
                         <td>
                           <ul className="list">
