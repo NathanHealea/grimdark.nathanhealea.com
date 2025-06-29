@@ -1,6 +1,6 @@
 
 import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/admin';
+import { createClient } from '@/lib/supabase/server';
 
 export async function GET(
   request: Request,
@@ -8,6 +8,47 @@ export async function GET(
 
   let status = 'success';
   let message = '';
+
+  const supabase = await createClient();
+
+  // Ensure the user is authenticated and has the right permissions
+  try {
+
+    const {data: {user}} = await supabase.auth.getUser();
+    // Check if the user is authenticated
+    if (!user) {
+      throw new Error('User not authenticated.');
+    }
+
+    // Check if the user has the required role 
+    const { data: roles, error: rolesError } = await supabase
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', user.id);
+
+
+    // Check for any errors in fetching roles
+    if (rolesError) {
+      throw rolesError
+    }
+
+    // Check users roles
+    if(!roles || roles.length === 0) {
+      throw new Error('User does not have the required permissions to delete users.');
+    }
+    else if(!roles.some(role => role.role === 'admin' || role.role === 'superadmin')) {
+      throw new Error('User does not have the required permissions to delete users.');
+    }
+
+  }
+  catch (error) {
+    console.error('Authentication error:', error);
+    return NextResponse.redirect(new URL('/login', request.url));
+  }
+  
+
+
+
   try {
 
     const { userId } = await params;
@@ -21,9 +62,6 @@ export async function GET(
     if (userId === 1) {
       throw new Error('Cannot delete the primary user with ID 1.');
     }
-
-
-    const supabase = await createClient();
 
     // Fetch the user to ensure they exist before attempting to delete
     const { data: user, error: userError } = await supabase
