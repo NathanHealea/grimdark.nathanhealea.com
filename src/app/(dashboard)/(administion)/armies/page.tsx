@@ -1,7 +1,9 @@
 import { createClient } from '@/lib/supabase/server'
+import { Army } from '@/types/army.types';
 import Link from 'next/link'
+import { Fragment } from 'react';
 
-export default async function ArmysPage({
+export default async function ArmiesPage({
   searchParams,
 }: {
   searchParams: Promise<{ message: string; status: string }>
@@ -13,15 +15,17 @@ export default async function ArmysPage({
   const { data: parentArmies, error: parentArmiesErrors } = await supabase
     .from('armies')
     .select('*')
-    .is('parent_army_id', null)
-  const { data: childArmies } = await supabase.from('armies').select('*').not('parent_army_id', 'is', null)
+    .is('parent_army_id', null).overrideTypes<Army[]>()
+  const { data: childArmies } = await supabase.from('armies').select('*').not('parent_army_id', 'is', null).overrideTypes<Army[]>()
 
   // Add child armies to their parent armies
-  if (parentArmies && childArmies) {
-    parentArmies.forEach((parentArmy) => {
-      parentArmy.list = childArmies.filter((childArmy) => childArmy.parent_army_id === parentArmy.id)
-    })
+
+  if(parentArmies && childArmies)
+  for(const army of parentArmies) {
+    army.list = childArmies.filter(child => child.parent_army_id === army.id)
   }
+
+  
 
   return (
     <main className="flex-1 flex min-h-screen flex-col gap-4 p-8 -mt-20 pt-28 relative">
@@ -106,8 +110,9 @@ export default async function ArmysPage({
               {parentArmies && parentArmies.length !== 0 && (
                 <ul className="list">
                   {parentArmies.map((army) => (
-                    <>
-                      <li key={army.id} className="list-row">
+                    <Fragment key={army.id}>
+                      {/* Parent Army */}
+                      <li  className="list-row">
                         {/* Army Details */}
                         <div>
                           <h3 className="text-lg font-semibold">{army.name}</h3>
@@ -146,7 +151,7 @@ export default async function ArmysPage({
                           ))}
                         </ul>
                       )}
-                    </>
+                    </Fragment>
                   ))}
                 </ul>
               )}

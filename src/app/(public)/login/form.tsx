@@ -1,6 +1,6 @@
 'use client'
 
-import { FormAction } from '@/types'
+import { FormAction } from '@/types/form.types'
 import { redirect } from 'next/navigation'
 import { useActionState } from 'react'
 import { Login, LoginFormState } from './types'

@@ -1,4 +1,4 @@
-import { FormState } from '@/types';
+import { FormState } from '@/types/form.types';
 
 
 

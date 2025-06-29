@@ -1,6 +1,6 @@
 'use client'
 
-import { FormAction } from '@/types'
+import { FormAction } from '@/types/form.types'
 import Link from 'next/link'
 import { useActionState } from 'react'
 import { Registration, RegistrationFormState } from './types'

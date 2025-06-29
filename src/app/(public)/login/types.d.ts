@@ -1,4 +1,4 @@
-import { type FormState } from '@/types';
+import { type FormState } from '@/types/form.types';
 
 export type Login = {
   email: string;

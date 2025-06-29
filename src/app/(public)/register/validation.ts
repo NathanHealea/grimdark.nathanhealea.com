@@ -1,4 +1,4 @@
-import { Errors } from '@/types'
+import { Errors } from '@/types/form.types'
 import { Registration } from './types'
 
 export async function validateRegistration(registration: Registration): Promise<{ errors: Errors; success: boolean }> {

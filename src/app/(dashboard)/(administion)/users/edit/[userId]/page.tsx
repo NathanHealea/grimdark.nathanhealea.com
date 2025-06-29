@@ -4,7 +4,7 @@ import Link from 'next/link'
 import editUserFormAction from './action'
 import UserEditForm from './form'
 
-export default async function EditUserPage({ params }: { params: { userId: string } }) {
+export default async function EditUserPage({ params }: { params: Promise<{ userId: number }> }) {
   const { userId } = await params
 
   if (!userId) {

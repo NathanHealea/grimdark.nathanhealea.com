@@ -1,6 +1,6 @@
 'use server';
 import { createClient } from '@/lib/supabase/server';
-import { Errors } from '@/types';
+import { Errors } from '@/types/form.types';
 import { EditUser, EditUserFormState } from './types';
 import { validateEditUser } from './validation';
 
@@ -17,6 +17,7 @@ export default async function editUserFormAction(
 
   try {
     const user: EditUser = {
+      id: initialState.state.id,
       username: formData.get('username')?.toString() || '',
       email: formData.get('email')?.toString() || '',
       first_name: formData.get('first_name')?.toString() || '',
@@ -31,7 +32,7 @@ export default async function editUserFormAction(
     };
 
     // Validate the edituser data
-    const validationResponse = await validateEditUser(user, initialState.state.id);
+    const validationResponse = await validateEditUser(user);
 
     state.errors = validationResponse.errors;
 

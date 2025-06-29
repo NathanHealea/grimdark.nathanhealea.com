@@ -1,6 +1,6 @@
 'use server';
 import { createClient } from '@/lib/supabase/server';
-import { Errors } from '@/types';
+import { Errors } from '@/types/form.types';
 import { CreateUser, CreateUserFormState } from './types';
 import { validateCreate } from './validation';
 import { redirect } from 'next/navigation';

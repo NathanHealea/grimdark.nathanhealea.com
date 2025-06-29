@@ -1,11 +1,12 @@
-import { type FormState } from '@/types';
+import { type FormState } from '@/types/form.types';
 
 export type EditUser = {
-  username: string;
+  id: number;
+  username: string | null;
   email: string;
-  first_name: string;
-  last_name: string;
-  bio: string;
+  first_name: string | null;
+  last_name: string | null;
+  bio: string | null;
 };
 
 export type EditUserFormState = FormState<EditUser>;

@@ -2,6 +2,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { RolesFormState } from './types';
 import { error } from 'console';
+import { RoleType } from '@/types/role.types';
 
 
 
@@ -100,19 +101,19 @@ export default async function roleFormAction(initialState: RolesFormState, formD
         .from('user_roles')
         .select('role')
         .eq('user_id', userId)
-        .eq('role', role).maybeSingle();
+        .eq('role', role as RoleType).maybeSingle();
 
       if (existingRolesError) {
         throw new Error(`Failed to check existing roles: ${existingRolesError.message}`);
       }
 
-      if (existingRoles && existingRoles.length > 0) {
+      if (existingRoles) {
         throw new Error(`User already has the role: ${role}`);
       }
 
       const { error: addError } = await supabase
         .from('user_roles')
-        .insert({ user_id: userId, role });
+        .insert({ user_id: userId, role: role as RoleType });
 
 
       // validate no errors occure while adding the role.
@@ -129,21 +130,21 @@ export default async function roleFormAction(initialState: RolesFormState, formD
         .from('user_roles')
         .select('role')
         .eq('user_id', userId)
-        .eq('role', role).maybeSingle();
+        .eq('role', role as RoleType).maybeSingle();
 
       if (existingRolesError) {
         throw new Error(`Failed to check existing roles: ${existingRolesError.message}`);
       }
 
-      if (existingRoles && existingRoles.length > 0) {
-        throw new Error(`User already has the role: ${role}`);
+      if (!existingRoles) {
+        throw new Error(`User does not has the role: ${role}`);
       }
 
       const { error: addError } = await supabase
         .from('user_roles')
         .delete()
         .eq('user_id', userId)
-        .eq('role', role);
+        .eq('role', role as RoleType);
 
       // validate no errors occure while removing the role.
       if (addError) {

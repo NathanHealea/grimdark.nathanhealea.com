@@ -4,7 +4,7 @@ import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 export default async function handleDiscordLogin() {
-  const origin = headers().get('origin')
+  const origin = (await headers()).get('origin')
   const supabase = await createClient()
   console.log('Origin:', origin)
 

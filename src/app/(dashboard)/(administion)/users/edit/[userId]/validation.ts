@@ -1,21 +1,19 @@
-import { Errors } from '@/types';
+import { Errors } from '@/types/form.types';
 import { EditUser } from './types';
 import { createClient } from '@/lib/supabase/server';
 
-export async function validateEditUser(user: EditUser, userId: string): Promise<{ errors: Errors; success: boolean; }> {
+export async function validateEditUser(user: EditUser): Promise<{ errors: Errors; success: boolean; }> {
   const errors: Errors = {};
   let success = true;
 
   const supabase = await createClient();
-
-  console.log('Validating user:', user, userId);
 
   const isUsernameTaken = async (username: string): Promise<boolean> => {
     const { data, error } = await supabase
       .from('users')
       .select('id')
       .eq('username', username)
-      .neq('id', userId) // Exclude current user if editing
+      .neq('id', user.id) // Exclude current user if editing
       .maybeSingle();
 
     if (error) {

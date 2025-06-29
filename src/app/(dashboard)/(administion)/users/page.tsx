@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { User } from '@/types/user.type'
 import Link from 'next/link'
 
 export default async function UsersPage({
@@ -10,7 +11,11 @@ export default async function UsersPage({
 
   const supabase = await createClient()
 
-  const { data, error } = await supabase.from('users').select('*').order('id', { ascending: true })
+  const { data, error } = await supabase
+    .from('users')
+    .select('*')
+    .order('id', { ascending: true })
+    .overrideTypes<User[]>()
 
   // Get users roles if users have been fetched.
   if (data && data.length != 0 && !error) {
@@ -29,7 +34,7 @@ export default async function UsersPage({
           if (data && data.length > 0) {
             user.roles = data
           } else {
-            user.roles = ['No roles assigned']
+            user.roles = []
           }
         }
       } catch (error) {
@@ -39,7 +44,7 @@ export default async function UsersPage({
           console.error(`Unknown error fetching roles for user ${user.id}:`, error)
         }
 
-        user.roles = ['Error fetching roles']
+        user.roles = []
       }
     }
   }
@@ -154,12 +159,15 @@ export default async function UsersPage({
                         <td>{user.email}</td>
                         <td>
                           <ul className="list">
-                            {user.roles.map((role) => (
-                              <li className="list-item" key={role.id}>
-                                {role.role}
-                              </li>
-                            ))}
-                            {user.roles.length === 0 && <li className="list-tiem text-gray-500">No roles assigned</li>}
+                            {user.roles &&
+                              user.roles.map((role) => (
+                                <li className="list-item" key={role.id}>
+                                  {role.role}
+                                </li>
+                              ))}
+                            {user.roles && user.roles.length === 0 && (
+                              <li className="list-tiem text-gray-500">No roles assigned</li>
+                            )}
                           </ul>
                         </td>
                         <td>{new Date(user.created_at).toLocaleString()}</td>

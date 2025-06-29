@@ -4,22 +4,21 @@ import { createClient } from '@/lib/supabase/admin';
 
 export async function GET(
   request: Request,
-  context: { params: { userId: string; }; }
-): Promise<NextResponse> {
+  { params }: { params: Promise<{ userId: number }> }): Promise<NextResponse> {
 
   let status = 'success';
   let message = '';
   try {
 
-    const { userId } = context.params;
+    const { userId } = await params;
 
 
     // Validate the userId parameter
-    if (!userId || userId.length === 0) {
+    if (!userId) {
       throw new Error('No User ID provided.');
     }
 
-    if (userId === '1') {
+    if (userId === 1) {
       throw new Error('Cannot delete the primary user with ID 1.');
     }
 

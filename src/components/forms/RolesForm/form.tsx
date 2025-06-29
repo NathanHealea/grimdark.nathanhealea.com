@@ -2,10 +2,10 @@
 import { createClient } from '@/lib/supabase/client'
 import { useEffect, useState } from 'react'
 import roleFormAction from './actions'
-import { RolesFormState } from './types'
+import { Role, RolesFormState } from './types'
 
 interface RolesFormProps {
-  userId?: string
+  userId: string | null
 }
 
 export default function RolesForm(props: RolesFormProps) {
@@ -13,7 +13,7 @@ export default function RolesForm(props: RolesFormProps) {
 
   const [selectedRole, setSelectedRole] = useState<string>('')
 
-  const [userRoles, setUserRoles] = useState<object[]>([])
+  const [userRoles, setUserRoles] = useState<Role[]>([])
   const [loadingUserRoles, setLoadingUserRoles] = useState<boolean>(true)
 
   const [state, setState] = useState<RolesFormState>({} as RolesFormState)
@@ -33,6 +33,7 @@ export default function RolesForm(props: RolesFormProps) {
         .select('*')
         .eq('user_id', userId)
         .order('role', { ascending: false })
+        .overrideTypes<Role[]>()
 
       // throw the error from the database query
       if (error) {
