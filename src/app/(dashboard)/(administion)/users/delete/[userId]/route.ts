@@ -1,6 +1,7 @@
 
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { createClient as createAdminClient } from '@/lib/supabase/admin';
 
 export async function GET(
   request: Request,
@@ -81,6 +82,7 @@ export async function GET(
       // Attempt to delete the user from the database
       const { error: deleteUserError } = await supabase.from('users').delete().eq('user_id', user.user_id);
 
+
       if (deleteUserError) {
         console.error('Error deleting user:', deleteUserError);
         throw new Error(`Could not delete user with ID ${userId}.`);
@@ -98,7 +100,8 @@ export async function GET(
       }
 
       // Attempt to delete the user from the auth system
-      const { error: deletedUserError } = await supabase.auth.admin.deleteUser(user.user_id);
+      const supabaseAdmin = await createAdminClient();
+      const { error: deletedUserError } = await supabaseAdmin.auth.admin.deleteUser(user.user_id);
 
       if (deletedUserError) {
         console.error('Error deleting user from auth:', deletedUserError);
