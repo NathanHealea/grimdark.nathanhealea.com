@@ -9,6 +9,41 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      armies: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: number
+          name: string | null
+          parent_army_id: number | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: number
+          name?: string | null
+          parent_army_id?: number | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: number
+          name?: string | null
+          parent_army_id?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "armies_parent_army_id_fkey"
+            columns: ["parent_army_id"]
+            isOneToOne: false
+            referencedRelation: "armies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           id: number
@@ -35,6 +70,7 @@ export type Database = {
           first_name: string | null
           id: number
           last_name: string | null
+          profile_url: string | null
           updated_at: string
           user_id: string | null
           username: string | null
@@ -46,6 +82,7 @@ export type Database = {
           first_name?: string | null
           id?: number
           last_name?: string | null
+          profile_url?: string | null
           updated_at?: string
           user_id?: string | null
           username?: string | null
@@ -57,6 +94,7 @@ export type Database = {
           first_name?: string | null
           id?: number
           last_name?: string | null
+          profile_url?: string | null
           updated_at?: string
           user_id?: string | null
           username?: string | null
