@@ -4,15 +4,15 @@ import { createClient } from '@/lib/supabase/admin';
 
 export async function GET(
   request: Request,
-  { params }: { params: { userId: string; }; }
+  context: { params: { userId: string; }; }
 ): Promise<NextResponse> {
 
   let status = 'success';
   let message = '';
   try {
 
+    const { userId } = context.params;
 
-    const { userId } = await params;
 
     // Validate the userId parameter
     if (!userId || userId.length === 0) {
