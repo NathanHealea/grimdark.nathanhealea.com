@@ -137,3 +137,51 @@ USING (
     WHERE role IN ('admin', 'superadmin')
   )
 );
+
+
+----
+-- RLS Policies for public.user_armies table
+----
+
+-- Enable RLS on the user_armies table (already in your schema, but included for completeness)
+ALTER TABLE public.user_armies ENABLE ROW LEVEL SECURITY;
+
+-- 1. Anyone can select on the user_armies table.
+CREATE POLICY "Allow public read access to users armies"
+ON public.user_armies FOR SELECT
+USING (true);
+
+-- 2. Any authenticated user with the role 'admin' or 'superadmin' can insert on the user_armies table.
+-- The WITH CHECK clause ensures that the user performing the insert has the required role.
+CREATE POLICY "Admins/Superadmins can insert user armies"
+ON public.user_armies FOR INSERT
+WITH CHECK (
+  auth.uid() IN (
+    SELECT user_id
+    FROM public.user_auth_roles
+    WHERE role IN ('admin', 'superadmin')
+  )
+);
+
+-- 3. Any authenticated user with the role 'admin' or 'superadmin' can delete any record on the user_armies table.
+-- The USING clause restricts which rows can be deleted (any row, but only by admins/superadmins).
+CREATE POLICY "Admins/Superadmins can delete user armies"
+ON public.user_armies FOR DELETE
+USING (
+  auth.uid() IN (
+    SELECT user_id
+    FROM public.user_auth_roles
+    WHERE role IN ('admin', 'superadmin')
+  )
+);
+
+-- 4. Any authenticated user can insert a record on the user_armies table.
+-- The WITH CHECK clause allows any authenticated user to insert a record.
+-- This policy does not restrict the user_id, allowing any authenticated user to create a new army association.
+
+CREATE POLICY "Users can delete their own armies"
+ON public.user_armies FOR DELETE
+USING (
+  user_id = (SELECT id FROM users WHERE uid = auth.uid())
+);
+

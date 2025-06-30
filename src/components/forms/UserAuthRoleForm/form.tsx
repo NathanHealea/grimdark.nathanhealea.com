@@ -8,7 +8,7 @@ interface UserAuthRoleProps {
   userId: string | null
 }
 
-export default function UserAuthRolesForm(props: UserAuthRoleProps) {
+export default function UserAuthRoleForm(props: UserAuthRoleProps) {
   const { userId } = props
 
   const [selectedRole, setSelectedRole] = useState<string>('')
