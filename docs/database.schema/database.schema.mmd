@@ -1,0 +1,60 @@
+---
+title: Grimdark Database Schema
+description: This document outlines the database schema for the Grimdark application, detailing the relationships between various entities such as users, roles, armies, and more. It serves as a guide for developers and database administrators.
+---
+erDiagram
+
+    %% Entities
+
+    %% Superbase Auth User
+    %% This table is managed by Supabase and contains user authentication details.
+    AuthUser {
+        uuid user_id
+    }
+
+    %% Table: users
+    %% This table contains user profile information.
+    User {
+        int id
+        string username
+        string first_name
+        string last_name
+        string email
+        string profile_url
+        string bio
+    }
+    
+    %% Table: user_auth_roles
+    %% This table defines the roles assigned to users.
+    UserAuthRoles {
+        int id
+        uuid user_id
+        role role
+    }
+
+    %% Table: armies
+    %% This table contains information about different armies.
+    Army {
+        int id
+        string name
+        string description
+        string image_url
+        int parent_army_id
+    }
+
+    %% Table: user_armies
+    %% This table links users to the armies they are associated with.
+    UserArmy {
+        int id
+        id user_id
+        int army_id
+        boolean is_primary
+    }
+
+
+    %% Relationships
+    AuthUser ||--|| User : "has"
+    AuthUser ||--o{ UserAuthRoles : "have"
+    Army ||--o{ Army : "have"
+    User ||--o{ UserArmy : "have"
+    Army ||--o{ UserArmy : "have"

@@ -20,7 +20,7 @@ export default async function UsersRoutesLayout({ children }: { children: React.
   }
 
   const roles = await supabase
-    .from('user_roles')
+    .from('user_auth_roles')
     .select('role')
     .eq('user_id', user?.id)
     .then(({ data }) => data?.map((item) => item.role))

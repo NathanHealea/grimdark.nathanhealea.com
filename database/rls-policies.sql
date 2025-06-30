@@ -1,4 +1,8 @@
+
+
+----
 -- RLS Policies for public.users table
+----
 
 -- Enable RLS on the users table (already in your schema, but included for completeness)
 ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
@@ -15,7 +19,7 @@ ON public.users FOR INSERT
 WITH CHECK (
   auth.uid() IN (
     SELECT user_id
-    FROM public.user_roles
+    FROM public.user_auth_roles
     WHERE role IN ('admin', 'superadmin')
   )
 );
@@ -35,7 +39,7 @@ ON public.users FOR UPDATE
 USING (
   auth.uid() IN (
     SELECT user_id
-    FROM public.user_roles
+    FROM public.user_auth_roles
     WHERE role IN ('admin', 'superadmin')
   )
 );
@@ -47,50 +51,60 @@ ON public.users FOR DELETE
 USING (
   auth.uid() IN (
     SELECT user_id
-    FROM public.user_roles
+    FROM public.user_auth_roles
     WHERE role IN ('admin', 'superadmin')
   )
 );
 
+----
+-- RLS Policies for public.user_auth_roles table
+----
 
--- RLS Policies for public.user_roles table
+-- Enable RLS on the user_auth_roles table (already in your schema, but included for completeness)
+ALTER TABLE public.user_auth_roles ENABLE ROW LEVEL SECURITY;
 
--- Enable RLS on the user_roles table (already in your schema, but included for completeness)
-ALTER TABLE public.user_roles ENABLE ROW LEVEL SECURITY;
+-- 1. Allows `supabase_auth_admin` to read all user roles.
+create policy "Allow auth admin to read user roles"
+on public.user_auth_roles
+as permissive
+for select
+to supabase_auth_admin
+using (true);
 
--- 1. Anyone can select on the user_roles table.
-CREATE POLICY "Allow public read access to user_roles"
-ON public.user_roles FOR SELECT
+-- 2. Anyone can select on the user_auth_roles table.
+CREATE POLICY "Allow public read access to user_auth_roles"
+ON public.user_auth_roles FOR SELECT
 USING (true);
 
--- 2. Only Superadmins can insert a record on the user_roles table.
+-- 3. Only Superadmins can insert a record on the user_auth_roles table.
 -- The WITH CHECK clause ensures that the user performing the insert has the 'superadmin' role.
 -- NOTE: Not implemented, needs validation and testing.
 CREATE POLICY "Superadmins can insert user roles"
-ON public.user_roles FOR INSERT
+ON public.user_auth_roles FOR INSERT
 WITH CHECK (
   auth.uid() IN (
     SELECT user_id
-    FROM public.user_roles
+    FROM public.user_auth_roles
     WHERE role = 'superadmin'
   )
 );
 
--- 3. Any authenticated user with the role 'admin' or 'superadmin' can delete any record on the user_roles table.
+-- 3. Any authenticated user with the role 'admin' or 'superadmin' can delete any record on the user_auth_roles table.
 -- The USING clause restricts which rows can be deleted (any row, but only by admins/superadmins).
 CREATE POLICY "Admins/Superadmins can delete user roles"
-ON public.user_roles FOR DELETE
+ON public.user_auth_roles FOR DELETE
 USING (
   auth.uid() IN (
     SELECT user_id
-    FROM public.user_roles
+    FROM public.user_auth_roles
     WHERE role IN ('admin', 'superadmin')
   )
 );
 
 
-
+----
 -- RLS Policies for public.armies table
+----
 
 -- Enable RLS on the armies table (already in your schema, but included for completeness)
 ALTER TABLE public.armies ENABLE ROW LEVEL SECURITY;
@@ -107,7 +121,7 @@ ON public.armies FOR INSERT
 WITH CHECK (
   auth.uid() IN (
     SELECT user_id
-    FROM public.user_roles
+    FROM public.user_auth_roles
     WHERE role IN ('admin', 'superadmin')
   )
 );
@@ -119,7 +133,7 @@ ON public.armies FOR DELETE
 USING (
   auth.uid() IN (
     SELECT user_id
-    FROM public.user_roles
+    FROM public.user_auth_roles
     WHERE role IN ('admin', 'superadmin')
   )
 );

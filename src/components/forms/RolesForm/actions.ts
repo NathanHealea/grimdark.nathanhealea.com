@@ -44,7 +44,7 @@ export default async function roleFormAction(initialState: RolesFormState, formD
 
 
     // Validate that the current user has the necessary roles to add or remove roles.
-    const { data: currentUserRoles, error: currentUserRolesErrors } = await supabase.from('user_roles').select('role').eq('user_id', currentUser.id);
+    const { data: currentUserRoles, error: currentUserRolesErrors } = await supabase.from('user_auth_roles').select('role').eq('user_id', currentUser.id);
 
     if (currentUserRolesErrors) {
       throw error;
@@ -98,7 +98,7 @@ export default async function roleFormAction(initialState: RolesFormState, formD
     if (action === 'add') {
 
       const { data: existingRoles, error: existingRolesError } = await supabase
-        .from('user_roles')
+        .from('user_auth_roles')
         .select('role')
         .eq('user_id', userId)
         .eq('role', role as RoleType).maybeSingle();
@@ -112,7 +112,7 @@ export default async function roleFormAction(initialState: RolesFormState, formD
       }
 
       const { error: addError } = await supabase
-        .from('user_roles')
+        .from('user_auth_roles')
         .insert({ user_id: userId, role: role as RoleType });
 
 
@@ -127,7 +127,7 @@ export default async function roleFormAction(initialState: RolesFormState, formD
     // Handle logic for removing a role
     if (action === 'remove') {
       const { data: existingRoles, error: existingRolesError } = await supabase
-        .from('user_roles')
+        .from('user_auth_roles')
         .select('role')
         .eq('user_id', userId)
         .eq('role', role as RoleType).maybeSingle();
@@ -141,7 +141,7 @@ export default async function roleFormAction(initialState: RolesFormState, formD
       }
 
       const { error: addError } = await supabase
-        .from('user_roles')
+        .from('user_auth_roles')
         .delete()
         .eq('user_id', userId)
         .eq('role', role as RoleType);

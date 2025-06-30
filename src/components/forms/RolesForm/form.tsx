@@ -29,7 +29,7 @@ export default function RolesForm(props: RolesFormProps) {
       }
 
       const { data, error } = await supabase
-        .from('user_roles')
+        .from('user_auth_roles')
         .select('*')
         .eq('user_id', userId)
         .order('role', { ascending: false })
@@ -135,7 +135,6 @@ export default function RolesForm(props: RolesFormProps) {
             </option>
             {/* <option value="superadmin">Superadmin</option> */}
             <option value="admin">Admin</option>
-            <option value="member">Member</option>
             <option value="user">User</option>
           </select>
           <button type="button" className="btn btn-primary" onClick={handleAddRole}>

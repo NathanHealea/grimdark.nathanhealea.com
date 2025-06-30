@@ -35,7 +35,7 @@ export async function deleteUserAction(params: DeleteUserParams): DeleteUserResp
 
     // Check if the user has the required role 
     const { data: roles, error: rolesError } = await supabase
-      .from('user_roles')
+      .from('user_auth_roles')
       .select('role')
       .eq('user_id', user.id);
 
@@ -110,7 +110,7 @@ export async function deleteUserAction(params: DeleteUserParams): DeleteUserResp
 
       // Attempt to delete the user roles associated with the user
       const { error: deleteUserRolesError } = await supabase
-        .from('user_roles')
+        .from('user_auth_roles')
         .delete()
         .eq('user_id', user.user_id);
 

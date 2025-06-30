@@ -42,7 +42,7 @@ export default async function UsersPage({
       try {
         // Fetch roles for each user using their user_id.
         if (user.user_id) {
-          const { data, error } = await supabase.from('user_roles').select('*').eq('user_id', user.user_id)
+          const { data, error } = await supabase.from('user_auth_roles').select('*').eq('user_id', user.user_id)
 
           if (error) {
             throw error
@@ -164,9 +164,9 @@ export default async function UsersPage({
                       <tr key={user.id}>
                         <td>{user.id}</td>
                         <td>
-                          {user.profile_url && (
+                          {user.profile_picture_url && (
                             <img
-                              src={user.profile_url}
+                              src={user.profile_picture_url}
                               alt={`${user.email}'s profile picture`}
                               className="h-10 w-10 rounded-full"
                             />
