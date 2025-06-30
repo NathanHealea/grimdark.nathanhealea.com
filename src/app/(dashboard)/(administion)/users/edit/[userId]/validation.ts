@@ -33,7 +33,7 @@ export async function validateEditUser(user: EditUser): Promise<{ errors: Errors
       errors.username = ['Username is required.'];
       success = false;
     }
-    else if(await isUsernameTaken(user.username)) {
+    else if (await isUsernameTaken(user.username)) {
       errors.username = ['Username is already taken.'];
       success = false;
     }
@@ -47,6 +47,23 @@ export async function validateEditUser(user: EditUser): Promise<{ errors: Errors
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(user.email)) {
       errors.email = ['Invalid email format.'];
       success = false;
+    }
+
+    // Validate password change
+    if (user.password) {
+      if (user.password.trim().length === 0) {
+        errors.password = ['Password must be at least 8 characters long.'];
+        success = false;
+      }
+
+      if (user.passwordConfirmation && user.passwordConfirmation.trim().length === 0) {
+        errors.passwordConfirmation = ['Password confirmation is required.'];
+        success = false;
+      }
+      else if (user.password !== user.passwordConfirmation) {
+        errors.passwordConfirmation = ['Passwords do not match.'];
+        success = false;
+      }
     }
 
   } catch (error) {

@@ -87,3 +87,39 @@ USING (
     WHERE role IN ('admin', 'superadmin')
   )
 );
+
+
+
+-- RLS Policies for public.armies table
+
+-- Enable RLS on the armies table (already in your schema, but included for completeness)
+ALTER TABLE public.armies ENABLE ROW LEVEL SECURITY;
+
+-- 1. Anyone can select on the armies table.
+CREATE POLICY "Allow public read access to armies"
+ON public.armies FOR SELECT
+USING (true);
+
+-- 2. Any authenticated user with the role 'admin' or 'superadmin' can insert on the armies table.
+-- The WITH CHECK clause ensures that the user performing the insert has the required role.
+CREATE POLICY "Admins/Superadmins can insert armies"
+ON public.armies FOR INSERT
+WITH CHECK (
+  auth.uid() IN (
+    SELECT user_id
+    FROM public.user_roles
+    WHERE role IN ('admin', 'superadmin')
+  )
+);
+
+-- 3. Any authenticated user with the role 'admin' or 'superadmin' can delete any record on the armies table.
+-- The USING clause restricts which rows can be deleted (any row, but only by admins/superadmins).
+CREATE POLICY "Admins/Superadmins can delete armies"
+ON public.armies FOR DELETE
+USING (
+  auth.uid() IN (
+    SELECT user_id
+    FROM public.user_roles
+    WHERE role IN ('admin', 'superadmin')
+  )
+);

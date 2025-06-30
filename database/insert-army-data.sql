@@ -1,21 +1,19 @@
 INSERT INTO
-  public.armies (title, description, icon)
+  public.armies (name, description)
 VALUES
-  ('Imperium', '', NULL),
+  ('Imperium', ''),
   (
     'Chaos',
-    'The Forces of Chaos are the malevolent entities that seek to corrupt and destroy the Imperium',
-    NULL
+    'The Forces of Chaos are the malevolent entities that seek to corrupt and destroy the Imperium'
   ),
-  ('Xenos', '', NULL),
+  ('Xenos', ''),
   (
     'Space Marines',
-    'The Space Marines are the Imperium''s most elite warriors, genetically enhanced super-soldiers who fight with the fury of a thousand suns. They are the Emperor''s Angels of Death, and they will stop at nothing to defend humanity from its many foes.',
-    NULL
+    'The Space Marines are the Imperium''s most elite warriors, genetically enhanced super-soldiers who fight with the fury of a thousand suns. They are the Emperor''s Angels of Death, and they will stop at nothing to defend humanity from its many foes.'
   );
 
 INSERT INTO
-  public.armies (title, description, parent_army_id, icon)
+  public.armies (name, description, parent_army_id)
 VALUES
   (
     'Adeptus Sororitas',
@@ -26,9 +24,8 @@ VALUES
       FROM
         public.armies
       WHERE
-        title = 'Imperium'
-    ),
-    NULL
+        name = 'Imperium'
+    )
   ),
   (
     'Adeptus Custodes',
@@ -39,9 +36,8 @@ VALUES
       FROM
         public.armies
       WHERE
-        title = 'Imperium'
-    ),
-    NULL
+        name = 'Imperium'
+    )
   ),
   (
     'Adeptus Mechanicus',
@@ -52,9 +48,8 @@ VALUES
       FROM
         public.armies
       WHERE
-        title = 'Imperium'
-    ),
-    NULL
+        name = 'Imperium'
+    )
   ),
   (
     'Astra Militarum',
@@ -65,9 +60,8 @@ VALUES
       FROM
         public.armies
       WHERE
-        title = 'Imperium'
-    ),
-    NULL
+        name = 'Imperium'
+    )
   ),
   (
     'Imperial Agents',
@@ -78,9 +72,8 @@ VALUES
       FROM
         public.armies
       WHERE
-        title = 'Imperium'
-    ),
-    NULL
+        name = 'Imperium'
+    )
   ),
   (
     'Chaos Space Marines',
@@ -91,9 +84,8 @@ VALUES
       FROM
         public.armies
       WHERE
-        title = 'Chaos'
-    ),
-    NULL
+        name = 'Chaos'
+    )
   ),
   (
     'Death Guard',
@@ -104,9 +96,8 @@ VALUES
       FROM
         public.armies
       WHERE
-        title = 'Chaos'
-    ),
-    NULL
+        name = 'Chaos'
+    )
   ),
   (
     'Thousand Sons',
@@ -117,9 +108,8 @@ VALUES
       FROM
         public.armies
       WHERE
-        title = 'Chaos'
-    ),
-    NULL
+        name = 'Chaos'
+    )
   ),
   (
     'World Eaters',
@@ -130,9 +120,8 @@ VALUES
       FROM
         public.armies
       WHERE
-        title = 'Chaos'
-    ),
-    NULL
+        name = 'Chaos'
+    )
   ),
   (
     'Chaos Daemons',
@@ -143,9 +132,8 @@ VALUES
       FROM
         public.armies
       WHERE
-        title = 'Chaos'
-    ),
-    NULL
+        name = 'Chaos'
+    )
   ),
   (
     'Aeldari',
@@ -156,9 +144,8 @@ VALUES
       FROM
         public.armies
       WHERE
-        title = 'Xenos'
-    ),
-    NULL
+        name = 'Xenos'
+    )
   ),
   (
     'Drukhari',
@@ -169,9 +156,8 @@ VALUES
       FROM
         public.armies
       WHERE
-        title = 'Xenos'
-    ),
-    NULL
+        name = 'Xenos'
+    )
   ),
   (
     'Tyranids',
@@ -182,9 +168,8 @@ VALUES
       FROM
         public.armies
       WHERE
-        title = 'Xenos'
-    ),
-    NULL
+        name = 'Xenos'
+    )
   ),
   (
     'Genestealer Cults',
@@ -195,9 +180,8 @@ VALUES
       FROM
         public.armies
       WHERE
-        title = 'Xenos'
-    ),
-    NULL
+        name = 'Xenos'
+    )
   ),
   (
     'Leagues of Votann',
@@ -208,9 +192,8 @@ VALUES
       FROM
         public.armies
       WHERE
-        title = 'Xenos'
-    ),
-    NULL
+        name = 'Xenos'
+    )
   ),
   (
     'Necrons',
@@ -221,9 +204,8 @@ VALUES
       FROM
         public.armies
       WHERE
-        title = 'Xenos'
-    ),
-    NULL
+        name = 'Xenos'
+    )
   ),
   (
     'Orks',
@@ -234,9 +216,8 @@ VALUES
       FROM
         public.armies
       WHERE
-        title = 'Xenos'
-    ),
-    NULL
+        name = 'Xenos'
+    )
   ),
   (
     'T''au Empire',
@@ -247,9 +228,8 @@ VALUES
       FROM
         public.armies
       WHERE
-        title = 'Xenos'
-    ),
-    NULL
+        name = 'Xenos'
+    )
   ),
   (
     'Black Templars',
@@ -260,9 +240,8 @@ VALUES
       FROM
         public.armies
       WHERE
-        title = 'Space Marines'
-    ),
-    NULL
+        name = 'Space Marines'
+    )
   ),
   (
     'Blood Angels',
@@ -273,9 +252,8 @@ VALUES
       FROM
         public.armies
       WHERE
-        title = 'Space Marines'
-    ),
-    NULL
+        name = 'Space Marines'
+    )
   ),
   (
     'Dark Angels',
@@ -286,9 +264,8 @@ VALUES
       FROM
         public.armies
       WHERE
-        title = 'Space Marines'
-    ),
-    NULL
+        name = 'Space Marines'
+    )
   ),
   (
     'Deathwatch',
@@ -299,9 +276,8 @@ VALUES
       FROM
         public.armies
       WHERE
-        title = 'Space Marines'
-    ),
-    NULL
+        name = 'Space Marines'
+    )
   ),
   (
     'Grey Knights',
@@ -312,9 +288,8 @@ VALUES
       FROM
         public.armies
       WHERE
-        title = 'Space Marines'
-    ),
-    NULL
+        name = 'Space Marines'
+    )
   ),
   (
     'Imperial Fists',
@@ -325,9 +300,8 @@ VALUES
       FROM
         public.armies
       WHERE
-        title = 'Space Marines'
-    ),
-    NULL
+        name = 'Space Marines'
+    )
   ),
   (
     'Iron Hands',
@@ -338,9 +312,8 @@ VALUES
       FROM
         public.armies
       WHERE
-        title = 'Space Marines'
-    ),
-    NULL
+        name = 'Space Marines'
+    )
   ),
   (
     'Raven Guard',
@@ -351,9 +324,8 @@ VALUES
       FROM
         public.armies
       WHERE
-        title = 'Space Marines'
-    ),
-    NULL
+        name = 'Space Marines'
+    )
   ),
   (
     'Salamanders',
@@ -364,9 +336,8 @@ VALUES
       FROM
         public.armies
       WHERE
-        title = 'Space Marines'
-    ),
-    NULL
+        name = 'Space Marines'
+    )
   ),
   (
     'Space Wolves',
@@ -377,9 +348,8 @@ VALUES
       FROM
         public.armies
       WHERE
-        title = 'Space Marines'
-    ),
-    NULL
+        name = 'Space Marines'
+    )
   ),
   (
     'Ultramarines',
@@ -390,9 +360,8 @@ VALUES
       FROM
         public.armies
       WHERE
-        title = 'Space Marines'
-    ),
-    NULL
+        name = 'Space Marines'
+    )
   ),
   (
     'White Scars',
@@ -403,7 +372,6 @@ VALUES
       FROM
         public.armies
       WHERE
-        title = 'Space Marines'
-    ),
-    NULL
+        name = 'Space Marines'
+    )
   );

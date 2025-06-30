@@ -7,6 +7,8 @@ export type EditUser = {
   first_name: string | null;
   last_name: string | null;
   bio: string | null;
+  password?: string; // Optional for password updates
+  passwordConfirmation?: string; // Optional for password confirmation
 };
 
 export type EditUserFormState = FormState<EditUser>;
