@@ -45,3 +45,10 @@ GRANT ALL ON TABLE public.user_auth_roles TO authenticated;
 -- Grant all privileges on the `public.armies' table to authenticated, anon, and public roles.
 grant all on table public.armies to authenticated, anon, public;
 
+----
+--- 4. Grants on the `public.user_armies` table
+---- 
+
+-- Grant all privileges on the `public.armies' table to authenticated, anon, and public roles.
+grant all on table public.user_armies to authenticated, anon, public;
+
