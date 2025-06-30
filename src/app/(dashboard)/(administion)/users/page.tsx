@@ -1,6 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
 import { User } from '@/types/user.type'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
+import { deleteUserAction } from './actions'
 
 export default async function UsersPage({
   searchParams,
@@ -16,6 +18,22 @@ export default async function UsersPage({
     .select('*')
     .order('id', { ascending: true })
     .overrideTypes<User[]>()
+
+  const handleDeleteUser = async (formData: FormData) => {
+    'use server'
+
+    const userId = formData.get('userId')?.toString()
+
+    if (!userId) {
+      redirect(`/users?message=User ID is required&status=error`)
+    }
+
+    // Call the delete user action
+    const response = await deleteUserAction({ userId: parseInt(userId) })
+    console.log('Delete User Response:', response)
+    const { message, success } = response
+    redirect(`/users?message=${message}&status=${success ? 'success' : 'error'}`)
+  }
 
   // Get users roles if users have been fetched.
   if (data && data.length != 0 && !error) {
@@ -48,8 +66,6 @@ export default async function UsersPage({
       }
     }
   }
-
-  console.log(data)
 
   return (
     <main className="flex-1 flex min-h-screen flex-col gap-4 p-8 -mt-20 pt-28 relative">
@@ -173,13 +189,16 @@ export default async function UsersPage({
                         <td>{new Date(user.created_at).toLocaleString()}</td>
                         <td>
                           <div className="flex gap-2">
-                            <Link href={`/users/edit/${user.id}`} className="btn btn-sm btn-primary">
+                            <Link href={`/users/${user.id}/edit`} className="btn btn-sm btn-primary">
                               Edit
                             </Link>
                             {user.id !== 1 && (
-                              <Link href={`/users/delete/${user.id}`} className="btn btn-sm btn-error">
-                                Delete
-                              </Link>
+                              <form action={handleDeleteUser}>
+                                <input type="hidden" name="userId" value={user.id} />
+                                <button type="submit" className="btn btn-sm btn-error">
+                                  Delete
+                                </button>
+                              </form>
                             )}
                           </div>
                         </td>
