@@ -68,7 +68,7 @@ export default async function UsersPage({
   }
 
   return (
-    <main className="flex-1 flex min-h-screen flex-col gap-4 p-8 -mt-20 pt-28 relative">
+    <main className="flex-1 flex min-h-screen flex-col gap-4 p-8 -mt-20 pt-28 ">
       {/* User Action Error  */}
       {userActionStatus === 'error' && (
         <div className="relative top-0 right-0 p-4">

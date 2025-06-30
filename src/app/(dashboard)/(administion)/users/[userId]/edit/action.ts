@@ -22,7 +22,9 @@ export default async function editUserFormAction(
       email: formData.get('email')?.toString() || '',
       first_name: formData.get('first_name')?.toString() || '',
       last_name: formData.get('last_name')?.toString() || '',
-      bio: formData.get('bio')?.toString() || ''
+      bio: formData.get('bio')?.toString() || '',
+      password: formData.get('password')?.toString() || '',
+      passwordConfirmation: formData.get('passwordConfirmation')?.toString() || '',
     };
 
 
@@ -31,7 +33,7 @@ export default async function editUserFormAction(
       ...user,
     };
 
-    // Validate the edituser data
+    // Validate the edit user data
     const validationResponse = await validateEditUser(user);
 
     state.errors = validationResponse.errors;
@@ -53,10 +55,22 @@ export default async function editUserFormAction(
         .single();
 
       if (error) {
-        state.errors.form = [error.message];
-      } else {
-        state.success = true;
+        throw error;
       }
+
+      // If password is provided, update it
+      if (user.password) {
+        const { error: passwordError } = await supabase.auth.updateUser({
+          password: user.password,
+        });
+
+        if (passwordError) {
+          throw passwordError;
+        }
+      }
+
+      // If the update is successful, set success to true
+      state.success = true;
     }
   } catch (error) {
     if (error instanceof Error) {
