@@ -109,13 +109,13 @@ export async function deleteUserAction(params: DeleteUserParams): DeleteUserResp
       }
 
       // Attempt to delete the user roles associated with the user
-      const { error: deleteUserRolesError } = await supabase
+      const { error: deleteUserAuthRolesError } = await supabase
         .from('user_auth_roles')
         .delete()
         .eq('user_id', user.user_id);
 
-      if (deleteUserRolesError) {
-        console.error('Error deleting user roles:', deleteUserRolesError);
+      if (deleteUserAuthRolesError) {
+        console.error('Error deleting user roles:', deleteUserAuthRolesError);
         throw new Error(`Could not delete roles for user with ID ${userId}.`);
       }
 

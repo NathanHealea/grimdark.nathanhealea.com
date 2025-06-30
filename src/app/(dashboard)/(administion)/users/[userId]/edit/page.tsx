@@ -1,4 +1,4 @@
-import { RolesForm } from '@/components/forms/RolesForm'
+import UserAuthRolesForm from '@/components/forms/UserAuthRolesForm'
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import editUserFormAction from './action'
@@ -60,7 +60,7 @@ export default async function EditUserPage({ params }: { params: Promise<{ userI
       <section>
         <div className="container mx-auto">
           <UserEditForm action={editUserFormAction} user={user}>
-            <RolesForm userId={user.user_id} />
+            <UserAuthRolesForm userId={user.user_id} />
           </UserEditForm>
         </div>
       </section>

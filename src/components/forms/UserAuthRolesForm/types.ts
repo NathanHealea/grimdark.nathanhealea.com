@@ -10,4 +10,4 @@ export type Role = {
 };
 
 
-export type RolesFormState = FormState<Role>;
+export type UserAuthRoleState = FormState<Role>;

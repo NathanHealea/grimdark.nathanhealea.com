@@ -36,6 +36,8 @@ grant all on table public.user_auth_roles to supabase_auth_admin;
 revoke all on table public.user_auth_roles
 from anon, public;
 
+GRANT ALL ON TABLE public.user_auth_roles TO authenticated;
+
 ----
 --- 3. Grants on the `public.armies` table
 ---- 

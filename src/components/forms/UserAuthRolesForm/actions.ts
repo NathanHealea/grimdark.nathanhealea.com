@@ -1,14 +1,14 @@
 'use server';
 import { createClient } from '@/lib/supabase/server';
-import { RolesFormState } from './types';
+import { UserAuthRoleState } from './types';
 import { error } from 'console';
 import { RoleType } from '@/types/role.types';
 
 
 
 
-export default async function roleFormAction(initialState: RolesFormState, formData: FormData): Promise<RolesFormState> {
-  const state: RolesFormState = {
+export default async function roleFormAction(initialState: UserAuthRoleState, formData: FormData): Promise<UserAuthRoleState> {
+  const state: UserAuthRoleState = {
     state: initialState.state,
     errors: {} as Record<string, string[]>,
     success: false,
@@ -44,24 +44,24 @@ export default async function roleFormAction(initialState: RolesFormState, formD
 
 
     // Validate that the current user has the necessary roles to add or remove roles.
-    const { data: currentUserRoles, error: currentUserRolesErrors } = await supabase.from('user_auth_roles').select('role').eq('user_id', currentUser.id);
+    const { data: currentUserAuthRoles, error: currentUserAuthRolesErrors } = await supabase.from('user_auth_roles').select('role').eq('user_id', currentUser.id);
 
-    if (currentUserRolesErrors) {
+    if (currentUserAuthRolesErrors) {
       throw error;
     }
-    else if (!currentUserRoles || currentUserRoles.length === 0) {
+    else if (!currentUserAuthRoles || currentUserAuthRoles.length === 0) {
       throw new Error('You do not have any roles assigned.');
     }
-    else if (!currentUserRoles.some(role => role.role === 'admin' || role.role === 'superadmin')) {
+    else if (!currentUserAuthRoles.some(role => role.role === 'admin' || role.role === 'superadmin')) {
       throw new Error('You do not have permission to add or remove roles.');
     }
 
 
-    if ((role === 'superadmin') && !(currentUserRoles.some(role => role.role === 'superadmin'))) {
+    if ((role === 'superadmin') && !(currentUserAuthRoles.some(role => role.role === 'superadmin'))) {
       throw new Error(`You do not have permission to add or remove the role ${role}.`);
     }
     // Only Superadmins and Admins can add roles.
-    else if ((role !== 'superadmin') && !(currentUserRoles.some(role => role.role === 'admin' || role.role === 'superadmin'))) {
+    else if ((role !== 'superadmin') && !(currentUserAuthRoles.some(role => role.role === 'admin' || role.role === 'superadmin'))) {
       throw new Error(`You do not have permission to add or remove the role ${role}.`);
     }
 
