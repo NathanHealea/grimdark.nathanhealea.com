@@ -1,0 +1,91 @@
+'use server';
+import { createClient } from '@/lib/supabase/server';
+import { Errors } from '@/types/form.types';
+import { EditProfile, EditProfileFormState } from './types';
+import { validateEditProfile } from './validation';
+
+export default async function editProfileFormAction(
+  initialState: EditProfileFormState,
+  formData: FormData
+): Promise<EditProfileFormState> {
+
+  const state: EditProfileFormState = {
+    state: initialState.state,
+    errors: {} as Errors,
+    success: false,
+  };
+
+  
+
+  try {
+    const user: EditProfile = {
+      id: initialState.state.id,
+      username: formData.get('username')?.toString() || '',
+      first_name: formData.get('first_name')?.toString() || '',
+      last_name: formData.get('last_name')?.toString() || '',
+      bio: formData.get('bio')?.toString() || '',
+      currentPassword: formData.get('currentPassword')?.toString() || '',
+      password: formData.get('password')?.toString() || '',
+      passwordConfirmation: formData.get('passwordConfirmation')?.toString() || '',
+    };
+
+
+    state.state = {
+      ...state.state,
+      ...user,
+    };
+
+    // Validate the edit user data
+    const validationResponse = await validateEditProfile(user);
+
+    state.errors = validationResponse.errors;
+
+    if (validationResponse.success) {
+      const supabase = await createClient();
+
+      // Attempt to update the user in the database
+      const { data: updatedUser, error } = await supabase.from('users')
+        .update({
+          username: user.username,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          bio: user.bio,
+        })
+        .eq('id', initialState.state.id)
+        .select()
+        .single();
+
+      if (error) {
+        throw error;
+      }
+
+      // If password is provided, update it
+      if (user.password) {
+
+        // First, verify the current password
+        // TBD: Implement current password verification logic
+
+        const { error: passwordError } = await supabase.auth.updateUser({
+          password: user.password,
+        });
+
+        if (passwordError) {
+          throw passwordError;
+        }
+      }
+
+      // If the update is successful, set success to true
+      state.success = true;
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      state.errors.form = [error.message];
+    } else if (typeof error === 'string') {
+      state.errors.form = [error];
+    } else {
+      state.errors.form = ['An unknown error occurred.'];
+    }
+  }
+
+  return state;
+}
