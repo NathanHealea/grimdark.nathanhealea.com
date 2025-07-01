@@ -85,3 +85,20 @@ BEGIN
     RETURN NEW; -- Return the new row from auth.users (required for AFTER triggers)
 END;
 $$;
+
+-- Function to validate the current password of the authenticated user
+-- This function checks if the provided current password matches the user's stored password.
+-- It raises an exception if the user is not authenticated or if the password does not match.
+-- Returns a JSON response indicating success or failure.
+-- SOURCE: https://github.com/orgs/supabase/discussions/4042
+create or replace function validate_current_password(current_plain_password varchar)
+RETURNS BOOLEAN SECURITY DEFINER AS
+$$
+BEGIN
+  RETURN EXISTS (
+    SELECT id 
+    FROM auth.users 
+    WHERE id = auth.uid() AND encrypted_password = crypt(current_plain_password, auth.users.encrypted_password)
+  );
+END;
+$$ LANGUAGE plpgsql;
