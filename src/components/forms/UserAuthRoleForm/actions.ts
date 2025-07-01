@@ -4,9 +4,6 @@ import { UserAuthRoleState } from './types';
 import { error } from 'console';
 import { RoleType } from '@/types/role.types';
 
-
-
-
 export default async function roleFormAction(initialState: UserAuthRoleState, formData: FormData): Promise<UserAuthRoleState> {
   const state: UserAuthRoleState = {
     state: initialState.state,
