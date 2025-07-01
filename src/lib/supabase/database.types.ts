@@ -44,20 +44,62 @@ export type Database = {
           },
         ]
       }
-      user_roles: {
+      user_armies: {
+        Row: {
+          army_id: number
+          created_at: string
+          id: number
+          is_primary: boolean
+          updated_at: string
+          user_id: number
+        }
+        Insert: {
+          army_id: number
+          created_at?: string
+          id?: number
+          is_primary?: boolean
+          updated_at?: string
+          user_id: number
+        }
+        Update: {
+          army_id?: number
+          created_at?: string
+          id?: number
+          is_primary?: boolean
+          updated_at?: string
+          user_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_armies_army_id_fkey"
+            columns: ["army_id"]
+            isOneToOne: false
+            referencedRelation: "armies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_armies_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_auth_roles: {
         Row: {
           id: number
-          role: Database["public"]["Enums"]["role"]
+          role: Database["public"]["Enums"]["auth_role"]
           user_id: string
         }
         Insert: {
           id?: number
-          role?: Database["public"]["Enums"]["role"]
+          role?: Database["public"]["Enums"]["auth_role"]
           user_id: string
         }
         Update: {
           id?: number
-          role?: Database["public"]["Enums"]["role"]
+          role?: Database["public"]["Enums"]["auth_role"]
           user_id?: string
         }
         Relationships: []
@@ -112,7 +154,7 @@ export type Database = {
       }
     }
     Enums: {
-      role: "user" | "member" | "admin" | "superadmin"
+      auth_role: "user" | "admin" | "superadmin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -228,7 +270,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      role: ["user", "member", "admin", "superadmin"],
+      auth_role: ["user", "admin", "superadmin"],
     },
   },
 } as const

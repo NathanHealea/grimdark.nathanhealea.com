@@ -3,7 +3,7 @@
 /**
  * RoleType defines the different types of roles a user can have in the system.
  */
-export type RoleType = NonNullable<'user' | 'member' | 'admin' | 'superadmin'>;
+export type RoleType = NonNullable<'user' | 'admin' | 'superadmin'>;
 
 
 /**
