@@ -11,7 +11,7 @@
     "lint": "next lint",
     "lint:fix": "eslint src --fix",
     "db:seed": "ts-node prisma/seed.ts",
-    "db:types": "supabase gen types typescript --project-id"
+    "db:types": "supabase gen types typescript --project-id \"uluadnzmwtmtranxxuak\" --schema public > ./src/lib/supabase/database.types.ts"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
