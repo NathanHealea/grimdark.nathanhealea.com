@@ -24,9 +24,9 @@ export default async function editProfileFormAction(
       first_name: formData.get('first_name')?.toString() || '',
       last_name: formData.get('last_name')?.toString() || '',
       bio: formData.get('bio')?.toString() || '',
-      currentPassword: formData.get('currentPassword')?.toString() || '',
+      passwordCurrent: formData.get('password_current')?.toString() || '',
       password: formData.get('password')?.toString() || '',
-      passwordConfirmation: formData.get('passwordConfirmation')?.toString() || '',
+      passwordConfirmation: formData.get('password_confirmation')?.toString() || '',
     };
 
 
