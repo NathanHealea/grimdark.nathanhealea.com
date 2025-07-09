@@ -104,11 +104,9 @@ export default function UserArmyForm(props: UserArmyProps) {
 
   const getArmyOptions = useCallback(() => {
     const options: ArmyOptions = armies.map((army) => {
-      console.log('Processing Army:', army)
       // Get the child armies of the current army.
       let childOptions = [] as ArmyOptions
       if (army.list && army.list.length > 0) {
-        console.log('Child Armies:', army.list)
         childOptions = army.list.map(
           (child) =>
             ({
@@ -124,8 +122,6 @@ export default function UserArmyForm(props: UserArmyProps) {
         list: childOptions,
       }
     })
-
-    console.log('Army Options:', options)
 
     setArmyOptions(options)
   }, [armies, userArmies])
@@ -150,12 +146,10 @@ export default function UserArmyForm(props: UserArmyProps) {
 
   // Update the army options whenever the armies or userArmies change
   useEffect(() => {
-    console.log('firing', armies.length > 0, userArmies.length > 0)
     if (armies.length > 0) {
       getArmyOptions()
     }
   }, [armies.length, userArmies.length, getArmyOptions])
-  console.log('Army Options:', armyOptions)
 
   // useEffect(() => {
   //   // Reset the selected army when the userArmies change
