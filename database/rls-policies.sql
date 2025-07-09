@@ -185,3 +185,67 @@ USING (
   user_id = (SELECT id FROM users WHERE uid = auth.uid())
 );
 
+
+-- Policies for the 'public-profile-pictures' bucket
+
+-- 1. All images can be viewed by any user (public read access)
+CREATE POLICY "Public read access for profile pictures" ON storage.objects FOR SELECT
+TO anon, authenticated
+USING (bucket_id = 'public-profile-pictures');
+
+-- 2. Users can update/delete images in their directory (their user ID)
+CREATE POLICY "Users can update their own profile pictures" ON storage.objects FOR UPDATE
+TO authenticated
+USING (bucket_id = 'public-profile-pictures' AND auth.uid()::text = owner_id)
+WITH CHECK (bucket_id = 'public-profile-pictures' AND auth.uid()::text = owner_id); -- WITH CHECK for update
+
+CREATE POLICY "Users can delete their own profile pictures" ON storage.objects FOR DELETE
+TO authenticated
+USING (bucket_id = 'public-profile-pictures' AND auth.uid()::text = owner_id);
+
+-- 3. Users with 'superadmin' and 'admin' roles can insert/update/delete any user's image.
+--    This policy requires your 'public.user_auth_roles' table.
+
+-- Policy for superadmin/admin to INSERT any image (e.g., if they are uploading on behalf of a user)
+CREATE POLICY "Admins/Superadmins can insert any profile picture" ON storage.objects FOR INSERT
+TO authenticated
+WITH CHECK (
+    bucket_id = 'public-profile-pictures' AND (
+        EXISTS (
+            SELECT 1 FROM public.user_auth_roles
+            WHERE user_id = auth.uid() AND role IN ('superadmin', 'admin')
+        )
+    )
+);
+
+-- Policy for superadmin/admin to UPDATE any image
+CREATE POLICY "Admins/Superadmins can update any profile picture" ON storage.objects FOR UPDATE
+TO authenticated
+USING (
+    bucket_id = 'public-profile-pictures' AND (
+        EXISTS (
+            SELECT 1 FROM public.user_auth_roles
+            WHERE user_id = auth.uid() AND role IN ('superadmin', 'admin')
+        )
+    )
+)
+WITH CHECK (
+    bucket_id = 'public-profile-pictures' AND (
+        EXISTS (
+            SELECT 1 FROM public.user_auth_roles
+            WHERE user_id = auth.uid() AND role IN ('superadmin', 'admin')
+        )
+    )
+);
+
+-- Policy for superadmin/admin to DELETE any image
+CREATE POLICY "Admins/Superadmins can delete any profile picture" ON storage.objects FOR DELETE
+TO authenticated
+USING (
+    bucket_id = 'public-profile-pictures' AND (
+        EXISTS (
+            SELECT 1 FROM public.user_auth_roles
+            WHERE user_id = auth.uid() AND role IN ('superadmin', 'admin')
+        )
+    )
+);
