@@ -102,3 +102,46 @@ BEGIN
   );
 END;
 $$ LANGUAGE plpgsql;
+
+
+
+-- 1. Create or Replace the Trigger Function
+-- This function will be executed by the trigger.
+-- It no longer takes arguments, as it accesses the new row data via the 'NEW' record.
+CREATE OR REPLACE FUNCTION public.handle_create_user_profile_directory()
+RETURNS TRIGGER -- A trigger function must return TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER -- This allows the function to run with the privileges of the user who defined it (e.g., supabase_admin)
+AS $$
+DECLARE
+    v_url text := 'http://supabase_edge_runtime_grimdark.nathanhealea.com:8081/create-profile-directory'; -- !! IMPORTANT: Replace with your actual API URL !!
+    v_body jsonb;
+    v_headers jsonb := '{"Content-Type": "application/json", "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0"}'; -- Headers for the request
+    v_response_json jsonb;
+    v_request_result http_response;
+BEGIN
+    -- Get the ID of the newly inserted row from the 'NEW' record.
+    -- 'NEW.id' refers to the 'id' column of the row just inserted into 'public.users'.
+    -- The 'userId' key in the JSON body will contain this ID.
+    v_body := jsonb_build_object('userId', NEW.id)::jsonb;
+
+
+    -- Make the POST request using the http_post function from the http extension
+    -- The arguments are: URL, body, headers
+    PERFORM  (
+    net.http_post(
+        -- url for the request
+        v_url,
+        -- body of the POST request
+        v_body,
+        -- key/value pairs to be url encoded and appended to the `url`
+        null,
+        -- key/values to be included in request headers
+        v_headers,
+        -- the maximum number of milliseconds the request may take before being cancelled
+        1000
+    ) );
+
+    RETURN NEW; -- For AFTER triggers, always return NEW
+END;
+$$;
