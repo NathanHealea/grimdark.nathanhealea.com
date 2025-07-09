@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import editProfileFormAction from './action'
 import EditProfileForm from './form'
+import UserProfilePictureForm from '@/components/forms/UserProfilePictureForm';
 
 export default async function ProfilePage({
   searchParams,
@@ -135,6 +136,7 @@ export default async function ProfilePage({
               <span>{message ? message : 'Profile was sucesfully saved.'}</span>
             </div>
           )}
+          <UserProfilePictureForm userId={userProfile.id} />
           <EditProfileForm action={editProfileFormAction} user={userProfile} />
         </div>
       </section>

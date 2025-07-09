@@ -1,7 +1,11 @@
+
+export type Error = string[]
+
+
 /**
  *  Represents the errors for a form.
  */
-export type Errors = Record<string, string[]>
+export type Errors = Record<string, Error>
 
 export type FormValidation = {
   errors: Errors
