@@ -3,7 +3,7 @@ import { type FormState } from '@/types/form.types';
 export type EditProfile = {
   id: number;
   username: string | null;
-  // email: string;
+  email?: string;
   first_name: string | null;
   last_name: string | null;
   bio: string | null;
