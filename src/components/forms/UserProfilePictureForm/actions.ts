@@ -46,6 +46,9 @@ export default async function userProfilePictureFormAction(
 
   // process form data
   try {
+    if (!file) {
+      throw new Error('No file provided for profile picture upload')
+    }
     const filePath = `${userId}/profile-picture.${file.type.split('/')[1]}`
     // Upload the profile picture file
     const { data: profilePictureData, error: profilePictureError } = await supabase.storage
@@ -67,12 +70,10 @@ export default async function userProfilePictureFormAction(
 
     // get profile picture URL
     const {
-      data: { publicUrl },
-      error: publicUrlError,
-    } = await supabase.storage.from('public-profile-pictures').getPublicUrl(profilePictureData.path)
+      data: { publicUrl }    } = await supabase.storage.from('public-profile-pictures').getPublicUrl(profilePictureData.path)
 
-    if (publicUrlError) {
-      throw new Error(`Failed to get public URL for profile picture: ${publicUrlError.message}`)
+    if (!publicUrl) {
+      throw new Error(`Failed to get public URL for profile picture.`)
     }
 
     // Update the user's profile picture URL in the database
