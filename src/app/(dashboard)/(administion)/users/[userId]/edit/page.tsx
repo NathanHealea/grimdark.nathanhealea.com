@@ -4,6 +4,7 @@ import Link from 'next/link'
 import editUserFormAction from './action'
 import UserEditForm from './form'
 import UserArmyForm from '@/components/forms/UserArmy';
+import UserProfilePictureForm from '@/components/forms/UserProfilePictureForm';
 
 export default async function EditUserPage({ params }: { params: Promise<{ userId: number }> }) {
   const { userId } = await params
@@ -60,6 +61,7 @@ export default async function EditUserPage({ params }: { params: Promise<{ userI
 
       <section>
         <div className="container mx-auto">
+          <UserProfilePictureForm userId={user.id} />
           <UserEditForm action={editUserFormAction} user={user}>
             <UserAuthRoleForm userId={user.user_id} />
             <UserArmyForm userId={user.id} />
