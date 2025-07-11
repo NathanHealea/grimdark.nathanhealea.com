@@ -6,7 +6,7 @@
   "scripts": {
     "supabase": "supabase",
     "prettify": "prettier --write .",
-    "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
