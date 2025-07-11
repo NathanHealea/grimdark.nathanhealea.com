@@ -4,11 +4,11 @@ import { createClient } from '@/lib/supabase/client'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { LeageMember, LeageMemberArmy } from './types'
+import { LeagueMember, LeagueMemberArmy } from './types'
 
 export default function Members() {
   const [loading, setLoading] = useState(true)
-  const [members, setMembers] = useState<Array<LeageMember>>([])
+  const [members, setMembers] = useState<Array<LeagueMember>>([])
 
   const supabase = createClient()
 
