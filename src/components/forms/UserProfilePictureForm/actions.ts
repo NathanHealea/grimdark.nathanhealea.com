@@ -50,6 +50,7 @@ export default async function userProfilePictureFormAction(
       throw new Error('No file provided for profile picture upload')
     }
     const filePath = `${userId}/profile-picture.${file.type.split('/')[1]}`
+    console.log(`Uploading profile picture for user ${userId} to path: ${filePath}`)
     // Upload the profile picture file
     const { data: profilePictureData, error: profilePictureError } = await supabase.storage
       .from('public-profile-pictures')
@@ -77,7 +78,7 @@ export default async function userProfilePictureFormAction(
     }
 
     // Update the user's profile picture URL in the database
-    const { error } = await supabase.from('users').update({ profile_picture_url: publicUrl }).eq('id', userId)
+    const { error } = await supabase.from('users').update({ profile_picture_url: `${publicUrl}?v=${Date.now()}` }).eq('id', userId)
 
     if (error) {
       throw new Error(`Failed to update user profile picture URL: ${error.message}`)
@@ -96,64 +97,6 @@ export default async function userProfilePictureFormAction(
     }
     return state
   }
-
-  // try {
-  //   const file = formData.get('profile_picture') as File | null
-  //   const userId = parseInt(formData.get('user_id') as string, 10)
-
-  //   const validateFile = validateProfilePictureFile(file)
-  //   if (validateFile) {
-  //     errors.profilePicture = [validateFile]
-  //   }
-
-  //   const validateUser = validateUserId(userId)
-  //   if (validateUser) {
-  //     errors.userId = [validateUser]
-  //   }
-
-  //   if (Object.keys(errors).length === 0) {
-  //     const supabase = await createClient();
-
-  //     // Upload the profile picture file
-  //     const { data: profilePictureData, error:profilePictureError } = await supabase.storage
-  //       .from('public-profile-pictures')
-  //       .upload(`${userId}/profile-picture${file?.type}`, file as Blob, {
-  //         cacheControl: '3600',
-  //         upsert: true,
-  //       })
-
-  //     if (profilePictureError) {
-  //       throw new Error(`Failed to upload profile picture: ${profilePictureError.message}`)
-  //     }
-
-  //     if(!profilePictureData) {
-  //       throw new Error('No data returned from profile picture upload')
-  //     }
-  //     else if (!profilePictureData.fullPath) {
-  //       throw new Error('No path returned from profile picture upload')
-  //     }
-
-  //     // Update the user's profile picture URL in the database
-  //     const {error} = await supabase
-  //       .from('users')
-  //       .update({ profile_picture_url: profilePictureData.fullPath })
-  //       .eq('id', userId)
-  //   }
-
-  //   success = true
-  // } catch (error) {
-  //   if (error instanceof Error) {
-  //     errors.form = [error.message]
-  //   } else if (typeof error === 'string') {
-  //     errors.form = [error]
-  //   }
-  // } finally {
-  //   return {
-  //     state: initialstate.state,
-  //     errors,
-  //     success,
-  //   }
-  // }
 
   return state
 }
