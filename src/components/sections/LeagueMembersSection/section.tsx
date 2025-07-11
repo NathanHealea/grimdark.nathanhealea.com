@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/client'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { LeagueMember, LeagueMemberArmy } from './types'
+import { LeagueMember } from './types'
 
 export default function Members() {
   const [loading, setLoading] = useState(true)
@@ -15,12 +15,17 @@ export default function Members() {
   const fetchMembers = async () => {
     setLoading(true)
     try {
-      const { data, error } = await supabase.from('users').select('*, user_armies(*, armies(name))')
+      const { data, error } = await supabase
+        .from('users')
+        .select('*, user_armies(*, armies(name))')
+        .eq('status', 'active') // Only fetch active members
+        .order('last_name', { ascending: false }) // Order by most recent
+        .order('first_name', { ascending: true }) // Then by first name
+        .order('username', { ascending: true }) // Then by username
 
       if (error) {
         throw error
       }
-      console.log('Fetched members data:', data)
 
       if (!data || data.length === 0) {
         throw new Error('No members found')
