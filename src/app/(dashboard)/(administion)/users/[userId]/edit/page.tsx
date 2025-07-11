@@ -11,7 +11,7 @@ export default async function EditUserPage({ params }: { params: Promise<{ userI
 
   if (!userId) {
     return (
-      <main className="flex-1 flex min-h-screen flex-col gap-4 p-8 -mt-20 pt-28 relative">
+      <main className="flex-1 flex min-h-screen flex-col gap-4 p-8 -mt-20 pt-28">
         <h1 className="text-3xl font-bold">Edit User</h1>
         <p className="text-error">No user ID provided.</p>
       </main>
@@ -23,7 +23,7 @@ export default async function EditUserPage({ params }: { params: Promise<{ userI
 
   if (userError) {
     return (
-      <main className="flex-1 flex min-h-screen flex-col gap-4 p-8 -mt-20 pt-28 relative">
+      <main className="flex-1 flex min-h-screen flex-col gap-4 p-8 -mt-20 pt-28">
         <h1 className="text-3xl font-bold">Edit User</h1>
         <p className="text-error">User not found.</p>
       </main>
@@ -31,7 +31,7 @@ export default async function EditUserPage({ params }: { params: Promise<{ userI
   }
 
   return (
-    <main className="flex-1 flex min-h-screen flex-col gap-4 p-8 -mt-20 pt-28 relative">
+    <main className="flex-1 flex min-h-screen flex-col gap-4 p-8 -mt-20 pt-28">
       {/* Header */}
       <header className="grid grid-cols-1 md:grid-cols-2 gap-2 w-full">
         {/* Header - Content */}
