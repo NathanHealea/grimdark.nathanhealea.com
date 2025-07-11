@@ -71,7 +71,7 @@ export default async function userProfilePictureFormAction(
 
     // get profile picture URL
     const {
-      data: { publicUrl }    } = await supabase.storage.from('public-profile-pictures').getPublicUrl(profilePictureData.path)
+      data: { publicUrl } } = await supabase.storage.from('public-profile-pictures').getPublicUrl(profilePictureData.path)
 
     if (!publicUrl) {
       throw new Error(`Failed to get public URL for profile picture.`)

@@ -1,13 +1,21 @@
-import UserAuthRoleForm from '@/components/forms/UserAuthRoleForm'
+import UserArmyForm from '@/components/forms/UserArmy'
+import editUserFormAction from './action'
+import EditUserForm from './form'
+
+import UserProfilePictureForm from '@/components/forms/UserProfilePictureForm'
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
-import editUserFormAction from './action'
-import UserEditForm from './form'
-import UserArmyForm from '@/components/forms/UserArmy';
-import UserProfilePictureForm from '@/components/forms/UserProfilePictureForm';
+import UserAuthRoleForm from '@/components/forms/UserAuthRoleForm';
 
-export default async function EditUserPage({ params }: { params: Promise<{ userId: number }> }) {
+export default async function EditUserPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ userId: number }>
+  searchParams: Promise<{ userId: number; message: string; status: string }>
+}) {
   const { userId } = await params
+  const { message, status } = await searchParams
 
   if (!userId) {
     return (
@@ -59,13 +67,85 @@ export default async function EditUserPage({ params }: { params: Promise<{ userI
         </div>
       </header>
 
-      <section>
-        <div className="container mx-auto">
+      {/* <section>
+        <div className="container mx-auto flex flex-col gap-4">
           <UserProfilePictureForm userId={user.id} />
-          <UserEditForm action={editUserFormAction} user={user}>
-            <UserAuthRoleForm userId={user.user_id} />
+          <UserEditForm action={editUserFormAction} user={user}></UserEditForm>
+          <UserAuthRoleForm userId={user.user_id} />
             <UserArmyForm userId={user.id} />
-          </UserEditForm>
+        </div>
+      </section> */}
+
+      {/* Edit Profile Form */}
+      <section>
+        <div className="container mx-auto flex flex-col gap-4">
+          {/* Edit User Action - Error  */}
+          {status === 'error' && (
+            <div role="alert" className="alert alert-error">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 shrink-0 stroke-current"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span>{message ? message : 'Unknown error occurred'}</span>
+            </div>
+          )}
+
+          {/* Edit User Action - Success */}
+          {status === 'success' && (
+            <div role="alert" className="alert alert-success">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 shrink-0 stroke-current"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span>{message ? message : 'Profile was sucesfully saved.'}</span>
+            </div>
+          )}
+          <UserProfilePictureForm userId={user.id} />
+          <EditUserForm action={editUserFormAction} user={user} />
+        </div>
+      </section>
+
+      {/* Edit Armies Form */}
+      <section>
+        <div className="container mx-auto ">
+          <div className="card bg-base-200 shadow-md p-4">
+            <div className="card-body">
+              <h2 className="card-title">Roles</h2>
+              <p className="text-sm">Manage {user.username}&apos;s roles here.</p>
+              <UserAuthRoleForm userId={user.user_id} />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Edit Armies Form */}
+      <section>
+        <div className="container mx-auto ">
+          <div className="card bg-base-200 shadow-md p-4">
+            <div className="card-body">
+              <h2 className="card-title">Armies</h2>
+              <p className="text-sm">Manage {user.username}&apos;s armies here.</p>
+              <UserArmyForm userId={user.id} />
+            </div>
+          </div>
         </div>
       </section>
     </main>
