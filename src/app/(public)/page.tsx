@@ -1,6 +1,9 @@
 import LeagueMembersSection from '@/components/sections/LeagueMembersSection'
+import loadMembers from './loaders';
 
 export default async function HomePage() {
+
+  const members = await loadMembers();
   return (
     <main className="flex min-h-screen flex-col items-center">
       {/* Hero */}
@@ -38,7 +41,8 @@ export default async function HomePage() {
       </section>
 
       {/* Members */}
-      <LeagueMembersSection />
+      {/* @ts-ignore - memebers have all properties */}
+      <LeagueMembersSection members={members} />
     </main>
   )
 }

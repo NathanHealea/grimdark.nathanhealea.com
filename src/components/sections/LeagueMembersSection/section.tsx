@@ -1,68 +1,25 @@
-'use client'
-
-import { createClient } from '@/lib/supabase/client'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
 import { LeagueMember, LeagueMemberArmy } from './types'
 
-export default function Members() {
-  const [loading, setLoading] = useState(true)
-  const [members, setMembers] = useState<Array<LeagueMember>>([])
 
-  const supabase = createClient()
+export interface LeagueMemberSectionProps {
+  members?: LeagueMember[] | undefined
+}
 
-  const fetchMembers = async () => {
-    setLoading(true)
-    try {
-      const { data, error } = await supabase
-        .from('users')
-        .select('*, user_armies(*, armies(name))')
-        .eq('status', 'active') // Only fetch active members
-        .order('last_name', { ascending: false }) // Order by most recent
-        .order('first_name', { ascending: true }) // Then by first name
-        .order('username', { ascending: true }) // Then by username
+export default function LeagueMemberSection({ members }: LeagueMemberSectionProps) {
 
-      if (error) {
-        throw error
-      }
-
-      if (!data || data.length === 0) {
-        throw new Error('No members found')
-      }
-
-      // flatten army information to single array.
-      for (const user of data) {
-        user.armies = user.user_armies.map((userArmy: any) => ({
-          id: userArmy.id,
-          name: userArmy.armies.name,
-          imageUrl: userArmy.armies.image_url,
-          isPrimary: userArmy.is_primary,
-        }))
-      }
-
-      setMembers(data)
-      console.log('Fetched members:', data)
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error('Error fetching members:', error.message)
-      } else if (typeof error === 'string') {
-        console.error('Error fetching members:', error)
-      } else {
-        console.error('An unexpected error occurred while fetching members:', error)
-      }
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    fetchMembers()
-  }, [])
-
-  // Do not dispaly if loading or no members
-  if (loading || members.length === 0) {
-    return null
+  if (!members || members.length === 0) {
+    return (
+      <section className="section section-md">
+        <div className="section-content">
+          <div className="content text-center">
+            <h2 className="text-3xl font-bold">League Members</h2>
+            <p className="text-lg">No members found.</p>
+          </div>
+        </div>
+      </section>
+    )
   }
 
   return (
