@@ -6,9 +6,14 @@
 
 -- ====================================================================
 -- 1. Custom Types
--- Defines an ENUM type for different application roles a user can have.
 -- ====================================================================
-create type public.role as enum('user', 'member', 'admin', 'superadmin');
+
+-- Defines an ENUM type for different application roles a user can have.
+create type public.role as enum('user', 'admin', 'superadmin');
+
+-- Defines an ENUM type for user status, which can be used to track the state of a user account.
+create type public.status as enum('active', 'inactive', 'banned', 'deleted');
+
 
 -- ====================================================================
 -- 2. Tables
@@ -41,6 +46,7 @@ create table public.users (
     first_name text, -- User's first name
     last_name text, -- User's last name
     bio text, -- Short biography or description for the user
+    status public.status default 'inactive' not null, -- User's status, defaults to 'active'
     profile_picture_url text, -- URL to the user's profile picture
     created_at timestamp with time zone default now() not null, -- Timestamp of record creation
     updated_at timestamp with time zone default now() not null -- Timestamp of last update

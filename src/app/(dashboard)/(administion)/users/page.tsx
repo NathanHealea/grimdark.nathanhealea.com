@@ -3,6 +3,7 @@ import { User } from '@/types/user.type'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { deleteUserAction } from './actions'
+import Image from 'next/image';
 
 export default async function UsersPage({
   searchParams,
@@ -152,9 +153,10 @@ export default async function UsersPage({
                   <thead>
                     <tr>
                       <th>ID</th>
-                      <th>Profile Picture</th>
+                      <th className='text-center'>Profile Picture</th>
                       <th>Email</th>
                       <th>Role</th>
+                      <th className='text-center'>Status</th>
                       <th>Created At</th>
                       <th>Actions</th>
                     </tr>
@@ -163,17 +165,25 @@ export default async function UsersPage({
                     {data.map((user) => (
                       <tr key={user.id}>
                         <td>{user.id}</td>
-                        <td>
-                          {user.profile_picture_url && (
-                            <img
+                        <td >
+                          <div className='flex justify-center items-center height-full'>
+                          {user.profile_picture_url ? (
+                            <Image
+                              height={40}
+                              width={40}
                               src={user.profile_picture_url}
                               alt={`${user.email}'s profile picture`}
                               className="h-10 w-10 rounded-full"
                             />
+                          ) : (
+                            <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                              <span className="text-gray-500">No Image</span>
+                            </div>
                           )}
+                          </div>
                         </td>
                         <td>{user.email}</td>
-                        <td>
+                        <td className='capitalize'>
                           <ul className="list">
                             {user.roles &&
                               user.roles.map((role) => (
@@ -185,6 +195,9 @@ export default async function UsersPage({
                               <li className="list-tiem text-gray-500">No roles assigned</li>
                             )}
                           </ul>
+                        </td>
+                        <td className='capitalize text-center'>
+                          {user.status}
                         </td>
                         <td>{new Date(user.created_at).toLocaleString()}</td>
                         <td>

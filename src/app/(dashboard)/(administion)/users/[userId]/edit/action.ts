@@ -23,6 +23,7 @@ export default async function editUserFormAction(
       first_name: formData.get('first_name')?.toString() || '',
       last_name: formData.get('last_name')?.toString() || '',
       bio: formData.get('bio')?.toString() || '',
+      status: formData.get('status')?.toString() || '',
       password: formData.get('password')?.toString() || '',
       passwordConfirmation: formData.get('passwordConfirmation')?.toString() || '',
     };
@@ -49,6 +50,7 @@ export default async function editUserFormAction(
           first_name: user.first_name,
           last_name: user.last_name,
           bio: user.bio,
+          status: user.status,
         })
         .eq('id', initialState.state.id)
         .select()
@@ -68,6 +70,11 @@ export default async function editUserFormAction(
           throw passwordError;
         }
       }
+
+      state.state = {
+        ...state.state,
+        ...updatedUser,
+      };
 
       // If the update is successful, set success to true
       state.success = true;
