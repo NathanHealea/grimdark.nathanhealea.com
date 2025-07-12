@@ -50,6 +50,7 @@ export default async function editUserFormAction(
           first_name: user.first_name,
           last_name: user.last_name,
           bio: user.bio,
+          /* @ts-ignore - status is evalulated for null/undefined in validateEditUser()*/
           status: user.status,
         })
         .eq('id', initialState.state.id)

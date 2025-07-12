@@ -7,7 +7,7 @@ export type EditUser = {
   first_name: string | null;
   last_name: string | null;
   bio: string | null;
-  status: string
+  status: string;
   password?: string; // Optional for password updates
   passwordConfirmation?: string; // Optional for password confirmation
 };

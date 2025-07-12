@@ -118,6 +118,7 @@ export type Database = {
           id: number
           last_name: string | null
           profile_picture_url: string | null
+          status: Database["public"]["Enums"]["status"]
           updated_at: string
           user_id: string | null
           username: string | null
@@ -130,6 +131,7 @@ export type Database = {
           id?: number
           last_name?: string | null
           profile_picture_url?: string | null
+          status?: Database["public"]["Enums"]["status"]
           updated_at?: string
           user_id?: string | null
           username?: string | null
@@ -142,6 +144,7 @@ export type Database = {
           id?: number
           last_name?: string | null
           profile_picture_url?: string | null
+          status?: Database["public"]["Enums"]["status"]
           updated_at?: string
           user_id?: string | null
           username?: string | null
@@ -164,6 +167,7 @@ export type Database = {
     }
     Enums: {
       auth_role: "user" | "admin" | "superadmin"
+      status: "active" | "inactive" | "banned" | "deleted"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -292,6 +296,7 @@ export const Constants = {
   public: {
     Enums: {
       auth_role: ["user", "admin", "superadmin"],
+      status: ["active", "inactive", "banned", "deleted"],
     },
   },
 } as const

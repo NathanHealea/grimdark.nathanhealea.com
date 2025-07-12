@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/client'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { LeagueMember } from './types'
+import { LeagueMember, LeagueMemberArmy } from './types'
 
 export default function Members() {
   const [loading, setLoading] = useState(true)
@@ -76,7 +76,7 @@ export default function Members() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-16">
             {members &&
-              members.map((member: LeageMember) => (
+              members.map((member: LeagueMember) => (
                 <Link href="/" key={member.id} className="card bg-base-200 shadow-xl">
                   <div className="card-body gap-4">
                     <h3 className="card-title">
@@ -115,7 +115,7 @@ export default function Members() {
                     <div className="flex flex-col gap-2">
                       <p className="text-sm text-gray-500">Armies:</p>
                       <ul className="list pl-2 text-sm gap-2">
-                        {member.armies.map((army: LeageMemberArmy, index: number) => (
+                        {member.armies.map((army: LeagueMemberArmy, index: number) => (
                           <li key={index}>{army.name}</li>
                         ))}
                       </ul>

@@ -1,11 +1,10 @@
 'use client'
 
+import UserStatusInput from '@/components/inputs/UserStatusInput/input'
 import { FormAction } from '@/types/form.types'
-import { StatusEnum } from '@/enums/status.enum'
+import { Status } from '@/types/status.types'
 import { useActionState } from 'react'
 import { EditUser, EditUserFormState } from './types'
-import UserStatusInput from '@/components/inputs/UserStatusInput/input';
-import { Status } from '@/types/status.types';
 
 interface EditUserFormProps {
   action: FormAction<EditUser>
@@ -21,7 +20,8 @@ export default function EditUserForm(props: EditUserFormProps) {
 
   console.log(state)
 
-  return (    <form className="form flex flex-col gap-4" action={formAction}>
+  return (
+    <form className="form flex flex-col gap-4" action={formAction}>
       {state.errors?.form && (
         <ul className="list text-error">
           {state.errors.form.map((error, index) => (
@@ -35,8 +35,7 @@ export default function EditUserForm(props: EditUserFormProps) {
       {/* Username */}
       <div className="flex flex-col gap-1 w-full">
         <label htmlFor="username" className={`label ${state.errors?.username ? 'text-error' : ''}`}>
-   
-       <span className="label-text">Username</span>
+          <span className="label-text">Username</span>
         </label>
         <label className={`input w-full ${state.errors?.username ? 'input-error' : 'validator'}`}>
           <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -192,8 +191,7 @@ export default function EditUserForm(props: EditUserFormProps) {
           <h2 className="text-lg font-semibold text-warning ">Status</h2>
           <p className="text-sm text-warning">Update the status for {state.state?.username}.</p>
         </div>
-          <UserStatusInput initialStatus={state.state?.status as Status} errors={state.errors?.status} />
-        
+        <UserStatusInput initialStatus={state.state?.status as Status} errors={state.errors?.status} />
       </fieldset>
 
       <fieldset className="fieldset bg-base-200  rounded-bo border border-warning rounded-lg p-4 w-full gap-4">
