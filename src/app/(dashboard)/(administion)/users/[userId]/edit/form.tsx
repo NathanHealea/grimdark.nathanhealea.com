@@ -18,8 +18,6 @@ export default function EditUserForm(props: EditUserFormProps) {
     state: user as EditUser,
   } as EditUserFormState)
 
-  console.log(state)
-
   return (
     <form className="form flex flex-col gap-4" action={formAction}>
       {state.errors?.form && (

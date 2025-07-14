@@ -50,7 +50,6 @@ export default async function userProfilePictureFormAction(
       throw new Error('No file provided for profile picture upload')
     }
     const filePath = `${userId}/profile-picture.${file.type.split('/')[1]}`
-    console.log(`Uploading profile picture for user ${userId} to path: ${filePath}`)
     // Upload the profile picture file
     const { data: profilePictureData, error: profilePictureError } = await supabase.storage
       .from('public-profile-pictures')
@@ -105,7 +104,6 @@ export async function userProfilePictureFormActionHandler(
   formState: UserProfilePictureFormState,
   formData: FormData,
 ): Promise<UserProfilePictureFormState> {
-  console.log('Handling user profile picture form action with form data:', Array.from(formData.entries()))
 
   return formState
 }

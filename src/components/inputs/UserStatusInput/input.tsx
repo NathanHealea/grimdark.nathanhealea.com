@@ -15,7 +15,6 @@ export default function UserStatusInput(props: UserStatusInputProps) {
   const [value, setValue] = useState<Status>(initialStatus)
 
   useEffect(() => {
-    console.log('UserStatusInput useEffect', initialStatus)
     setValue(initialStatus)
   }, [initialStatus])
 
