@@ -26,9 +26,10 @@
       "@/styles/*": ["./src/styles/*"],
       "@/layouts/*": ["./src/layouts/*"],
       "@/models/*": ["./src/models/*"],
-      "@types/*": ["./src/types/*"]
+      "@types/*": ["./src/types/*"],
+      "@enums/*": ["./src/enums/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "supabase"]
 }

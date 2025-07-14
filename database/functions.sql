@@ -46,35 +46,64 @@ security definer -- Runs with the privileges of the function's owner (typically 
 as $$
 DECLARE
     existing_user_id BIGINT; -- Variable to hold the ID of an existing user profile
+    v_username text;
+    v_first_name text;
+    v_last_name text;
+    v_profile_picture_url text; -- Corrected variable name
 BEGIN
     -- Check if a user profile with the new user's email already exists in `public.users`.
-    SELECT id INTO existing_user_id
+    -- We need to select the existing values to compare them with NEW values.
+    SELECT 
+        id,
+        username,
+        first_name,
+        last_name,
+        profile_picture_url
+    INTO 
+        existing_user_id,
+        v_username,
+        v_first_name,
+        v_last_name,
+        v_profile_picture_url
     FROM public.users
     WHERE email = NEW.email; -- NEW refers to the newly inserted row in auth.users
 
     IF existing_user_id IS NOT NULL THEN
         -- If an existing user profile is found (e.g., pre-created by an admin),
         -- update its ID to match the new `auth.users.id` and refresh `updated_at`.
+        -- Only update if the current value in public.users is NULL or an empty string.
         UPDATE public.users
         SET
-          email = COALESCE(NEW.email, public.users.email), 
-          username = COALESCE(NEW.raw_user_meta_data->>'user_name', NEW.raw_user_meta_data->>'username', public.users.username),
-          first_name = COALESCE(NEW.raw_user_meta_data->>'name',NEW.raw_user_meta_data->>'first_name', public.users.first_name), 
-          last_name = COALESCE(NEW.raw_user_meta_data->>'last_name', public.users.last_name),
-          profile_picture_url = COALESCE(NEW.raw_user_meta_data->>'picture', NEW.raw_user_meta_data->>'avatar_url', public.users.profile_picture_url),
-          updated_at = NOW() -- Assuming you have an updated_at column in public.users
+            email = COALESCE(NEW.email, public.users.email), -- Email should generally always be updated if it changes in auth.users
+            username = CASE 
+                            WHEN v_username IS NULL OR v_username = '' THEN COALESCE(NEW.raw_user_meta_data->>'user_name', NEW.raw_user_meta_data->>'username')
+                            ELSE v_username
+                        END,
+            first_name = CASE 
+                            WHEN v_first_name IS NULL OR v_first_name = '' THEN COALESCE(NEW.raw_user_meta_data->>'name', NEW.raw_user_meta_data->>'first_name')
+                            ELSE v_first_name
+                         END, 
+            last_name = CASE 
+                            WHEN v_last_name IS NULL OR v_last_name = '' THEN NEW.raw_user_meta_data->>'last_name'
+                            ELSE v_last_name
+                        END,
+            profile_picture_url = CASE 
+                                    WHEN v_profile_picture_url IS NULL OR v_profile_picture_url = '' THEN COALESCE(NEW.raw_user_meta_data->>'picture', NEW.raw_user_meta_data->>'avatar_url')
+                                    ELSE v_profile_picture_url
+                                  END,
+            updated_at = NOW() -- Assuming you have an updated_at column in public.users
         WHERE id = existing_user_id;
     ELSE
         -- If no existing user profile, create a new one in `public.users`.
         INSERT INTO public.users (user_id, email, username, first_name, last_name, profile_picture_url)
         VALUES (
-          NEW.id, -- Use the auth.users ID as the primary key for public.users
-          NEW.email,
-          -- Attempt to get a username from user metadata, otherwise generate one.
-          coalesce(NEW.raw_user_meta_data->>'username', 'user-' ||SPLIT_PART(NEW.id::TEXT, '-', 5) ),
-          first_name = COALESCE(NEW.raw_user_meta_data->>'name',NEW.raw_user_meta_data->>'first_name', public.users.first_name), 
-          last_name = COALESCE(NEW.raw_user_meta_data->>'last_name', public.users.last_name),
-          profile_picture_url = COALESCE(NEW.raw_user_meta_data->>'picture', NEW.raw_user_meta_data->>'avatar_url', public.users.profile_url)
+            NEW.id, -- Use the auth.users ID as the primary key for public.users
+            NEW.email,
+            -- Attempt to get a username from user metadata, otherwise generate one.
+            coalesce(NEW.raw_user_meta_data->>'username', 'user-' ||SPLIT_PART(NEW.id::TEXT, '-', 5) ),
+            COALESCE(NEW.raw_user_meta_data->>'name', NEW.raw_user_meta_data->>'first_name'), 
+            NEW.raw_user_meta_data->>'last_name',
+            COALESCE(NEW.raw_user_meta_data->>'picture', NEW.raw_user_meta_data->>'avatar_url')
         );
 
         -- Assign a default 'user' role to the newly created user.
@@ -83,5 +112,65 @@ BEGIN
     END IF;
 
     RETURN NEW; -- Return the new row from auth.users (required for AFTER triggers)
+END;
+$$;
+
+-- Function to validate the current password of the authenticated user
+-- This function checks if the provided current password matches the user's stored password.
+-- It raises an exception if the user is not authenticated or if the password does not match.
+-- Returns a JSON response indicating success or failure.
+-- SOURCE: https://github.com/orgs/supabase/discussions/4042
+create or replace function validate_current_password(current_plain_password varchar)
+RETURNS BOOLEAN SECURITY DEFINER AS
+$$
+BEGIN
+  RETURN EXISTS (
+    SELECT id 
+    FROM auth.users 
+    WHERE id = auth.uid() AND encrypted_password = crypt(current_plain_password, auth.users.encrypted_password)
+  );
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+-- 1. Create or Replace the Trigger Function
+-- This function will be executed by the trigger.
+-- It no longer takes arguments, as it accesses the new row data via the 'NEW' record.
+CREATE OR REPLACE FUNCTION public.handle_create_user_profile_directory()
+RETURNS TRIGGER -- A trigger function must return TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER -- This allows the function to run with the privileges of the user who defined it (e.g., supabase_admin)
+AS $$
+DECLARE
+    v_url text := 'http://supabase_edge_runtime_grimdark.nathanhealea.com:8081/create-profile-directory'; -- !! IMPORTANT: Replace with your actual API URL !!
+    v_body jsonb;
+    v_headers jsonb := '{"Content-Type": "application/json", "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0"}'; -- Headers for the request
+    v_response_json jsonb;
+    v_request_result http_response;
+BEGIN
+    -- Get the ID of the newly inserted row from the 'NEW' record.
+    -- 'NEW.id' refers to the 'id' column of the row just inserted into 'public.users'.
+    -- The 'userId' key in the JSON body will contain this ID.
+    v_body := jsonb_build_object('userId', NEW.id)::jsonb;
+
+
+    -- Make the POST request using the http_post function from the http extension
+    -- The arguments are: URL, body, headers
+    PERFORM  (
+    net.http_post(
+        -- url for the request
+        v_url,
+        -- body of the POST request
+        v_body,
+        -- key/value pairs to be url encoded and appended to the `url`
+        null,
+        -- key/values to be included in request headers
+        v_headers,
+        -- the maximum number of milliseconds the request may take before being cancelled
+        1000
+    ) );
+
+    RETURN NEW; -- For AFTER triggers, always return NEW
 END;
 $$;
