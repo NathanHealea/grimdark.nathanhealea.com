@@ -1,9 +1,9 @@
 'use client'
 import useTailwindBreakpoints from '@/hooks/useTailwindBreakPoints'
+import { User } from '@/types/user.type'
 import { useState } from 'react'
 import Navigation from './components/navigation'
 import Sidebar from './components/sidebar'
-import { User } from '@/types/user.type';
 
 export type DashboardLayoutProps = {
   user: User
@@ -28,7 +28,7 @@ export default function DashboardLayout(props: DashboardLayoutProps) {
       </div>
 
       {/* Sidebar */}
-      <Sidebar open={isSidebarOpen} onClose={handleOnClose} />
+      <Sidebar user={user} open={isSidebarOpen} onClose={handleOnClose} />
     </>
   )
 }
