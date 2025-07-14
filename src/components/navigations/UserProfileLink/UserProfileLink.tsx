@@ -15,7 +15,7 @@ export default function UserProfileLink(props: UserProfileLinkProps) {
 
   return (
     <Menu as="div" className="dropdown">
-      <MenuButton className="btn btn-ghost rounded-full p-0">
+      <MenuButton className="btn btn-ghost rounded-full">
         {user.profile_picture_url && (
           <Image
             width={32}

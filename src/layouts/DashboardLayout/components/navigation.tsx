@@ -2,7 +2,7 @@
 
 import UserProfileLink from '@/components/navigations/UserProfileLink'
 import useTailwindBreakpoints from '@/hooks/useTailwindBreakPoints'
-import { User } from '@/types/user.type';
+import { User } from '@/types/user.type'
 import Link from 'next/link'
 
 export type NavigationProps = {
@@ -17,7 +17,7 @@ export default function Navigation(props: NavigationProps) {
   const isMd = useTailwindBreakpoints('md')
 
   return (
-    <nav className="navbar fixed top-0 left-0 z-50 w-screen bg-base-200  border-left-0">
+    <nav className="navbar fixed top-0 left-0 z-50 w-screen bg-base-200  border-left-0 pr-4">
       {!isMd && (
         <div className="flex gap-2">
           <button type="button" className="btn btn-square" onClick={handleOnOpen}>
@@ -39,31 +39,31 @@ export default function Navigation(props: NavigationProps) {
         </div>
       )}
       <div className="flex-1"></div>
+      <div className="navbar-end ">
+        <ul className="menu menu-horizontal gap-2">
+          <li>
+            <Link href="/" className="btn btn-ghost">
+              Home
+            </Link>
+          </li>
+          {!user && (
+            <>
+              <li>
+                <Link href="/register" className="btn btn-ghost">
+                  register
+                </Link>
+              </li>
 
-      <ul className="menu menu-horizontal gap-2">
-        <li>
-          <Link href="/" className="btn btn-ghost">
-            Home
-          </Link>
-        </li>
-        {!user && (
-          <>
-            <li>
-              <Link href="/register" className="btn btn-ghost">
-                register
-              </Link>
-            </li>
-
-            <li>
-              <Link href="/login" className="btn btn-primary">
-                Login
-              </Link>
-            </li>
-          </>
-        )}
-      </ul>
-
-      {user && <UserProfileLink user={user} />}
+              <li>
+                <Link href="/login" className="btn btn-primary">
+                  Login
+                </Link>
+              </li>
+            </>
+          )}
+        </ul>
+        {user && <UserProfileLink user={user} />}
+      </div>
     </nav>
   )
 }
