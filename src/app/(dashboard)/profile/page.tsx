@@ -51,7 +51,7 @@ export default async function ProfilePage({
     console.error('Error fetching user profile:', userProfileError.message)
 
     return (
-      <main className="flex-1 flex min-h-screen flex-col gap-4 p-8 -mt-20 pt-28 ">
+    <main className="flex min-h-screen flex-col gap-8 p-8 pt-24">
         <h1 className="text-2xl font-bold">Error</h1>
         <p className="text-sm text-red-500">Failed to fetch user profile: {userProfileError.message}</p>
       </main>
@@ -61,7 +61,7 @@ export default async function ProfilePage({
   // If the user profile is not found, return an error message
   if (!userProfile) {
     return (
-      <main className="flex-1 flex min-h-screen flex-col gap-4 p-8 -mt-20 pt-28 ">
+    <main className="flex min-h-screen flex-col gap-8 p-8 pt-24">
         <h1 className="text-2xl font-bold">Error</h1>
         <p className="text-sm text-red-500">Failed to fetch user profile.</p>
       </main>
@@ -69,7 +69,7 @@ export default async function ProfilePage({
   }
 
   return (
-    <main className="flex-1 flex min-h-screen flex-col gap-8 p-8 -mt-20 pt-28 ">
+    <main className="flex min-h-screen flex-col gap-8 p-8 pt-24">
       {/* Header */}
       <header className="grid grid-cols-1 md:grid-cols-2 gap-2 w-full">
         {/* Header - Content */}

@@ -31,7 +31,6 @@ export default async function UsersPage({
 
     // Call the delete user action
     const response = await deleteUserAction({ userId: parseInt(userId) })
-    console.log('Delete User Response:', response)
     const { message, success } = response
     redirect(`/users?message=${message}&status=${success ? 'success' : 'error'}`)
   }
@@ -69,7 +68,7 @@ export default async function UsersPage({
   }
 
   return (
-    <main className="flex-1 flex min-h-screen flex-col gap-4 p-8 -mt-20 pt-28 ">
+    <main className="flex min-h-screen flex-col gap-8 p-8 pt-24">
       {/* User Action Error  */}
       {userActionStatus === 'error' && (
         <div className="relative top-0 right-0 p-4">
