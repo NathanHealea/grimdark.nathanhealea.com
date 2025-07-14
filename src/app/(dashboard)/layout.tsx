@@ -4,9 +4,11 @@ import { redirect } from 'next/navigation'
 import DashboardLayout from '@/layouts/DashboardLayout'
 import { User } from '@/types/user.type'
 import '../globals.css'
+import { UserService } from '@/services/UserService';
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient()
+  const userService = new UserService(supabase);
 
   const {
     data: { user: currentUser },
@@ -17,14 +19,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     redirect('/login')
   }
 
-  const { data: userData } = await supabase
-    .from('users')
-    .select('*')
-    .eq('user_id', currentUser.id)
-    .single()
-    .overrideTypes<User>()
+  // Fetch user data using the UserService
+  const user = await userService.getUserByUserId(currentUser.id)
 
-  if (!userData) {
+  if (!user) {
     const searchParams = new URLSearchParams({
       status: '404',
       message: 'User not found',
@@ -33,9 +31,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     // If no user data is found, redirect to the error page
     redirect(`/error?${searchParams.toString()}`)
   }
-
-
-  const user: User = userData
 
   return (
     <html lang="en">

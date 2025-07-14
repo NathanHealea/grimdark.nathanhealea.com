@@ -1,8 +1,10 @@
 'use client'
 import useTailwindBreakpoints from '@/hooks/useTailwindBreakPoints';
+import { User } from '@/types/user.type';
 import { useRouter } from 'next/navigation'
 
 export type SidebarProps = {
+  user: User;
   open?: boolean
   onClose?: () => void
 }
@@ -13,7 +15,7 @@ export type SidebarProps = {
  * @param {SidebarProps} props - The properties for the sidebar component.
  */
 export default function Sidebar(props: SidebarProps) {
-  const { open, onClose: handleOnClose } = props
+  const { user, open, onClose: handleOnClose } = props
   const isMd = useTailwindBreakpoints('md')
   const router = useRouter();
 
@@ -76,6 +78,7 @@ export default function Sidebar(props: SidebarProps) {
               </li>
             </ul>
           </li> */}
+          {user.roles?.some(role => role.role === 'admin' || role.role === 'superadmin') && (
           <li>
             <p className="menu-title">Administration</p>
             <ul className="menu menu-compact w-full">
@@ -91,6 +94,7 @@ export default function Sidebar(props: SidebarProps) {
               </li>
             </ul>
           </li>
+          )}
         </ul>
       </div>
     </aside>
