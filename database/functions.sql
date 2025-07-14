@@ -46,35 +46,64 @@ security definer -- Runs with the privileges of the function's owner (typically 
 as $$
 DECLARE
     existing_user_id BIGINT; -- Variable to hold the ID of an existing user profile
+    v_username text;
+    v_first_name text;
+    v_last_name text;
+    v_profile_picture_url text; -- Corrected variable name
 BEGIN
     -- Check if a user profile with the new user's email already exists in `public.users`.
-    SELECT id INTO existing_user_id
+    -- We need to select the existing values to compare them with NEW values.
+    SELECT 
+        id,
+        username,
+        first_name,
+        last_name,
+        profile_picture_url
+    INTO 
+        existing_user_id,
+        v_username,
+        v_first_name,
+        v_last_name,
+        v_profile_picture_url
     FROM public.users
     WHERE email = NEW.email; -- NEW refers to the newly inserted row in auth.users
 
     IF existing_user_id IS NOT NULL THEN
         -- If an existing user profile is found (e.g., pre-created by an admin),
         -- update its ID to match the new `auth.users.id` and refresh `updated_at`.
+        -- Only update if the current value in public.users is NULL or an empty string.
         UPDATE public.users
         SET
-          email = COALESCE(NEW.email, public.users.email), 
-          username = COALESCE(NEW.raw_user_meta_data->>'user_name', NEW.raw_user_meta_data->>'username', public.users.username),
-          first_name = COALESCE(NEW.raw_user_meta_data->>'name',NEW.raw_user_meta_data->>'first_name', public.users.first_name), 
-          last_name = COALESCE(NEW.raw_user_meta_data->>'last_name', public.users.last_name),
-          profile_picture_url = COALESCE(NEW.raw_user_meta_data->>'picture', NEW.raw_user_meta_data->>'avatar_url', public.users.profile_picture_url),
-          updated_at = NOW() -- Assuming you have an updated_at column in public.users
+            email = COALESCE(NEW.email, public.users.email), -- Email should generally always be updated if it changes in auth.users
+            username = CASE 
+                            WHEN v_username IS NULL OR v_username = '' THEN COALESCE(NEW.raw_user_meta_data->>'user_name', NEW.raw_user_meta_data->>'username')
+                            ELSE v_username
+                        END,
+            first_name = CASE 
+                            WHEN v_first_name IS NULL OR v_first_name = '' THEN COALESCE(NEW.raw_user_meta_data->>'name', NEW.raw_user_meta_data->>'first_name')
+                            ELSE v_first_name
+                         END, 
+            last_name = CASE 
+                            WHEN v_last_name IS NULL OR v_last_name = '' THEN NEW.raw_user_meta_data->>'last_name'
+                            ELSE v_last_name
+                        END,
+            profile_picture_url = CASE 
+                                    WHEN v_profile_picture_url IS NULL OR v_profile_picture_url = '' THEN COALESCE(NEW.raw_user_meta_data->>'picture', NEW.raw_user_meta_data->>'avatar_url')
+                                    ELSE v_profile_picture_url
+                                  END,
+            updated_at = NOW() -- Assuming you have an updated_at column in public.users
         WHERE id = existing_user_id;
     ELSE
         -- If no existing user profile, create a new one in `public.users`.
         INSERT INTO public.users (user_id, email, username, first_name, last_name, profile_picture_url)
         VALUES (
-          NEW.id, -- Use the auth.users ID as the primary key for public.users
-          NEW.email,
-          -- Attempt to get a username from user metadata, otherwise generate one.
-          coalesce(NEW.raw_user_meta_data->>'username', 'user-' ||SPLIT_PART(NEW.id::TEXT, '-', 5) ),
-          first_name = COALESCE(NEW.raw_user_meta_data->>'name',NEW.raw_user_meta_data->>'first_name', public.users.first_name), 
-          last_name = COALESCE(NEW.raw_user_meta_data->>'last_name', public.users.last_name),
-          profile_picture_url = COALESCE(NEW.raw_user_meta_data->>'picture', NEW.raw_user_meta_data->>'avatar_url', public.users.profile_url)
+            NEW.id, -- Use the auth.users ID as the primary key for public.users
+            NEW.email,
+            -- Attempt to get a username from user metadata, otherwise generate one.
+            coalesce(NEW.raw_user_meta_data->>'username', 'user-' ||SPLIT_PART(NEW.id::TEXT, '-', 5) ),
+            COALESCE(NEW.raw_user_meta_data->>'name', NEW.raw_user_meta_data->>'first_name'), 
+            NEW.raw_user_meta_data->>'last_name',
+            COALESCE(NEW.raw_user_meta_data->>'picture', NEW.raw_user_meta_data->>'avatar_url')
         );
 
         -- Assign a default 'user' role to the newly created user.

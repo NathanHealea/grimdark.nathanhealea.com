@@ -86,7 +86,6 @@ export default function UserProfilePictureForm(props: UserProfileImageProps) {
 
       profilePictureUrl = data.profile_picture_url
 
-      console.log('Fetched user profile picture data:', data)
     } catch (error) {
       if (error instanceof Error) {
         errors.form = [error.message]
@@ -124,7 +123,6 @@ export default function UserProfilePictureForm(props: UserProfileImageProps) {
     formData.append('user_id', userId?.toString() || '')
 
     const result = await userProfilePictureFormAction(formState, formData)
-    console.log(result)
     if (result.errors) {
       // If there are errors, update the form state with the errors
       setFormState((prevState) => ({

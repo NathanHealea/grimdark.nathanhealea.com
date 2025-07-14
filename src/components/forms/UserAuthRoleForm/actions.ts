@@ -165,7 +165,6 @@ export default async function roleFormAction(initialState: UserAuthRoleState, fo
   }
 
   // Return the updated state
-  console.log('Role Form Action Result', state);
   return state;
 }
 

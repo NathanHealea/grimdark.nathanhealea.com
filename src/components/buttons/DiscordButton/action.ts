@@ -6,7 +6,6 @@ import { redirect } from 'next/navigation'
 export default async function handleDiscordLogin() {
   const origin = (await headers()).get('origin')
   const supabase = await createClient()
-  console.log('Origin:', origin)
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'discord', // or "github", "facebook", etc.
@@ -18,6 +17,4 @@ export default async function handleDiscordLogin() {
   if (data.url) {
     redirect(data.url) // Redirect to the OAuth provider's login page
   }
-
-  console.log('Discord Login Response:', { data, error })
 }

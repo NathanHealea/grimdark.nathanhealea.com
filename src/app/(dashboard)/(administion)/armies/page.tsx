@@ -28,7 +28,7 @@ export default async function ArmiesPage({
   
 
   return (
-    <main className="flex-1 flex min-h-screen flex-col gap-4 p-8 -mt-20 pt-28 relative">
+    <main className="flex min-h-screen flex-col gap-8 p-8 pt-24">
       {/* Army Action Error  */}
       {armyActionStatus === 'error' && (
         <div className="relative top-0 right-0 p-4">
