@@ -7,10 +7,10 @@ import { useRouter } from 'next/navigation'
 interface LogoutButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
 
 export default function LogoutButton(props: LogoutButtonProps) {
-  const { className = 'btn btn-ghost', ...rest } = props
+  const { className = 'btn btn-ghost', onClick, ...rest } = props
   const router = useRouter()
 
-  const handleLogout = async () => {
+  const handleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const supabase = createClient()
     try {
       const { error } = await supabase.auth.signOut()
@@ -19,6 +19,11 @@ export default function LogoutButton(props: LogoutButtonProps) {
       }
     } catch (error) {
       console.error('Could not sign out:', error)
+    }
+    finally{
+      if(onClick) {
+        onClick(e)
+      }
     }
   }
 
