@@ -34,11 +34,46 @@ Allow users to create an account and log in using email and password through Sup
 ### Approach
 
 1. **Supabase client setup** — Create browser and server Supabase clients using `@supabase/ssr` with cookie-based session management.
-2. **Middleware** — Add Next.js middleware to refresh the auth session on every request.
-3. **Sign up page** — Form with email/password fields. Calls `supabase.auth.signUp()`. Redirects to sign-in or shows confirmation message.
-4. **Sign in page** — Form with email/password fields. Calls `supabase.auth.signInWithPassword()`. Redirects to home on success.
-5. **Auth callback route** — Handles the code exchange from Supabase email confirmation links.
-6. **Sign out** — Server action or API route calling `supabase.auth.signOut()`, then redirect to sign-in.
+   - `src/lib/supabase/client.ts` — Browser client created with `createBrowserClient()` from `@supabase/ssr`. Used in client components.
+   - `src/lib/supabase/server.ts` — Server client created with `createServerClient()` from `@supabase/ssr`. Reads/writes auth tokens via Next.js `cookies()`. Used in server components, server actions, and route handlers.
+   - Both clients reference `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` from environment variables.
+
+2. **Middleware** — Add Next.js middleware (`src/middleware.ts`) to refresh the auth session on every request.
+   - Creates a server Supabase client within the middleware using the request/response cookie accessors.
+   - Calls `supabase.auth.getUser()` to refresh the session and rewrite expired tokens into the response cookies.
+   - Runs on all routes via a `matcher` config that excludes static assets (`_next/static`, `_next/image`, `favicon.ico`).
+   - Does **not** handle redirects or route protection — that is handled separately in the [protected routes](./protected-routes.md) feature.
+
+3. **Sign up page** — `src/app/(auth)/sign-up/page.tsx`
+   - Client component with a form containing email and password fields.
+   - On submit, calls a server action that invokes `supabase.auth.signUp({ email, password })`.
+   - On success, displays a confirmation message prompting the user to check their email.
+   - On error (duplicate email, weak password), displays the error message inline.
+   - Includes a link to the sign-in page for existing users.
+
+4. **Sign in page** — `src/app/(auth)/sign-in/page.tsx`
+   - Client component with a form containing email and password fields.
+   - On submit, calls a server action that invokes `supabase.auth.signInWithPassword({ email, password })`.
+   - On success, redirects to the home page (`/`).
+   - On error (invalid credentials), displays the error message inline.
+   - Includes a link to the sign-up page for new users.
+
+5. **Auth callback route** — `src/app/auth/callback/route.ts`
+   - Next.js route handler (`GET`) that handles the redirect from Supabase email confirmation links.
+   - Reads the `code` query parameter from the URL.
+   - Calls `supabase.auth.exchangeCodeForSession(code)` to complete the email verification.
+   - On success, redirects to the home page or a `next` URL if provided.
+   - On error, redirects to an error page or sign-in with an error message.
+
+6. **Sign out** — Server action calling `supabase.auth.signOut()`, then redirect to sign-in.
+   - Exposed as a server action in `src/app/(auth)/actions.ts` (shared across auth-related components).
+   - Can be triggered from a sign-out button in the app navigation.
+   - After sign out, redirects to `/sign-in`.
+
+7. **Auth server actions** — `src/app/(auth)/actions.ts`
+   - Centralizes all auth-related server actions: `signUp`, `signIn`, `signOut`.
+   - Each action creates a server Supabase client, performs the auth call, and returns errors or redirects.
+   - Form pages call these actions via React `useActionState` (or direct invocation) to handle loading and error states.
 
 ### Notes
 
