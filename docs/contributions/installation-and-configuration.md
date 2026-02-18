@@ -41,12 +41,12 @@ Once started, note the **Project URL** and **Publishable key** from the output, 
 npx supabase status
 ```
 
-| Service | URL |
-|---|---|
-| API | `http://127.0.0.1:54321` |
-| Studio (Dashboard) | `http://127.0.0.1:54323` |
-| Mailpit (Email Inbox) | `http://127.0.0.1:54324` |
-| Database | `postgresql://postgres:postgres@127.0.0.1:54322/postgres` |
+| Service               | URL                                                       |
+| --------------------- | --------------------------------------------------------- |
+| API                   | `http://127.0.0.1:54321`                                  |
+| Studio (Dashboard)    | `http://127.0.0.1:54323`                                  |
+| Mailpit (Email Inbox) | `http://127.0.0.1:54324`                                  |
+| Database              | `postgresql://postgres:postgres@127.0.0.1:54322/postgres` |
 
 ## 4. Configure Environment Variables
 
@@ -77,14 +77,14 @@ When signing up locally, Supabase does not send real emails. Use **Mailpit** at 
 
 ## Useful Commands
 
-| Command | Description |
-|---|---|
-| `npx supabase status` | Show local Supabase URLs and keys |
-| `npx supabase stop` | Stop local Supabase services |
-| `npx supabase db reset` | Drop and re-run all migrations from scratch |
-| `npm run db:types` | Regenerate TypeScript types from the database schema |
-| `npm run prettify` | Format all files with Prettier |
-| `npm run lint` | Run ESLint |
+| Command                 | Description                                          |
+| ----------------------- | ---------------------------------------------------- |
+| `npx supabase status`   | Show local Supabase URLs and keys                    |
+| `npx supabase stop`     | Stop local Supabase services                         |
+| `npx supabase db reset` | Drop and re-run all migrations from scratch          |
+| `npm run db:types`      | Regenerate TypeScript types from the database schema |
+| `npm run prettify`      | Format all files with Prettier                       |
+| `npm run lint`          | Run ESLint                                           |
 
 ---
 

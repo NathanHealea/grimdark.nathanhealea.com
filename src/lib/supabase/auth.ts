@@ -9,9 +9,9 @@ type AuthResultWithProfile = { user: User; profile: Profile }
 
 export async function getAuthUser(options: { withProfile: true }): Promise<AuthResultWithProfile | null>
 export async function getAuthUser(options?: { withProfile?: false }): Promise<AuthResult | null>
-export async function getAuthUser(
-  options?: { withProfile?: boolean },
-): Promise<AuthResult | AuthResultWithProfile | null> {
+export async function getAuthUser(options?: {
+  withProfile?: boolean
+}): Promise<AuthResult | AuthResultWithProfile | null> {
   const supabase = await createClient()
 
   const {

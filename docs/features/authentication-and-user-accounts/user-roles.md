@@ -28,20 +28,20 @@ Admins can grant or revoke the `member` and `admin` roles through an admin inter
 
 ### `roles` Table
 
-| Column | Type | Constraints |
-| ------ | ---- | ----------- |
-| `id` | `serial` | Primary key |
-| `name` | `text` | Unique, not null |
+| Column | Type     | Constraints      |
+| ------ | -------- | ---------------- |
+| `id`   | `serial` | Primary key      |
+| `name` | `text`   | Unique, not null |
 
 Seeded with three rows: `user`, `member`, `admin`.
 
 ### `user_roles` Table
 
-| Column | Type | Constraints |
-| ------ | ---- | ----------- |
-| `user_id` | `uuid` | FK → `profiles.id` on delete cascade, part of composite PK |
-| `role_id` | `int` | FK → `roles.id`, part of composite PK |
-| `assigned_at` | `timestamptz` | Not null, default `now()` |
+| Column        | Type          | Constraints                                                |
+| ------------- | ------------- | ---------------------------------------------------------- |
+| `user_id`     | `uuid`        | FK → `profiles.id` on delete cascade, part of composite PK |
+| `role_id`     | `int`         | FK → `roles.id`, part of composite PK                      |
+| `assigned_at` | `timestamptz` | Not null, default `now()`                                  |
 
 Composite primary key on `(user_id, role_id)`.
 

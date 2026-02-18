@@ -10,18 +10,18 @@ Create a `factions` reference table containing all official Warhammer 40k factio
 
 ### `factions` table
 
-| Column       | Type         | Constraints              |
-| ------------ | ------------ | ------------------------ |
-| `id`         | UUID         | PK, default `gen_random_uuid()` |
-| `name`       | TEXT         | NOT NULL, UNIQUE         |
-| `created_at` | TIMESTAMPTZ  | default `now()`          |
+| Column       | Type        | Constraints                     |
+| ------------ | ----------- | ------------------------------- |
+| `id`         | UUID        | PK, default `gen_random_uuid()` |
+| `name`       | TEXT        | NOT NULL, UNIQUE                |
+| `created_at` | TIMESTAMPTZ | default `now()`                 |
 
 ### `profile_factions` join table
 
-| Column       | Type | Constraints                    |
-| ------------ | ---- | ------------------------------ |
-| `profile_id` | UUID | FK to `profiles.id`, NOT NULL  |
-| `faction_id` | UUID | FK to `factions.id`, NOT NULL  |
+| Column       | Type | Constraints                   |
+| ------------ | ---- | ----------------------------- |
+| `profile_id` | UUID | FK to `profiles.id`, NOT NULL |
+| `faction_id` | UUID | FK to `factions.id`, NOT NULL |
 
 Composite primary key on (`profile_id`, `faction_id`).
 
