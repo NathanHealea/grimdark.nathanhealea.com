@@ -1,12 +1,10 @@
-import { createClient } from '@/lib/supabase/server'
+import { getAuthUser } from '@/lib/supabase/auth'
 import Link from 'next/link'
 import { signOut } from './(auth)/actions'
 
 export default async function Home() {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const auth = await getAuthUser()
+  const user = auth?.user ?? null
 
   return (
     <div className="min-h-screen">
