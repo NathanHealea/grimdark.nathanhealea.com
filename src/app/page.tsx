@@ -16,11 +16,16 @@ export default async function Home() {
         </div>
         <div className="flex gap-2">
           {user ? (
-            <form action={signOut}>
-              <button type="submit" className="btn btn-outline btn-error">
-                Sign Out
-              </button>
-            </form>
+            <>
+              <Link href="/profile/edit" className="btn btn-ghost">
+                Edit Profile
+              </Link>
+              <form action={signOut}>
+                <button type="submit" className="btn btn-outline btn-error">
+                  Sign Out
+                </button>
+              </form>
+            </>
           ) : (
             <>
               <Link href="/sign-in" className="btn btn-ghost">
