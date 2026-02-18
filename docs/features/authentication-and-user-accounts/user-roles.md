@@ -14,15 +14,15 @@ Admins can grant or revoke the `member` and `admin` roles through an admin inter
 
 ## Acceptance Criteria
 
-- [ ] A `roles` table exists with seeded `user`, `member`, and `admin` entries
-- [ ] A `user_roles` table links users to roles (many-to-many — a user can hold multiple roles)
-- [ ] New users are automatically assigned the `user` role upon profile creation
-- [ ] The `user` role cannot be removed from any account
+- [x] A `roles` table exists with seeded `user`, `member`, and `admin` entries
+- [x] A `user_roles` table links users to roles (many-to-many — a user can hold multiple roles)
+- [x] New users are automatically assigned the `user` role upon profile creation
+- [x] The `user` role cannot be removed from any account
 - [ ] At least one admin is seeded or manually assigned in the database
 - [ ] Admins can grant or revoke the `member` and `admin` roles via an admin interface
-- [ ] RLS policies on `user_roles` prevent non-admin users from modifying role assignments
-- [ ] A helper function or utility exists to check a user's roles on the server
-- [ ] Role information is available in middleware for route-level access control
+- [x] RLS policies on `user_roles` prevent non-admin users from modifying role assignments
+- [x] A helper function or utility exists to check a user's roles on the server
+- [x] Role information is available in middleware for route-level access control
 
 ## Data Model
 
