@@ -34,6 +34,7 @@ Epic Template:
 - [Sign up / sign in via Supabase Auth (email/password)](./features/authentication-and-user-accounts/sign-up-sign-in.md)
 - [User profile creation on first login](./features/authentication-and-user-accounts/user-profile-creation-on-first-login.md)
 - [Protected routes for authenticated features](./features/authentication-and-user-accounts/protected-routes.md)
+- [User roles (user, member, admin)](./features/authentication-and-user-accounts/user-roles.md)
 
 ### Epic: League Information
 
@@ -54,6 +55,17 @@ Epic Template:
 - [Member profile page (display name, faction/army, bio)](./features/member-profiles/member-profile-page.md)
 - [Member directory listing all active league participants](./features/member-profiles/member-directory.md)
 - [Members can edit their own profile](./features/member-profiles/edit-own-profile.md)
+
+### Epic: Factions
+
+**Goal:** Provide a managed list of Warhammer 40k factions that users can associate with their profiles and reference in forms like battle reports.
+
+**High-Level Scope:**
+
+- [Factions data model and seed data](./features/factions/factions-data-model.md)
+- [Browse factions page](./features/factions/browse-factions.md)
+- [Select factions for profile](./features/factions/select-factions-for-profile.md)
+- [Reusable faction selector component](./features/factions/faction-selector-component.md)
 
 ### Epic: Battle Reports
 

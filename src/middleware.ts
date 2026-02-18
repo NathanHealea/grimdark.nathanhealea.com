@@ -3,6 +3,7 @@ import { type NextRequest, NextResponse } from 'next/server'
 
 const PUBLIC_ROUTES = ['/sign-in', '/sign-up', '/auth/callback']
 const PROFILE_SETUP_ROUTE = '/profile/setup'
+const ADMIN_ROUTE_PREFIX = '/admin'
 
 export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request })
@@ -56,6 +57,22 @@ export async function middleware(request: NextRequest) {
     const url = request.nextUrl.clone()
     url.pathname = PROFILE_SETUP_ROUTE
     return NextResponse.redirect(url)
+  }
+
+  // Role-based route protection for admin routes
+  if (pathname.startsWith(ADMIN_ROUTE_PREFIX)) {
+    const { data: adminRole } = await supabase
+      .from('user_roles')
+      .select('role_id, roles(name)')
+      .eq('user_id', user.id)
+      .eq('roles.name', 'admin')
+      .single()
+
+    if (!adminRole) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/'
+      return NextResponse.redirect(url)
+    }
   }
 
   return supabaseResponse
