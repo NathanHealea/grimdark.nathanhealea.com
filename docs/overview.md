@@ -66,6 +66,7 @@ Epic Template:
 - [ ] [Member directory listing all active league participants](./features/member-profiles/member-directory.md)
 - [x] [Members can edit their own profile](./features/member-profiles/edit-own-profile.md)
 - [ ] [Admins can edit any member's profile](./features/member-profiles/admin-edit-profile.md)
+- [ ] [Profile picture display (avatar from OAuth provider)](./features/member-profiles/profile-picture.md)
 
 ### Epic: Factions
 

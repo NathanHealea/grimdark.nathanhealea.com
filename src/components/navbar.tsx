@@ -17,7 +17,12 @@ export default async function Navbar() {
       </div>
       <div className="flex gap-2">
         {user ? (
-          <UserMenu profileId={profile?.profile_id} signOutAction={signOut} />
+          <UserMenu
+            profileId={profile?.profile_id}
+            avatarUrl={profile?.avatar_url}
+            displayName={profile?.display_name}
+            signOutAction={signOut}
+          />
         ) : (
           <>
             <Link href="/sign-in" className="btn btn-ghost">

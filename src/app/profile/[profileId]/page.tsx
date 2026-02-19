@@ -1,3 +1,4 @@
+import Avatar from '@/components/avatar'
 import { getAuthUser } from '@/lib/supabase/auth'
 import { createClient } from '@/lib/supabase/server'
 import { getFactions, getProfileFactionIds } from '@/modules/faction/queries'
@@ -60,7 +61,8 @@ export default async function ProfilePage({ params }: { params: Promise<{ profil
   return (
     <div className="flex-1 flex items-center justify-center w-full px-4 py-24">
       <div className="card w-full max-w-md bg-base-200 shadow-xl">
-        <div className="card-body">
+        <div className="card-body items-center">
+          <Avatar src={typedProfile.avatar_url} displayName={typedProfile.display_name} size="lg" />
           <h1 className="card-title text-2xl">{typedProfile.display_name}</h1>
           <p className="text-sm text-base-content/50">Member since {memberSince}</p>
 

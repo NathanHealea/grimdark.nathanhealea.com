@@ -1,19 +1,22 @@
 'use client'
 
+import Avatar from '@/components/avatar'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { UserCircleIcon } from '@heroicons/react/24/solid'
 import Link from 'next/link'
 
 type UserMenuProps = {
   profileId?: number
+  avatarUrl?: string | null
+  displayName?: string
   signOutAction: () => Promise<void>
 }
 
-export default function UserMenu({ profileId, signOutAction }: UserMenuProps) {
+export default function UserMenu({ profileId, avatarUrl, displayName, signOutAction }: UserMenuProps) {
   return (
     <Menu as="div" className="relative">
       <MenuButton className="btn btn-ghost btn-circle">
-        <UserCircleIcon className="size-6" />
+        {displayName ? <Avatar src={avatarUrl ?? null} displayName={displayName} size="sm" /> : <UserCircleIcon className="size-6" />}
       </MenuButton>
 
       <MenuItems
