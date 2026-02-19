@@ -33,6 +33,8 @@ export async function updateProfile(prevState: ProfileFormState, formData: FormD
     return { errors: { faction_ids: factionError } }
   }
 
+  const avatarUrl = formData.get('avatar_url') as string | null
+
   const trimmed = displayName.trim()
 
   // Check uniqueness (case-insensitive), excluding the current user's own row
@@ -47,13 +49,16 @@ export async function updateProfile(prevState: ProfileFormState, formData: FormD
     return { errors: { display_name: 'Display name is already taken.' } }
   }
 
-  const { error } = await supabase
-    .from('profiles')
-    .update({
-      display_name: trimmed,
-      bio: bio.trim() || null,
-    })
-    .eq('id', user.id)
+  const updateData: Record<string, string | null> = {
+    display_name: trimmed,
+    bio: bio.trim() || null,
+  }
+
+  if (avatarUrl) {
+    updateData.avatar_url = avatarUrl
+  }
+
+  const { error } = await supabase.from('profiles').update(updateData).eq('id', user.id)
 
   if (error) {
     if (error.code === '23505') {

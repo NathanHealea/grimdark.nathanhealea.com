@@ -14,7 +14,7 @@ export default async function EditProfilePage() {
 
   return (
     <div className="flex-1 flex items-center justify-center w-full px-4 py-24">
-      <EditProfileForm profile={auth.profile} factions={factions} selectedFactionIds={selectedFactionIds} />
+      <EditProfileForm profile={auth.profile} userId={auth.user.id} factions={factions} selectedFactionIds={selectedFactionIds} />
     </div>
   )
 }
