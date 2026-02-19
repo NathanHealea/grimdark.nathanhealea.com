@@ -54,12 +54,12 @@ export default function SignInPage() {
 
         <div className="divider">OR</div>
 
-        <form action={signInWithGoogle}>
+        {/* <form action={signInWithGoogle}>
           <button type="submit" className="btn btn-outline w-full">
             <GoogleIcon className="h-5 w-5" />
             Continue with Google
           </button>
-        </form>
+        </form> */}
 
         <form action={signInWithDiscord}>
           <button type="submit" className="btn btn-outline w-full">
