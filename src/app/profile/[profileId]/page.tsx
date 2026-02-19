@@ -58,7 +58,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ profil
   })
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
+    <div className="flex-1 flex items-center justify-center w-full px-4 py-24">
       <div className="card w-full max-w-md bg-base-200 shadow-xl">
         <div className="card-body">
           <h1 className="card-title text-2xl">{typedProfile.display_name}</h1>
