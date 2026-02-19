@@ -9,7 +9,7 @@ export default function SignInPage() {
 
   return (
     <div className="card w-full max-w-md bg-base-200 shadow-xl">
-      <div className="card-body">
+      <div className="card-body gap-4">
         <h1 className="card-title text-2xl">Sign In</h1>
 
         {state?.error && (
@@ -19,29 +19,31 @@ export default function SignInPage() {
         )}
 
         <form action={formAction} className="flex flex-col gap-4">
-          <label className="fieldset-label" htmlFor="email">
-            Email
-          </label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            placeholder="you@example.com"
-            className="input input-bordered w-full"
-            required
-          />
+          <fieldset className="fieldset">
+            <label className="label" htmlFor="email">
+              Email
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="you@example.com"
+              className="input input-bordered w-full"
+              required
+            />
 
-          <label className="fieldset-label" htmlFor="password">
-            Password
-          </label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            placeholder="••••••••"
-            className="input input-bordered w-full"
-            required
-          />
+            <label className="label" htmlFor="password">
+              Password
+            </label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="••••••••"
+              className="input input-bordered w-full"
+              required
+            />
+          </fieldset>
 
           <button type="submit" className="btn btn-primary w-full" disabled={pending}>
             {pending ? <span className="loading loading-spinner loading-sm" /> : 'Sign In'}
