@@ -1,7 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
-import { type ProfileFormState, validateBio, validateDisplayName } from '@/modules/profile/validation'
+import { type ProfileFormState, validateBio, validateDisplayName, validateFactionIds } from '@/modules/profile/validation'
 
 export async function updateProfile(prevState: ProfileFormState, formData: FormData): Promise<ProfileFormState> {
   const supabase = await createClient()
@@ -25,6 +25,12 @@ export async function updateProfile(prevState: ProfileFormState, formData: FormD
   const bioError = validateBio(bio)
   if (bioError) {
     return { errors: { bio: bioError } }
+  }
+
+  const factionIds = formData.getAll('faction_ids') as string[]
+  const factionError = validateFactionIds(factionIds)
+  if (factionError) {
+    return { errors: { faction_ids: factionError } }
   }
 
   const trimmed = displayName.trim()
@@ -54,6 +60,17 @@ export async function updateProfile(prevState: ProfileFormState, formData: FormD
       return { errors: { display_name: 'Display name is already taken.' } }
     }
     return { error: 'Failed to update profile. Please try again.' }
+  }
+
+  // Clear-and-replace faction associations
+  await supabase.from('profile_factions').delete().eq('profile_id', user.id)
+
+  if (factionIds.length > 0) {
+    const rows = factionIds.map((faction_id) => ({ profile_id: user.id, faction_id }))
+    const { error: factionInsertError } = await supabase.from('profile_factions').insert(rows)
+    if (factionInsertError) {
+      console.error('Failed to update faction associations:', factionInsertError)
+    }
   }
 
   return { success: 'Profile updated successfully.' }

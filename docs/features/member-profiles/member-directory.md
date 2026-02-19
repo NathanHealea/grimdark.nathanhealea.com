@@ -1,6 +1,7 @@
 # Member Directory
 
 **Epic:** Member Profiles
+**Status:** Todo
 
 ## Summary
 

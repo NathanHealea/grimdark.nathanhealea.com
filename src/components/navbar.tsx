@@ -1,6 +1,7 @@
 import { getAuthUser } from '@/lib/supabase/auth'
 import Link from 'next/link'
 import { signOut } from '@/app/(auth)/actions'
+import UserMenu from './user-menu'
 
 export default async function Navbar() {
   const auth = await getAuthUser({ withProfile: true })
@@ -8,7 +9,7 @@ export default async function Navbar() {
   const profile = auth ? auth.profile : null
 
   return (
-    <nav className="navbar bg-base-200">
+    <nav className="navbar sticky top-0 z-40 bg-base-200">
       <div className="flex-1">
         <Link href="/" className="btn btn-ghost text-xl">
           Grimdark League
@@ -16,21 +17,7 @@ export default async function Navbar() {
       </div>
       <div className="flex gap-2">
         {user ? (
-          <>
-            {profile && (
-              <Link href={`/profile/${profile.profile_id}`} className="btn btn-ghost">
-                My Profile
-              </Link>
-            )}
-            <Link href="/profile/edit" className="btn btn-ghost">
-              Edit Profile
-            </Link>
-            <form action={signOut}>
-              <button type="submit" className="btn btn-outline btn-error">
-                Sign Out
-              </button>
-            </form>
-          </>
+          <UserMenu profileId={profile?.profile_id} signOutAction={signOut} />
         ) : (
           <>
             <Link href="/sign-in" className="btn btn-ghost">

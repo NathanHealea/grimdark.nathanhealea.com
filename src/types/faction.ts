@@ -5,6 +5,10 @@ export type Faction = {
   created_at: string
 }
 
+export type FactionNode = Faction & {
+  children: FactionNode[]
+}
+
 export type ProfileFaction = {
   profile_id: string
   faction_id: string

@@ -1,10 +1,12 @@
 'use client'
 
+import FactionSelector from '@/modules/faction/components/faction-selector'
+import { type ProfileFormState, validateDisplayName } from '@/modules/profile/validation'
+import type { Faction } from '@/types/faction'
 import { useActionState, useRef } from 'react'
 import { setupProfile } from './actions'
-import { type ProfileFormState, validateDisplayName } from '@/modules/profile/validation'
 
-export default function ProfileForm() {
+export default function ProfileForm({ factions }: { factions: Faction[] }) {
   const [state, formAction, pending] = useActionState<ProfileFormState, FormData>(setupProfile, null)
   const displayNameRef = useRef<HTMLInputElement>(null)
 
@@ -23,10 +25,11 @@ export default function ProfileForm() {
   }
 
   const fieldError = state?.errors?.display_name
+  const factionFieldError = state?.errors?.faction_ids
 
   return (
     <div className="card w-full max-w-md bg-base-200 shadow-xl">
-      <div className="card-body">
+      <div className="card-body gap-4">
         <h1 className="card-title text-2xl">Set Up Your Profile</h1>
         <p className="text-base-content/70">Choose a display name to get started. You can add more details later.</p>
 
@@ -37,8 +40,8 @@ export default function ProfileForm() {
         )}
 
         <form action={handleSubmit} className="flex flex-col gap-4">
-          <div>
-            <label className="fieldset-label" htmlFor="display_name">
+          <fieldset className="fieldset">
+            <label className="label" htmlFor="display_name">
               Display Name
             </label>
             <input
@@ -53,10 +56,13 @@ export default function ProfileForm() {
               maxLength={50}
               onChange={() => displayNameRef.current?.setCustomValidity('')}
             />
-            {fieldError && <p className="mt-1 text-sm text-error">{fieldError}</p>}
-          </div>
+            {fieldError && <p className="label">{fieldError}</p>}
 
-          <button type="submit" className="btn btn-primary w-full" disabled={pending}>
+            <label className="label">Factions (optional)</label>
+            <FactionSelector factions={factions} error={factionFieldError} />
+          </fieldset>
+
+          <button type="submit" className="btn btn-success w-full" disabled={pending}>
             {pending ? <span className="loading loading-spinner loading-sm" /> : 'Continue'}
           </button>
         </form>

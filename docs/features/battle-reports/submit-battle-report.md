@@ -1,6 +1,7 @@
 # Submit a Battle Report
 
 **Epic:** Battle Reports
+**Status:** Todo
 
 ## Summary
 

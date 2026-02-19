@@ -1,6 +1,7 @@
 # Protected Routes for Authenticated Features
 
 **Epic:** Authentication & User Accounts
+**Status:** Completed
 
 ## Summary
 

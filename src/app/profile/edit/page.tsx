@@ -1,4 +1,5 @@
 import { getAuthUser } from '@/lib/supabase/auth'
+import { getFactions, getProfileFactionIds } from '@/modules/faction/queries'
 import { redirect } from 'next/navigation'
 import EditProfileForm from './edit-profile-form'
 
@@ -9,9 +10,11 @@ export default async function EditProfilePage() {
     redirect('/sign-in')
   }
 
+  const [factions, selectedFactionIds] = await Promise.all([getFactions(), getProfileFactionIds(auth.user.id)])
+
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <EditProfileForm profile={auth.profile} />
+    <div className="flex-1 flex items-center justify-center w-full px-4 py-24">
+      <EditProfileForm profile={auth.profile} factions={factions} selectedFactionIds={selectedFactionIds} />
     </div>
   )
 }

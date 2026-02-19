@@ -1,6 +1,7 @@
 # Factions Data Model
 
 **Epic:** Factions
+**Status:** Completed
 
 ## Summary
 

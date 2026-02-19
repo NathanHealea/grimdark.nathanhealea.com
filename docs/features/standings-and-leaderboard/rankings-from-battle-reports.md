@@ -1,6 +1,7 @@
 # Rankings Calculated from Battle Reports
 
 **Epic:** Standings & Leaderboard
+**Status:** Todo
 
 ## Summary
 

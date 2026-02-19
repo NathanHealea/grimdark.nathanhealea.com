@@ -1,6 +1,7 @@
 # Battle Report Detail View
 
 **Epic:** Battle Reports
+**Status:** Todo
 
 ## Summary
 

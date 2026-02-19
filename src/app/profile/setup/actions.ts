@@ -2,7 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { type ProfileFormState, validateDisplayName } from '@/modules/profile/validation'
+import { type ProfileFormState, validateDisplayName, validateFactionIds } from '@/modules/profile/validation'
 
 export async function setupProfile(prevState: ProfileFormState, formData: FormData): Promise<ProfileFormState> {
   const supabase = await createClient()
@@ -20,6 +20,12 @@ export async function setupProfile(prevState: ProfileFormState, formData: FormDa
 
   if (fieldError) {
     return { errors: { display_name: fieldError } }
+  }
+
+  const factionIds = formData.getAll('faction_ids') as string[]
+  const factionError = validateFactionIds(factionIds)
+  if (factionError) {
+    return { errors: { faction_ids: factionError } }
   }
 
   const trimmed = displayName.trim()
@@ -41,6 +47,15 @@ export async function setupProfile(prevState: ProfileFormState, formData: FormDa
       return { errors: { display_name: 'Display name is already taken.' } }
     }
     return { error: 'Failed to create profile. Please try again.' }
+  }
+
+  // Insert faction associations (non-blocking — profile already created)
+  if (factionIds.length > 0) {
+    const rows = factionIds.map((faction_id) => ({ profile_id: user.id, faction_id }))
+    const { error: factionInsertError } = await supabase.from('profile_factions').insert(rows)
+    if (factionInsertError) {
+      console.error('Failed to insert faction associations:', factionInsertError)
+    }
   }
 
   redirect('/')

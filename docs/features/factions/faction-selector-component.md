@@ -1,6 +1,7 @@
 # Faction Selector Component
 
 **Epic:** Factions
+**Status:** Todo
 
 ## Summary
 
