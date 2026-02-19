@@ -67,7 +67,7 @@ export default function ProfileForm({ factions }: { factions: Faction[] }) {
             />
           </div>
 
-          <button type="submit" className="btn btn-primary w-full" disabled={pending}>
+          <button type="submit" className="btn btn-success w-full" disabled={pending}>
             {pending ? <span className="loading loading-spinner loading-sm" /> : 'Continue'}
           </button>
         </form>

@@ -1,38 +1,41 @@
 @import 'tailwindcss';
+
 @plugin 'daisyui' {
   themes: grimdark --default;
 }
 
+
 @plugin "daisyui/theme" {
-  name: "grimdark";
+  name: "Grimdakr";
   default: true;
-
-  --color-primary: #c9a84c;
-  --color-primary-content: #0a0a0a;
-
-  --color-secondary: #2a2a2a;
-  --color-secondary-content: #e5e5e5;
-
-  --color-accent: #c9a84c;
-  --color-accent-content: #0a0a0a;
-
-  --color-neutral: #141414;
-  --color-neutral-content: #a3a3a3;
-
+  prefersdark: true;
+  color-scheme: "dark";
   --color-base-100: #0a0a0a;
   --color-base-200: #141414;
   --color-base-300: #2a2a2a;
   --color-base-content: #e5e5e5;
-
+  --color-primary: #c9a84c;
+  --color-primary-content: #0a0a0a;
+  --color-secondary: #2a2a2a;
+  --color-secondary-content: #e5e5e5;
+  --color-accent: #c9a84c;
+  --color-accent-content: #0a0a0a;
+  --color-neutral: #141414;
+  --color-neutral-content: #a3a3a3;
   --color-info: #4a6a8b;
   --color-info-content: #e5e5e5;
-
   --color-success: #4a7c59;
   --color-success-content: #e5e5e5;
-
-  --color-warning: #a3a3a3;
-  --color-warning-content: #0a0a0a;
-
+  --color-warning: #a36b2b;
+  --color-warning-content: #e5e5e5;
   --color-error: #8b2020;
   --color-error-content: #e5e5e5;
+  --radius-selector: 2rem;
+  --radius-field: 0.5rem;
+  --radius-box: 1rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 2px;
+  --depth: 1;
+  --noise: 1;
 }

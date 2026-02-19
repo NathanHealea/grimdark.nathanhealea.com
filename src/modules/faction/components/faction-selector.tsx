@@ -100,7 +100,7 @@ export default function FactionSelector({
         </select>
         <button
           type="button"
-          className="btn btn-primary"
+          className="btn btn-success"
           onClick={handleAdd}
           disabled={!selectValue}
         >
