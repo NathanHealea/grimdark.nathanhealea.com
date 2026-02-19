@@ -1,6 +1,7 @@
 # Member Profile Page
 
 **Epic:** Member Profiles
+**Status:** Completed
 
 ## Summary
 

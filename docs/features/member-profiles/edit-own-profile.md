@@ -1,6 +1,7 @@
 # Edit Own Profile
 
 **Epic:** Member Profiles
+**Status:** Completed
 
 ## Summary
 

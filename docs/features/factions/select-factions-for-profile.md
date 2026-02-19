@@ -1,6 +1,7 @@
 # Select Factions for Profile
 
 **Epic:** Factions
+**Status:** In Progress
 
 ## Summary
 

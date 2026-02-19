@@ -1,6 +1,7 @@
 # User Profile Creation on First Login
 
 **Epic:** Authentication & User Accounts
+**Status:** Completed
 
 ## Summary
 

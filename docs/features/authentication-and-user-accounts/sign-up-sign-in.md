@@ -1,6 +1,7 @@
 # Sign Up / Sign In via Supabase Auth
 
 **Epic:** Authentication & User Accounts
+**Status:** Completed
 
 ## Summary
 
