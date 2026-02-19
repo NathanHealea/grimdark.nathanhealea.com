@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { revalidatePath } from 'next/cache'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function GET(request: NextRequest) {
@@ -11,6 +12,7 @@ export async function GET(request: NextRequest) {
     const { error } = await supabase.auth.exchangeCodeForSession(code)
 
     if (!error) {
+      revalidatePath('/', 'layout')
       return NextResponse.redirect(`${origin}${next}`)
     }
   }

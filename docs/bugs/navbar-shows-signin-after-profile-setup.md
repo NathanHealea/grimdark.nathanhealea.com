@@ -1,12 +1,12 @@
 # Navbar Shows Sign In/Sign Up After First-Time Profile Setup
 
-**Status:** Open
+**Status:** Fixed
 **Severity:** Medium
 **Area:** Authentication / Navigation
 
 ## Description
 
-After a new user signs up and completes the profile setup flow, the navbar continues to display "Sign In" and "Sign Up" links instead of the authenticated navigation items ("My Profile", "Edit Profile", "Sign Out").
+After a new user signs up and completes the profile setup flow, the navbar continues to display "Sign In" and "Sign Up" links instead of the authenticated navigation items ("My Profile", "Edit Profile", "Sign Out"). The same issue occurs after email/password sign-in and OAuth sign-in.
 
 ## Steps to Reproduce
 
@@ -28,19 +28,22 @@ After completing profile setup, the navbar should display:
 
 The navbar still shows "Sign In" and "Sign Up" links as if the user is not authenticated.
 
-## Root Cause (Suspected)
+## Root Cause
 
-The `Navbar` component (`src/components/navbar.tsx`) is a server component that calls `getAuthUser({ withProfile: true })`. This function returns `null` when the user exists but has no profile yet (the `withProfile` overload requires a profile row to exist). After profile setup, the redirect to `/` may be serving a cached version of the navbar, or the Supabase auth cookie may not be refreshed in the server component context after the redirect.
+The `Navbar` component (`src/components/navbar.tsx`) is a server component rendered inside the root layout (`src/app/layout.tsx`). Next.js caches the RSC payload for layouts across navigations. When server actions or route handlers called `redirect()` after authentication state changes, the root layout's cached RSC payload (including the navbar) was still served — showing the stale unauthenticated state.
 
-The setup action (`src/app/profile/setup/actions.ts`) calls `redirect('/')` after inserting the profile. The navbar's cached RSC payload from before the profile existed may still be served.
+None of the auth-related actions or routes called `revalidatePath()` before redirecting, so the layout cache was never invalidated after sign-in, sign-out, or profile setup.
 
-## Affected Files
+## Fix
 
-- `src/components/navbar.tsx` — server component rendering auth-dependent navigation
-- `src/lib/supabase/auth.ts` — `getAuthUser()` returns `null` when profile is missing with `withProfile: true`
-- `src/app/profile/setup/actions.ts` — redirect after profile creation
+Added `revalidatePath('/', 'layout')` before every `redirect()` call in auth-related server actions and route handlers. This invalidates the root layout's cached RSC payload, forcing the `Navbar` server component to re-render with the current auth state.
 
-## Possible Fixes
+### Files Changed
 
-- Ensure the redirect from the setup action invalidates the cached navbar (e.g. `revalidatePath('/')` before redirecting)
-- Split the `getAuthUser` check in the navbar: check `user` for auth state (show Sign Out), check `profile` separately for profile-dependent links (My Profile)
+- **`src/app/(auth)/actions.ts`** — Added `revalidatePath('/', 'layout')` before `redirect()` in `signIn` and `signOut`
+- **`src/app/profile/setup/actions.ts`** — Added `revalidatePath('/', 'layout')` before `redirect('/')` after profile creation
+- **`src/app/auth/callback/route.ts`** — Added `revalidatePath('/', 'layout')` before `NextResponse.redirect()` after OAuth code exchange
+
+### Why `'layout'` Scope
+
+Using `revalidatePath('/', 'layout')` specifically targets the root layout and all nested layouts, which is where the `Navbar` lives. This is more precise than a full page revalidation and ensures the navbar re-renders with fresh auth data on the next request.

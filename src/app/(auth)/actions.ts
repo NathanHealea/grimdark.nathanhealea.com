@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
+import { revalidatePath } from 'next/cache'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 
@@ -40,6 +41,7 @@ export async function signIn(prevState: AuthState, formData: FormData) {
     return { error: error.message }
   }
 
+  revalidatePath('/', 'layout')
   redirect('/')
 }
 
@@ -82,5 +84,6 @@ export async function signInWithDiscord() {
 export async function signOut() {
   const supabase = await createClient()
   await supabase.auth.signOut()
+  revalidatePath('/', 'layout')
   redirect('/sign-in')
 }
