@@ -6,7 +6,7 @@ import FactionSelector from '@/modules/faction/components/faction-selector'
 import { type ProfileFormState, validateBio, validateDisplayName } from '@/modules/profile/validation'
 import type { Faction } from '@/types/faction'
 import type { Profile } from '@/types/profile'
-import { useActionState, useRef, useState } from 'react'
+import { startTransition, useActionState, useRef, useState } from 'react'
 import { updateProfile } from './actions'
 
 type EditProfileFormProps = {
@@ -78,7 +78,9 @@ export default function EditProfileForm({ profile, userId, factions, selectedFac
       setUploading(false)
     }
 
-    formAction(formData)
+    startTransition(() => {
+      formAction(formData)
+    })
   }
 
   const isSubmitting = pending || uploading

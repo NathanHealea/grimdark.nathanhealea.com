@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
+import { revalidatePath } from 'next/cache'
 import { type ProfileFormState, validateBio, validateDisplayName, validateFactionIds } from '@/modules/profile/validation'
 
 export async function updateProfile(prevState: ProfileFormState, formData: FormData): Promise<ProfileFormState> {
@@ -78,5 +79,6 @@ export async function updateProfile(prevState: ProfileFormState, formData: FormD
     }
   }
 
+  revalidatePath('/', 'layout')
   return { success: 'Profile updated successfully.' }
 }
