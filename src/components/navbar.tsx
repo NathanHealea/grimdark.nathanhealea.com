@@ -10,9 +10,12 @@ export default async function Navbar() {
 
   return (
     <nav className="navbar sticky top-0 z-40 bg-base-200">
-      <div className="flex-1">
+      <div className="flex-1 gap-2">
         <Link href="/" className="btn btn-ghost text-xl">
           Grimdark League
+        </Link>
+        <Link href="/members" className="btn btn-ghost btn-sm">
+          Members
         </Link>
       </div>
       <div className="flex gap-2">
