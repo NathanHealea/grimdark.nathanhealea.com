@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
+import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { type ProfileFormState, validateDisplayName, validateFactionIds } from '@/modules/profile/validation'
 
@@ -58,5 +59,6 @@ export async function setupProfile(prevState: ProfileFormState, formData: FormDa
     }
   }
 
+  revalidatePath('/', 'layout')
   redirect('/')
 }

@@ -1,8 +1,10 @@
 'use client'
 
+import DiscordIcon from '@/components/icons/discord-icon'
+import GoogleIcon from '@/components/icons/google-icon'
 import Link from 'next/link'
 import { useActionState } from 'react'
-import { signIn } from '../actions'
+import { signIn, signInWithDiscord, signInWithGoogle } from '../actions'
 
 export default function SignInPage() {
   const [state, formAction, pending] = useActionState(signIn, null)
@@ -47,6 +49,22 @@ export default function SignInPage() {
 
           <button type="submit" className="btn btn-primary w-full" disabled={pending}>
             {pending ? <span className="loading loading-spinner loading-sm" /> : 'Sign In'}
+          </button>
+        </form>
+
+        <div className="divider">OR</div>
+
+        {/* <form action={signInWithGoogle}>
+          <button type="submit" className="btn btn-outline w-full">
+            <GoogleIcon className="h-5 w-5" />
+            Continue with Google
+          </button>
+        </form> */}
+
+        <form action={signInWithDiscord}>
+          <button type="submit" className="btn btn-outline w-full">
+            <DiscordIcon className="h-5 w-5" />
+            Continue with Discord
           </button>
         </form>
 

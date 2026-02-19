@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
+import { revalidatePath } from 'next/cache'
 import { type ProfileFormState, validateBio, validateDisplayName, validateFactionIds } from '@/modules/profile/validation'
 
 export async function updateProfile(prevState: ProfileFormState, formData: FormData): Promise<ProfileFormState> {
@@ -33,6 +34,8 @@ export async function updateProfile(prevState: ProfileFormState, formData: FormD
     return { errors: { faction_ids: factionError } }
   }
 
+  const avatarUrl = formData.get('avatar_url') as string | null
+
   const trimmed = displayName.trim()
 
   // Check uniqueness (case-insensitive), excluding the current user's own row
@@ -47,13 +50,16 @@ export async function updateProfile(prevState: ProfileFormState, formData: FormD
     return { errors: { display_name: 'Display name is already taken.' } }
   }
 
-  const { error } = await supabase
-    .from('profiles')
-    .update({
-      display_name: trimmed,
-      bio: bio.trim() || null,
-    })
-    .eq('id', user.id)
+  const updateData: Record<string, string | null> = {
+    display_name: trimmed,
+    bio: bio.trim() || null,
+  }
+
+  if (avatarUrl) {
+    updateData.avatar_url = avatarUrl
+  }
+
+  const { error } = await supabase.from('profiles').update(updateData).eq('id', user.id)
 
   if (error) {
     if (error.code === '23505') {
@@ -73,5 +79,6 @@ export async function updateProfile(prevState: ProfileFormState, formData: FormD
     }
   }
 
+  revalidatePath('/', 'layout')
   return { success: 'Profile updated successfully.' }
 }

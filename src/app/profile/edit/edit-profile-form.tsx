@@ -1,24 +1,30 @@
 'use client'
 
+import ImageUpload from '@/components/image-upload'
+import { createClient } from '@/lib/supabase/client'
 import FactionSelector from '@/modules/faction/components/faction-selector'
 import { type ProfileFormState, validateBio, validateDisplayName } from '@/modules/profile/validation'
 import type { Faction } from '@/types/faction'
 import type { Profile } from '@/types/profile'
-import { useActionState, useRef } from 'react'
+import { startTransition, useActionState, useRef, useState } from 'react'
 import { updateProfile } from './actions'
 
 type EditProfileFormProps = {
   profile: Profile
+  userId: string
   factions: Faction[]
   selectedFactionIds: string[]
 }
 
-export default function EditProfileForm({ profile, factions, selectedFactionIds }: EditProfileFormProps) {
+export default function EditProfileForm({ profile, userId, factions, selectedFactionIds }: EditProfileFormProps) {
   const [state, formAction, pending] = useActionState<ProfileFormState, FormData>(updateProfile, null)
   const displayNameRef = useRef<HTMLInputElement>(null)
   const bioRef = useRef<HTMLTextAreaElement>(null)
+  const [avatarFile, setAvatarFile] = useState<File | null>(null)
+  const [avatarError, setAvatarError] = useState<string | undefined>()
+  const [uploading, setUploading] = useState(false)
 
-  function handleSubmit(formData: FormData) {
+  async function handleSubmit(formData: FormData) {
     const displayName = (formData.get('display_name') as string) ?? ''
     const bio = (formData.get('bio') as string) ?? ''
 
@@ -38,9 +44,46 @@ export default function EditProfileForm({ profile, factions, selectedFactionIds 
     }
     bioRef.current?.setCustomValidity('')
 
-    formAction(formData)
+    if (avatarFile) {
+      setAvatarError(undefined)
+      setUploading(true)
+
+      try {
+        const supabase = createClient()
+        const ext = avatarFile.name.split('.').pop() ?? 'jpg'
+        const filePath = `${userId}/avatar.${ext}`
+
+        const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, avatarFile, {
+          upsert: true,
+          contentType: avatarFile.type,
+        })
+
+        if (uploadError) {
+          setAvatarError('Failed to upload image. Please try again.')
+          setUploading(false)
+          return
+        }
+
+        const {
+          data: { publicUrl },
+        } = supabase.storage.from('avatars').getPublicUrl(filePath)
+
+        formData.set('avatar_url', `${publicUrl}?t=${Date.now()}`)
+      } catch {
+        setAvatarError('Failed to upload image. Please try again.')
+        setUploading(false)
+        return
+      }
+
+      setUploading(false)
+    }
+
+    startTransition(() => {
+      formAction(formData)
+    })
   }
 
+  const isSubmitting = pending || uploading
   const displayNameFieldError = state?.errors?.display_name
   const bioFieldError = state?.errors?.bio
   const factionFieldError = state?.errors?.faction_ids
@@ -64,6 +107,13 @@ export default function EditProfileForm({ profile, factions, selectedFactionIds 
         )}
 
         <form action={handleSubmit} className="flex flex-col gap-4">
+          <ImageUpload
+            currentImageUrl={profile.avatar_url}
+            displayName={profile.display_name}
+            onFileSelect={setAvatarFile}
+            error={avatarError}
+          />
+
           <fieldset className="fieldset">
             <label className="label" htmlFor="display_name">
               Display Name
@@ -103,8 +153,8 @@ export default function EditProfileForm({ profile, factions, selectedFactionIds 
             <FactionSelector factions={factions} selectedIds={selectedFactionIds} error={factionFieldError} />
           </fieldset>
 
-          <button type="submit" className="btn btn-success w-full" disabled={pending}>
-            {pending ? <span className="loading loading-spinner loading-sm" /> : 'Save Changes'}
+          <button type="submit" className="btn btn-success w-full" disabled={isSubmitting}>
+            {isSubmitting ? <span className="loading loading-spinner loading-sm" /> : 'Save Changes'}
           </button>
         </form>
       </div>
