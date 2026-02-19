@@ -61,19 +61,21 @@ export default async function ProfilePage({ params }: { params: Promise<{ profil
   return (
     <div className="flex-1 flex items-center justify-center w-full px-4 py-24">
       <div className="card w-full max-w-md bg-base-200 shadow-xl">
-        <div className="card-body items-center">
-          <Avatar src={typedProfile.avatar_url} displayName={typedProfile.display_name} size="lg" />
-          <h1 className="card-title text-2xl">{typedProfile.display_name}</h1>
-          <p className="text-sm text-base-content/50">Member since {memberSince}</p>
+        <div className="card-body gap-4">
+          <div className="flex flex-col items-center gap-4">
+            <Avatar src={typedProfile.avatar_url} displayName={typedProfile.display_name} size="lg" />
+            <h1 className="card-title text-2xl">{typedProfile.display_name}</h1>
+            <p className="text-sm text-base-content/50">Member since {memberSince}</p>
+          </div>
 
-          <div className="mt-4">
+          <div className="">
             <h2 className="text-sm font-semibold text-base-content/70">Bio</h2>
             <p className="mt-1 text-base-content">
               {typedProfile.bio ?? <span className="italic text-base-content/50">No bio yet.</span>}
             </p>
           </div>
 
-          <div className="mt-4">
+          <div className="">
             <h2 className="text-sm font-semibold text-base-content/70">Factions</h2>
             {factionLabels.length > 0 ? (
               <ul className="mt-1 list-disc list-inside text-base-content">
