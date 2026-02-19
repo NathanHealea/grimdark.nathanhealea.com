@@ -44,6 +44,7 @@ Epic Template:
 - [x] [User profile creation on first login](./features/authentication-and-user-accounts/user-profile-creation-on-first-login.md)
 - [x] [Protected routes for authenticated features](./features/authentication-and-user-accounts/protected-routes.md)
 - [ ] [User roles (user, member, admin)](./features/authentication-and-user-accounts/user-roles.md)
+- [ ] [Social media login (Google, Discord)](./features/authentication-and-user-accounts/social-media-login.md)
 
 ### Epic: League Information
 

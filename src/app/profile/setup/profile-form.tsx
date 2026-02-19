@@ -6,7 +6,13 @@ import type { Faction } from '@/types/faction'
 import { useActionState, useRef } from 'react'
 import { setupProfile } from './actions'
 
-export default function ProfileForm({ factions }: { factions: Faction[] }) {
+type ProfileFormProps = {
+  factions: Faction[]
+  suggestedName?: string
+  nameAlreadyTaken?: boolean
+}
+
+export default function ProfileForm({ factions, suggestedName, nameAlreadyTaken }: ProfileFormProps) {
   const [state, formAction, pending] = useActionState<ProfileFormState, FormData>(setupProfile, null)
   const displayNameRef = useRef<HTMLInputElement>(null)
 
@@ -33,6 +39,12 @@ export default function ProfileForm({ factions }: { factions: Faction[] }) {
         <h1 className="card-title text-2xl">Set Up Your Profile</h1>
         <p className="text-base-content/70">Choose a display name to get started. You can add more details later.</p>
 
+        {nameAlreadyTaken && (
+          <div role="alert" className="alert alert-warning">
+            <span>The display name &quot;{suggestedName}&quot; is already taken. Please choose a different one.</span>
+          </div>
+        )}
+
         {state?.error && (
           <div role="alert" className="alert alert-error">
             <span>{state.error}</span>
@@ -50,6 +62,7 @@ export default function ProfileForm({ factions }: { factions: Faction[] }) {
               name="display_name"
               type="text"
               placeholder="Your display name"
+              defaultValue={suggestedName}
               className={`input input-bordered w-full ${fieldError ? 'input-error' : ''}`}
               required
               minLength={2}
