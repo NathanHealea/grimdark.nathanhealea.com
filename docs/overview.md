@@ -4,12 +4,21 @@ A Warhammer 40k league website for displaying league information, managing leagu
 
 ## Tech Stack
 
-- **Frontend**: Next.js 15 (App Router), React 19, TypeScript
+- **Framework**: Next.js 16 (App Router), React 19, TypeScript 5
 - **Styling**: Tailwind CSS v4, DaisyUI v5
-- **Backend/Database**: Supabase (PostgreSQL, Auth, Real-time)
-- **Icons**: Heroicons v2
+- **UI Components**: Headless UI v2, Heroicons v2
+- **Backend/Database**: Supabase (PostgreSQL, Auth, RLS, SSR)
+- **Tooling**: ESLint 9, Prettier 3, Supabase CLI
 
 ---
+
+## Status Key
+
+| Status | Description |
+|---|---|
+| **Todo** | Not started — no acceptance criteria completed |
+| **In Progress** | Partially implemented — some acceptance criteria completed |
+| **Completed** | Fully implemented — all acceptance criteria completed |
 
 ## MVP Features (Epics)
 
@@ -31,10 +40,10 @@ Epic Template:
 
 **High-Level Scope:**
 
-- [Sign up / sign in via Supabase Auth (email/password)](./features/authentication-and-user-accounts/sign-up-sign-in.md)
-- [User profile creation on first login](./features/authentication-and-user-accounts/user-profile-creation-on-first-login.md)
-- [Protected routes for authenticated features](./features/authentication-and-user-accounts/protected-routes.md)
-- [User roles (user, member, admin)](./features/authentication-and-user-accounts/user-roles.md)
+- [x] [Sign up / sign in via Supabase Auth (email/password)](./features/authentication-and-user-accounts/sign-up-sign-in.md)
+- [x] [User profile creation on first login](./features/authentication-and-user-accounts/user-profile-creation-on-first-login.md)
+- [x] [Protected routes for authenticated features](./features/authentication-and-user-accounts/protected-routes.md)
+- [ ] [User roles (user, member, admin)](./features/authentication-and-user-accounts/user-roles.md)
 
 ### Epic: League Information
 
@@ -42,9 +51,9 @@ Epic Template:
 
 **High-Level Scope:**
 
-- [League landing page with description, rules, and schedule](./features/league-information/landing-page.md)
-- [Season information (start/end dates, format, point limits)](./features/league-information/season-information.md)
-- [Public visibility — no login required to view](./features/league-information/public-visibility.md)
+- [ ] [League landing page with description, rules, and schedule](./features/league-information/landing-page.md)
+- [ ] [Season information (start/end dates, format, point limits)](./features/league-information/season-information.md)
+- [ ] [Public visibility — no login required to view](./features/league-information/public-visibility.md)
 
 ### Epic: Member Profiles
 
@@ -52,9 +61,10 @@ Epic Template:
 
 **High-Level Scope:**
 
-- [Member profile page (display name, faction/army, bio)](./features/member-profiles/member-profile-page.md)
-- [Member directory listing all active league participants](./features/member-profiles/member-directory.md)
-- [Members can edit their own profile](./features/member-profiles/edit-own-profile.md)
+- [x] [Member profile page (display name, faction/army, bio)](./features/member-profiles/member-profile-page.md)
+- [ ] [Member directory listing all active league participants](./features/member-profiles/member-directory.md)
+- [x] [Members can edit their own profile](./features/member-profiles/edit-own-profile.md)
+- [ ] [Admins can edit any member's profile](./features/member-profiles/admin-edit-profile.md)
 
 ### Epic: Factions
 
@@ -62,10 +72,10 @@ Epic Template:
 
 **High-Level Scope:**
 
-- [Factions data model and seed data](./features/factions/factions-data-model.md)
-- [Browse factions page](./features/factions/browse-factions.md)
-- [Select factions for profile](./features/factions/select-factions-for-profile.md)
-- [Reusable faction selector component](./features/factions/faction-selector-component.md)
+- [x] [Factions data model and seed data](./features/factions/factions-data-model.md)
+- [ ] [Browse factions page](./features/factions/browse-factions.md)
+- [ ] [Select factions for profile](./features/factions/select-factions-for-profile.md)
+- [ ] [Reusable faction selector component](./features/factions/faction-selector-component.md)
 
 ### Epic: Battle Reports
 
@@ -73,9 +83,9 @@ Epic Template:
 
 **High-Level Scope:**
 
-- [Submit a battle report (players, factions, points, outcome, mission)](./features/battle-reports/submit-battle-report.md)
-- [Battle report detail view with game summary](./features/battle-reports/battle-report-detail-view.md)
-- [Battle report feed/history viewable by all members](./features/battle-reports/battle-report-feed.md)
+- [ ] [Submit a battle report (players, factions, points, outcome, mission)](./features/battle-reports/submit-battle-report.md)
+- [ ] [Battle report detail view with game summary](./features/battle-reports/battle-report-detail-view.md)
+- [ ] [Battle report feed/history viewable by all members](./features/battle-reports/battle-report-feed.md)
 
 ### Epic: Standings & Leaderboard
 
@@ -83,6 +93,6 @@ Epic Template:
 
 **High-Level Scope:**
 
-- [Leaderboard page with win/loss/draw records](./features/standings-and-leaderboard/leaderboard-page.md)
-- [Rankings calculated from submitted battle reports](./features/standings-and-leaderboard/rankings-from-battle-reports.md)
-- [Filter by current season](./features/standings-and-leaderboard/filter-by-season.md)
+- [ ] [Leaderboard page with win/loss/draw records](./features/standings-and-leaderboard/leaderboard-page.md)
+- [ ] [Rankings calculated from submitted battle reports](./features/standings-and-leaderboard/rankings-from-battle-reports.md)
+- [ ] [Filter by current season](./features/standings-and-leaderboard/filter-by-season.md)
