@@ -1,2 +1,38 @@
 @import 'tailwindcss';
-@plugin 'daisyui';
+@plugin 'daisyui' {
+  themes: grimdark --default;
+}
+
+@plugin "daisyui/theme" {
+  name: "grimdark";
+  default: true;
+
+  --color-primary: #c9a84c;
+  --color-primary-content: #0a0a0a;
+
+  --color-secondary: #2a2a2a;
+  --color-secondary-content: #e5e5e5;
+
+  --color-accent: #c9a84c;
+  --color-accent-content: #0a0a0a;
+
+  --color-neutral: #141414;
+  --color-neutral-content: #a3a3a3;
+
+  --color-base-100: #0a0a0a;
+  --color-base-200: #141414;
+  --color-base-300: #2a2a2a;
+  --color-base-content: #e5e5e5;
+
+  --color-info: #4a6a8b;
+  --color-info-content: #e5e5e5;
+
+  --color-success: #4a7c59;
+  --color-success-content: #e5e5e5;
+
+  --color-warning: #a3a3a3;
+  --color-warning-content: #0a0a0a;
+
+  --color-error: #8b2020;
+  --color-error-content: #e5e5e5;
+}
