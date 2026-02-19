@@ -1,11 +1,19 @@
 'use client'
 
+import type { Faction } from '@/types/faction'
 import type { Profile } from '@/types/profile'
 import { useActionState, useRef } from 'react'
 import { updateProfile } from './actions'
 import { type ProfileFormState, validateBio, validateDisplayName } from '@/modules/profile/validation'
+import FactionSelector from '@/modules/faction/components/faction-selector'
 
-export default function EditProfileForm({ profile }: { profile: Profile }) {
+type EditProfileFormProps = {
+  profile: Profile
+  factions: Faction[]
+  selectedFactionIds: string[]
+}
+
+export default function EditProfileForm({ profile, factions, selectedFactionIds }: EditProfileFormProps) {
   const [state, formAction, pending] = useActionState<ProfileFormState, FormData>(updateProfile, null)
   const displayNameRef = useRef<HTMLInputElement>(null)
   const bioRef = useRef<HTMLTextAreaElement>(null)
@@ -35,6 +43,7 @@ export default function EditProfileForm({ profile }: { profile: Profile }) {
 
   const displayNameFieldError = state?.errors?.display_name
   const bioFieldError = state?.errors?.bio
+  const factionFieldError = state?.errors?.faction_ids
 
   return (
     <div className="card w-full max-w-md bg-base-200 shadow-xl">
@@ -91,6 +100,15 @@ export default function EditProfileForm({ profile }: { profile: Profile }) {
               onChange={() => bioRef.current?.setCustomValidity('')}
             />
             {bioFieldError && <p className="mt-1 text-sm text-error">{bioFieldError}</p>}
+          </div>
+
+          <div>
+            <label className="fieldset-label">Factions</label>
+            <FactionSelector
+              factions={factions}
+              selectedIds={selectedFactionIds}
+              error={factionFieldError}
+            />
           </div>
 
           <button type="submit" className="btn btn-primary w-full" disabled={pending}>

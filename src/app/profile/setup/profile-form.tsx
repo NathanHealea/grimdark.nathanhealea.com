@@ -1,10 +1,12 @@
 'use client'
 
+import type { Faction } from '@/types/faction'
 import { useActionState, useRef } from 'react'
 import { setupProfile } from './actions'
 import { type ProfileFormState, validateDisplayName } from '@/modules/profile/validation'
+import FactionSelector from '@/modules/faction/components/faction-selector'
 
-export default function ProfileForm() {
+export default function ProfileForm({ factions }: { factions: Faction[] }) {
   const [state, formAction, pending] = useActionState<ProfileFormState, FormData>(setupProfile, null)
   const displayNameRef = useRef<HTMLInputElement>(null)
 
@@ -23,6 +25,7 @@ export default function ProfileForm() {
   }
 
   const fieldError = state?.errors?.display_name
+  const factionFieldError = state?.errors?.faction_ids
 
   return (
     <div className="card w-full max-w-md bg-base-200 shadow-xl">
@@ -54,6 +57,14 @@ export default function ProfileForm() {
               onChange={() => displayNameRef.current?.setCustomValidity('')}
             />
             {fieldError && <p className="mt-1 text-sm text-error">{fieldError}</p>}
+          </div>
+
+          <div>
+            <label className="fieldset-label">Factions (optional)</label>
+            <FactionSelector
+              factions={factions}
+              error={factionFieldError}
+            />
           </div>
 
           <button type="submit" className="btn btn-primary w-full" disabled={pending}>

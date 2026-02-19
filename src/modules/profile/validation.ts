@@ -1,6 +1,6 @@
 import type { FormState } from '@/types/forms'
 
-export type ProfileFormState = FormState<{ display_name: string; bio: string }>
+export type ProfileFormState = FormState<{ display_name: string; bio: string; faction_ids: string }>
 
 const DISPLAY_NAME_PATTERN = /^[a-zA-Z0-9_-]+$/
 
@@ -23,6 +23,17 @@ export function validateDisplayName(value: string): string | null {
     return 'Display name can only contain letters, numbers, hyphens, and underscores.'
   }
 
+  return null
+}
+
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+export function validateFactionIds(ids: string[]): string | null {
+  for (const id of ids) {
+    if (!UUID_PATTERN.test(id)) {
+      return 'Invalid faction selection.'
+    }
+  }
   return null
 }
 
