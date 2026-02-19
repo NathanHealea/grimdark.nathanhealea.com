@@ -12,7 +12,7 @@ Allow users to associate one or more Warhammer 40k factions with their profile. 
 - [x] Users can select multiple factions from the full list
 - [x] Selections are stored in the `profile_factions` join table
 - [x] Users can update their faction selections when editing their profile
-- [ ] Selected factions are displayed on the member's profile page
+- [x] Selected factions are displayed on the member's profile page
 - [ ] Member directory entries show each member's selected factions
 - [x] Users can only manage their own faction associations
 
@@ -56,6 +56,15 @@ Allow users to associate one or more Warhammer 40k factions with their profile. 
 - **Page:** `src/app/profile/edit/page.tsx` — fetches factions and selected IDs in parallel via `Promise.all`
 - **Form:** `src/app/profile/edit/edit-profile-form.tsx` — renders `<FactionSelector>` with pre-selected IDs
 - **Action:** `src/app/profile/edit/actions.ts` — reads `faction_ids` from FormData, validates, then clear-and-replaces: DELETE all `profile_factions` for the user, INSERT the new set
+
+### Display Factions on Profile Page
+
+- **Page:** `src/app/profile/[profileId]/page.tsx`
+- Fetch the profile's faction IDs via `getProfileFactionIds(profile.id)` and the full faction list via `getFactions()` in parallel using `Promise.all`
+- Resolve faction IDs to `Faction` objects using a `Map` lookup
+- Build display labels showing the full ancestry path (e.g. "Imperium > Space Marines > Blood Angels") using the faction map's `parent_id` chain
+- Render a "Factions" section below the bio with faction names as DaisyUI badge elements
+- If the user has no factions selected, show italic placeholder text: "No factions selected."
 
 ### Key Design Decisions
 
