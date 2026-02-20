@@ -26,7 +26,7 @@ export default async function ProfileSetupPage() {
   }
 
   return (
-    <main className="flex flex-col items-center justify-center -mt-16 min-h-screen">
+    <main className="flex flex-col items-center justify-center -mt-16 pt-16 min-h-screen">
     <div className="flex-1 flex justify-center items-center">
       <ProfileForm factions={factions} suggestedName={suggestedName} nameAlreadyTaken={nameAlreadyTaken} />
     </div>

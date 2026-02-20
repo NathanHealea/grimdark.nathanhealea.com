@@ -13,7 +13,7 @@ export default async function EditProfilePage() {
   const [factions, selectedFactionIds] = await Promise.all([getFactions(), getProfileFactionIds(auth.user.id)])
 
   return (
-    <main className="flex flex-col items-center justify-center -mt-16 min-h-screen">
+    <main className="flex flex-col items-center justify-center -mt-16 pt-16 min-h-screen">
     <div className="flex-1 flex items-center justify-center w-full px-4 py-24">
       <EditProfileForm profile={auth.profile} userId={auth.user.id} factions={factions} selectedFactionIds={selectedFactionIds} />
     </div>

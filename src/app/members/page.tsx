@@ -45,7 +45,7 @@ export default async function MembersPage() {
   }))
 
   return (
-    <main className="flex flex-col items-center -mt-8 min-h-screen">
+    <main className="flex flex-col items-center -mt-16 pt-16 min-h-screen">
     <div className="w-full px-4 py-12">
       <div className="mx-auto max-w-4xl">
         <div className="mb-8">
