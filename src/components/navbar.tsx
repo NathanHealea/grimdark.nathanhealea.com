@@ -49,10 +49,10 @@ export default async function Navbar() {
           />
         ) : (
           <>
-            <Link href="/sign-in" className="btn btn-ghost">
+            <Link href="/sign-in" className="btn btn-outline btn-primary btn-sm hidden sm:flex">
               Sign In
             </Link>
-            <Link href="/sign-up" className="btn btn-primary">
+            <Link href="/sign-up" className="btn btn-primary btn-sm">
               Sign Up
             </Link>
           </>

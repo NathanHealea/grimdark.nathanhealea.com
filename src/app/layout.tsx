@@ -1,17 +1,6 @@
 import Navbar from '@/components/navbar'
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
-
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-})
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-})
 
 export const metadata: Metadata = {
   title: 'Grimdark League',
@@ -37,9 +26,24 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} flex min-h-screen flex-col antialiased`}>
+      <body className="bg-base-100 text-base-content flex flex-col min-h-screen ">
         <Navbar />
-        <main className="flex min-h-0 flex-1 flex-col">{children}</main>
+        <div className="relative z-0 flex-1">{children}</div>
+
+        <footer className="border-t border-base-300 bg-base-200 text-base-content/60 text-xs">
+          <div className="max-w-6xl mx-auto px-6 py-6 flex flex-col gap-4 text-center">
+            <p>
+              Warhammer 40,000 and all associated marks, logos, and images are trademarks and/or registered trademarks of Games Workshop Ltd. This site is completely unofficial and is in no way endorsed by Games Workshop.
+            </p>
+            <p>&copy; {new Date().getFullYear()} Grimdark League. All rights reserved.</p>
+            <p>
+              Created by{' '}
+              <a href="https://nathanhealea.com" className="link link-hover text-primary" target="_blank" rel="noopener noreferrer">
+                Nathan Healea
+              </a>
+            </p>
+          </div>
+        </footer>
       </body>
     </html>
   )
