@@ -2,6 +2,7 @@ import { getSeasons } from '@/modules/season/queries'
 import { getBattlePoints } from '@/modules/battle-report/queries'
 import type { BattlePoints } from '@/types/battle-report'
 import type { Season } from '@/types/season'
+import Link from 'next/link'
 
 function formatDate(dateString: string): string {
   return new Date(dateString + 'T00:00:00').toLocaleDateString('en-US', {
@@ -19,7 +20,10 @@ function SeasonCard({ season, battlePointsMap, highlighted }: {
   const bp = battlePointsMap.get(season.battle_points_id)
 
   return (
-    <div className={`card ${highlighted ? 'bg-base-200 border-2 border-primary/30' : 'bg-base-200'} shadow-sm`}>
+    <Link
+      href={`/seasons/${season.id}`}
+      className={`card ${highlighted ? 'bg-base-200 border-2 border-primary/30' : 'bg-base-200'} shadow-sm transition-shadow hover:shadow-md`}
+    >
       <div className="card-body gap-3">
         <div className="flex items-start justify-between gap-2">
           <h2 className={`card-title ${highlighted ? 'text-gold' : ''}`}>{season.name}</h2>
@@ -33,7 +37,7 @@ function SeasonCard({ season, battlePointsMap, highlighted }: {
 
         {season.description && <p className="text-base-content/70">{season.description}</p>}
       </div>
-    </div>
+    </Link>
   )
 }
 
