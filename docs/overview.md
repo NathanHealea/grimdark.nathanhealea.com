@@ -18,15 +18,15 @@ The core loop: **members join, play games, record results, and track standings.*
 - **Battle Reports** — Game records capturing attacker/defender, factions, scores, outcome (win/loss/draw), mission, deployment, battle size, and rounds.
 - **Battle Sizes** — Standard point levels: Combat Patrol (500), Incursion (1000), Strike Force (2000), Onslaught (3000).
 - **Missions & Deployments** — Predefined game scenarios and map configurations from the official rules.
-- **Seasons** — Time-bounded league periods with rules and point limits. Standings and stats scoped per season. *(Planned)*
+- **Seasons** — Time-bounded league periods with battle size and date ranges. Battle reports are auto-assigned to the active season. Admins manage seasons through the admin panel.
 - **Standings** — Win/loss/draw records and rankings derived from battle reports, filtered by season. *(Planned)*
 
 ## Product Direction
 
 Current priority: finish the MVP epics listed below. After MVP:
 
-- **Season-based structure** — Seasons with start/end dates, format rules, and point limits.
 - **Stats & analytics** — Player win rates, faction matchup data, historical trends across seasons.
+- **Leaderboard** — Season-scoped standings and rankings derived from battle reports.
 
 ## Tech Stack
 
@@ -81,7 +81,7 @@ Epic Template:
 **High-Level Scope:**
 
 - [ ] [League landing page with description, rules, and schedule](./features/league-information/landing-page.md)
-- [ ] [Season information (start/end dates, format, point limits)](./features/league-information/season-information.md)
+- [x] [Season information (start/end dates, format, point limits)](./features/league-information/season-information.md)
 - [ ] [Public visibility — no login required to view](./features/league-information/public-visibility.md)
 
 ### Epic: Member Profiles
@@ -93,7 +93,7 @@ Epic Template:
 - [x] [Member profile page (display name, faction/army, bio)](./features/member-profiles/member-profile-page.md)
 - [x] [Member directory listing all active league participants](./features/member-profiles/member-directory.md)
 - [x] [Members can edit their own profile](./features/member-profiles/edit-own-profile.md)
-- [ ] [Admins can edit any member's profile](./features/member-profiles/admin-edit-profile.md)
+- [x] [Admins can edit any member's profile](./features/member-profiles/admin-edit-profile.md)
 - [x] [Profile picture display (avatar from OAuth provider)](./features/member-profiles/profile-picture.md)
 
 ### Epic: Factions

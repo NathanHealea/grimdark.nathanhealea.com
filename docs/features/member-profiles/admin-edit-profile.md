@@ -1,7 +1,7 @@
 # Admin Edit Profile
 
 **Epic:** Member Profiles
-**Status:** In Progress
+**Status:** Completed
 
 ## Summary
 
@@ -11,28 +11,28 @@ Provide administrators with a dedicated page to view and edit any member's profi
 
 ### Profile Editing
 
-- [ ] Admins can navigate to an edit page for any member's profile
-- [ ] The member's profile page shows an "Edit" link/button to admins (not just the profile owner)
-- [ ] The user management table "Edit User" action links to this page
-- [ ] Admins can update a member's display name, bio, and faction selections
-- [ ] Admins can update a member's avatar (upload a new image)
-- [ ] The same validation rules apply (display name format, uniqueness, bio length, faction UUID format, image type/size)
-- [ ] Non-admin users cannot access or submit the admin edit form (server-side role check)
-- [ ] RLS policies allow admins to update other users' profiles and faction associations
-- [ ] Changes are saved to the database and reflected immediately
+- [x] Admins can navigate to an edit page for any member's profile
+- [x] The member's profile page shows an "Edit" link/button to admins (not just the profile owner)
+- [x] The user management table "Edit User" action links to this page
+- [x] Admins can update a member's display name, bio, and faction selections
+- [x] Admins can update a member's avatar (upload a new image)
+- [x] The same validation rules apply (display name format, uniqueness, bio length, faction UUID format, image type/size)
+- [x] Non-admin users cannot access or submit the admin edit form (server-side role check)
+- [x] RLS policies allow admins to update other users' profiles and faction associations
+- [x] Changes are saved to the database and reflected immediately
 
 ### Role Management
 
-- [ ] The edit page includes a "Roles" section showing the user's current roles
-- [ ] Admins can grant or revoke `member` and `admin` roles from this page
-- [ ] The `user` role is displayed but cannot be removed
-- [ ] Admins cannot modify their own roles (self-modification prevention)
-- [ ] Role changes revalidate the page immediately
+- [x] The edit page includes a "Roles" section showing the user's current roles
+- [x] Admins can grant or revoke `member` and `admin` roles from this page
+- [x] The `user` role is displayed but cannot be removed
+- [x] Admins cannot modify their own roles (self-modification prevention)
+- [x] Role changes revalidate the page immediately
 
 ### Admin Actions
 
-- [ ] The page includes an "Admin Actions" section as a placeholder for future operations
-- [ ] The section is extensible — new actions can be added without restructuring the page
+- [x] The page includes an "Admin Actions" section as a placeholder for future operations
+- [x] The section is extensible — new actions can be added without restructuring the page
 
 ## Implementation Plan
 

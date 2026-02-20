@@ -75,6 +75,23 @@ export async function getBattleReportsByPlayerId(playerId: string): Promise<Batt
   return data as BattleReport[]
 }
 
+export async function getBattleReportsBySeasonId(seasonId: number): Promise<BattleReport[]> {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
+    .from('battle_reports')
+    .select('*')
+    .eq('season_id', seasonId)
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error('Failed to fetch battle reports for season:', error)
+    return []
+  }
+
+  return data as BattleReport[]
+}
+
 export async function getBattleReportById(id: string): Promise<BattleReport | null> {
   const supabase = await createClient()
 
