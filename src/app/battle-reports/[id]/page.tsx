@@ -99,7 +99,7 @@ export default async function BattleReportDetailPage({ params }: { params: Promi
                 <div className="flex items-center justify-between gap-2">
                   <div className="min-w-0">
                     <Link
-                      href={`/profile/${attacker?.id}`}
+                      href={`/profile/${attacker?.profile_id}`}
                       className="link link-hover font-semibold truncate block"
                     >
                       {attacker?.display_name ?? 'Unknown'}
@@ -121,7 +121,7 @@ export default async function BattleReportDetailPage({ params }: { params: Promi
                 <div className="flex items-center justify-between gap-2">
                   <div className="min-w-0">
                     <Link
-                      href={`/profile/${defender?.id}`}
+                      href={`/profile/${defender?.profile_id}`}
                       className="link link-hover font-semibold truncate block"
                     >
                       {defender?.display_name ?? 'Unknown'}
