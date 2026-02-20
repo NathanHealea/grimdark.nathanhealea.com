@@ -63,7 +63,7 @@ export async function middleware(request: NextRequest) {
   if (pathname.startsWith(ADMIN_ROUTE_PREFIX)) {
     const { data: adminRole } = await supabase
       .from('user_roles')
-      .select('role_id, roles(name)')
+      .select('role_id, roles!inner(name)')
       .eq('user_id', user.id)
       .eq('roles.name', 'admin')
       .single()

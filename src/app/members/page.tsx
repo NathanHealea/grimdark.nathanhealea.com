@@ -24,11 +24,20 @@ function getFactionLabel(id: string, factionMap: Map<string, Faction>): string {
 export default async function MembersPage() {
   const supabase = await createClient()
 
-  const [{ data: profiles }, factions, { data: profileFactions }] = await Promise.all([
-    supabase.from('profiles').select('*').order('display_name'),
+  const [{ data: memberRoles }, factions, { data: profileFactions }] = await Promise.all([
+    supabase
+      .from('user_roles')
+      .select('user_id, roles!inner(name)')
+      .eq('roles.name', 'member'),
     getFactions(),
     supabase.from('profile_factions').select('profile_id, faction_id'),
   ])
+
+  const memberIds = (memberRoles ?? []).map((r) => r.user_id)
+
+  const { data: profiles } = memberIds.length > 0
+    ? await supabase.from('profiles').select('*').in('id', memberIds).order('display_name')
+    : { data: [] }
 
   const factionMap = new Map(factions.map((f) => [f.id, f]))
 

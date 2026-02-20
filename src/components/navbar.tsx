@@ -1,23 +1,23 @@
 import { signOut } from '@/app/(auth)/actions'
 import { getAuthUser } from '@/lib/supabase/auth'
 import { hasRole } from '@/lib/supabase/roles'
+import { publicLinks, memberLinks, adminLinks } from '@/routes'
 import Link from 'next/link'
 import MobileNav from './mobile-nav'
 import UserMenu from './user-menu'
-
-const publicLinks = [
-  { href: '/members', label: 'Members' },
-  { href: '/battle-reports', label: 'Battle Reports' },
-]
-const memberLinks = [{ href: '/battle-reports/submit', label: 'Submit Battle Report' }]
 
 export default async function Navbar() {
   const auth = await getAuthUser({ withProfile: true })
   const user = auth?.user ?? null
   const profile = auth ? auth.profile : null
 
-  const isMember = user ? (await hasRole(user.id, 'member')) || (await hasRole(user.id, 'admin')) : false
-  const navLinks = isMember ? [...publicLinks, ...memberLinks] : publicLinks
+  const isAdmin = user ? await hasRole(user.id, 'admin') : false
+  const isMember = user ? isAdmin || (await hasRole(user.id, 'member')) : false
+  const navLinks = [
+    ...publicLinks,
+    ...(isMember ? memberLinks : []),
+    ...(isAdmin ? adminLinks : []),
+  ]
 
   return (
     <nav className="navbar bg-base-100/90 backdrop-blur-md border-b border-base-300 sticky top-0 z-50">

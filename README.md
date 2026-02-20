@@ -76,6 +76,40 @@ npm run db:start
 npm run dev
 ```
 
+## Database
+
+### Applying migrations from git
+
+After pulling new code that includes migration files in `supabase/migrations/`, apply them to your local database:
+
+```bash
+npx supabase db reset
+```
+
+This drops and recreates your local database, running all migrations in order. Use this when you pull changes that add or modify migration files.
+
+### Pulling schema changes from the remote database
+
+If schema changes were made directly on the remote Supabase project (e.g. via the Dashboard or SQL Editor), pull them into a local migration file:
+
+```bash
+# Link to the remote project (one-time setup)
+npx supabase link
+
+# Pull remote schema changes into a new migration file
+npx supabase db pull
+```
+
+This generates a new migration file in `supabase/migrations/` capturing any differences between your local migrations and the remote schema. Review the generated file, then commit it to git.
+
+### Regenerating TypeScript types
+
+After any schema change, regenerate the TypeScript types:
+
+```bash
+npm run db:types
+```
+
 ## Scripts
 
 | Command | Description |
