@@ -58,6 +58,23 @@ export async function getBattleReports(): Promise<BattleReport[]> {
   return data as BattleReport[]
 }
 
+export async function getBattleReportById(id: string): Promise<BattleReport | null> {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
+    .from('battle_reports')
+    .select('*')
+    .eq('id', id)
+    .single()
+
+  if (error) {
+    console.error('Failed to fetch battle report:', error)
+    return null
+  }
+
+  return data as BattleReport
+}
+
 export async function getMembers(): Promise<Profile[]> {
   const supabase = await createClient()
 
