@@ -5,7 +5,7 @@
 
 ## Summary
 
-A public landing page that displays the league description, rules, and schedule so visitors and members can learn about the league.
+A public landing page that displays the league description, leaderboard, so visitors and members can learn about the league.
 
 ## Acceptance Criteria
 

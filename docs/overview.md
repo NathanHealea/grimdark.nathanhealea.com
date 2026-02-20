@@ -1,14 +1,42 @@
 # Project Overview
 
-A Warhammer 40k league website for displaying league information, managing league member profiles, and recording battle reports.
+**Grimdark League** is a league management tool for a small, local Warhammer 40,000 tabletop gaming group (5-15 players) based in Eugene/Springfield, Oregon. Run by a small team of 2-3 organizers, the app focuses on league operations and competitive tracking — not social features.
+
+## What It Does
+
+The app serves three user types:
+
+- **Members (players)** join the league, maintain a profile with their factions, record battle results, and track standings.
+- **Organizers (admins)** manage member roles, edit profiles, and oversee league operations through an admin panel.
+- **Visitors** can browse public pages (member directory, battle reports, standings) without logging in.
+
+The core loop: **members join, play games, record results, and track standings.**
+
+## Domain
+
+- **Factions** — Armies organized hierarchically: alliance (Imperium, Chaos, Xenos) > faction (Space Marines, Aeldari) > sub-faction/chapter (Blood Angels, Dark Angels). Players associate multiple factions with their profile.
+- **Battle Reports** — Game records capturing attacker/defender, factions, scores, outcome (win/loss/draw), mission, deployment, battle size, and rounds.
+- **Battle Sizes** — Standard point levels: Combat Patrol (500), Incursion (1000), Strike Force (2000), Onslaught (3000).
+- **Missions & Deployments** — Predefined game scenarios and map configurations from the official rules.
+- **Seasons** — Time-bounded league periods with rules and point limits. Standings and stats scoped per season. *(Planned)*
+- **Standings** — Win/loss/draw records and rankings derived from battle reports, filtered by season. *(Planned)*
+
+## Product Direction
+
+Current priority: finish the MVP epics listed below. After MVP:
+
+- **Season-based structure** — Seasons with start/end dates, format rules, and point limits.
+- **Stats & analytics** — Player win rates, faction matchup data, historical trends across seasons.
 
 ## Tech Stack
 
-- **Framework**: Next.js 16 (App Router), React 19, TypeScript 5
-- **Styling**: Tailwind CSS v4, DaisyUI v5
-- **UI Components**: Headless UI v2, Heroicons v2
-- **Backend/Database**: Supabase (PostgreSQL, Auth, RLS, SSR)
-- **Tooling**: ESLint 9, Prettier 3, Supabase CLI
+| Layer | Technology |
+|---|---|
+| **Framework** | Next.js 16 (App Router), React 19, TypeScript 5 |
+| **Styling** | Tailwind CSS v4, DaisyUI v5 |
+| **UI Components** | Headless UI v2, Heroicons v2 |
+| **Backend / Database** | Supabase (PostgreSQL, Auth, RLS, SSR) |
+| **Tooling** | ESLint 9, Prettier 3, Supabase CLI |
 
 ---
 
