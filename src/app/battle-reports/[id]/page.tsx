@@ -76,6 +76,7 @@ export default async function BattleReportDetailPage({ params }: { params: Promi
   const bp = battlePointsMap.get(report.battle_points_id)
 
   return (
+    <main className="flex flex-col items-center justify-center -mt-16 min-h-screen">
     <div className="w-full px-4 py-12">
       <div className="mx-auto max-w-2xl">
         <div className="mb-6">
@@ -169,5 +170,6 @@ export default async function BattleReportDetailPage({ params }: { params: Promi
         </div>
       </div>
     </div>
+    </main>
   )
 }

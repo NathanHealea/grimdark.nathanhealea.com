@@ -16,6 +16,7 @@ export default async function SubmitBattleReportPage() {
 
   if (!isMember && !isAdmin) {
     return (
+      <main className="flex flex-col items-center justify-center -mt-16 min-h-screen">
       <div className="flex-1 flex items-center justify-center w-full px-4 py-24">
         <div className="card w-full max-w-md bg-base-200 shadow-xl">
           <div className="card-body">
@@ -24,6 +25,7 @@ export default async function SubmitBattleReportPage() {
           </div>
         </div>
       </div>
+      </main>
     )
   }
 
@@ -37,6 +39,7 @@ export default async function SubmitBattleReportPage() {
   ])
 
   return (
+    <main className="flex flex-col items-center justify-center -mt-16 min-h-screen">
     <div className="flex-1 flex items-center justify-center w-full px-4 py-24">
       <BattleReportForm
         missions={missions}
@@ -47,5 +50,6 @@ export default async function SubmitBattleReportPage() {
         memberFactions={memberFactions}
       />
     </div>
+    </main>
   )
 }

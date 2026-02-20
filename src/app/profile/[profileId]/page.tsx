@@ -94,6 +94,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ profil
   })
 
   return (
+    <main className="flex flex-col items-center justify-center -mt-16 min-h-screen">
     <div className="flex-1 flex items-center justify-center w-full px-4 py-24">
       <div className="card w-full max-w-2xl bg-base-200 shadow-xl">
         <div className="card-body gap-4">
@@ -208,5 +209,6 @@ export default async function ProfilePage({ params }: { params: Promise<{ profil
         </div>
       </div>
     </div>
+    </main>
   )
 }
