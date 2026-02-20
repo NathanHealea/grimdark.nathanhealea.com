@@ -54,10 +54,13 @@ export default function MobileNav({ links, isAuthenticated, profileId, signOutAc
                   </CloseButton>
                 </li>
                 <li className="rounded-md bg-error">
-                  <form action={signOutAction}>
-                    <CloseButton as="button" type="submit">
+                  <form action={async () => {
+                    setOpen(false)
+                    await signOutAction?.()
+                  }}>
+                    <button type="submit">
                       Sign Out
-                    </CloseButton>
+                    </button>
                   </form>
                 </li>
               </>
