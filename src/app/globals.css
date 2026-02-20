@@ -103,15 +103,22 @@ body {
 
 
 /* ── Scroll reveal ── */
-.reveal {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.55s ease-in-out, transform 0.10s ease-in-out;
+@keyframes scroll-banner {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
-.reveal.visible {
-  opacity: 1;
-  transform: none;
+.scroll-banner-track {
+  animation: scroll-banner 120s linear infinite;
+}
+
+.scroll-banner-track:hover {
+  animation-play-state: paused;
 }
 
 /* ── Leaderboard row hover ── */
@@ -147,8 +154,13 @@ body {
 
 /* ── Ticker marquee ── */
 @keyframes ticker-scroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 .ticker-track {
@@ -156,7 +168,7 @@ body {
   animation: ticker-scroll 30s linear infinite;
 }
 
-.ticker-track > span {
+.ticker-track>span {
   flex-shrink: 0;
   padding-right: 2rem;
 }

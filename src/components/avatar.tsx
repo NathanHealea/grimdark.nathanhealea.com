@@ -1,3 +1,5 @@
+import { UserIcon } from '@heroicons/react/24/solid'
+
 type AvatarProps = {
   src: string | null
   displayName: string
@@ -9,12 +11,15 @@ const sizeClasses = {
   lg: 'w-24',
 } as const
 
-export default function Avatar({ src, displayName, size = 'sm' }: AvatarProps) {
-  const initial = displayName.charAt(0).toUpperCase()
+const iconClasses = {
+  sm: 'w-5 h-5',
+  lg: 'w-12 h-12',
+} as const
 
+export default function Avatar({ src, displayName, size = 'sm' }: AvatarProps) {
   if (src) {
     return (
-      <div className={`avatar ${sizeClasses[size]}`}>
+      <div className={`avatar ${sizeClasses[size]} mx-auto`}>
         <div className="rounded-full">
           <img src={src} alt={displayName} />
         </div>
@@ -23,9 +28,9 @@ export default function Avatar({ src, displayName, size = 'sm' }: AvatarProps) {
   }
 
   return (
-    <div className={`avatar avatar-placeholder ${sizeClasses[size]}`}>
-      <div className="bg-neutral text-neutral-content rounded-full">
-        <span className={size === 'lg' ? 'text-3xl' : 'text-sm'}>{initial}</span>
+    <div className={`avatar avatar-placeholder ${sizeClasses[size]} justify-center mx-auto`}>
+      <div className="bg-neutral text-neutral-content rounded-full flex items-center justify-center">
+        <UserIcon className={iconClasses[size]} />
       </div>
     </div>
   )

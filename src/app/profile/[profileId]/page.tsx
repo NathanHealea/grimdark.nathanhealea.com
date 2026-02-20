@@ -1,5 +1,6 @@
 import Avatar from '@/components/avatar'
 import { getAuthUser } from '@/lib/supabase/auth'
+import { hasRole } from '@/lib/supabase/roles'
 import { createClient } from '@/lib/supabase/server'
 import { getFactions, getProfileFactionIds } from '@/modules/faction/queries'
 import {
@@ -75,6 +76,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ profil
       getBattlePoints(),
     ])
   const isOwner = auth?.user.id === typedProfile.id
+  const isAdmin = auth ? await hasRole(auth.user.id, 'admin') : false
 
   const factionMap = new Map(factions.map((f) => [f.id, f]))
   const factionLabels = factionIds.map((id) => ({
@@ -199,11 +201,18 @@ export default async function ProfilePage({ params }: { params: Promise<{ profil
             )}
           </div>
 
-          {isOwner && (
+          {(isOwner || isAdmin) && (
             <div className="card-actions mt-4 justify-end">
-              <Link href="/profile/edit" className="btn btn-outline btn-sm">
-                Edit Profile
-              </Link>
+              {isOwner && (
+                <Link href="/profile/edit" className="btn btn-outline btn-sm">
+                  Edit Profile
+                </Link>
+              )}
+              {isAdmin && !isOwner && (
+                <Link href={`/admin/user-management/${typedProfile.profile_id}/edit`} className="btn btn-outline btn-sm">
+                  Edit User
+                </Link>
+              )}
             </div>
           )}
         </div>
