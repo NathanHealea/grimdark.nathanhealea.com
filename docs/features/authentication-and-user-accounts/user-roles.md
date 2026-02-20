@@ -1,7 +1,7 @@
 # User Roles
 
 **Epic:** Authentication & User Accounts
-**Status:** In Progress
+**Status:** Completed
 
 ## Summary
 
@@ -19,7 +19,7 @@ Admins can grant or revoke the `member` and `admin` roles through an admin inter
 - [x] A `user_roles` table links users to roles (many-to-many — a user can hold multiple roles)
 - [x] New users are automatically assigned the `user` role upon profile creation
 - [x] The `user` role cannot be removed from any account
-- [ ] At least one admin is seeded or manually assigned in the database
+- [x] At least one admin is seeded or manually assigned in the database
 - [x] Admins can grant or revoke the `member` and `admin` roles via an admin interface
 - [x] RLS policies on `user_roles` prevent non-admin users from modifying role assignments
 - [x] A helper function or utility exists to check a user's roles on the server

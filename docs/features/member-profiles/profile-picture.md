@@ -14,7 +14,7 @@ Display the member's profile picture (avatar) on their profile page. The avatar 
 - [x] User-set avatars are not overwritten by the provider sync
 - [x] Profile page displays the member's avatar image
 - [x] A fallback placeholder is shown when no avatar is available (user initial in a colored circle via `Avatar` component)
-- [ ] Avatar is displayed on the member directory listing (when implemented)
+- [x] Avatar is displayed on the member directory listing
 
 ## Database
 

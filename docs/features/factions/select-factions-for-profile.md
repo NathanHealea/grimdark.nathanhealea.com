@@ -14,7 +14,7 @@ Allow users to associate one or more Warhammer 40k factions with their profile. 
 - [x] Selections are stored in the `profile_factions` join table
 - [x] Users can update their faction selections when editing their profile
 - [x] Selected factions are displayed on the member's profile page
-- [ ] Member directory entries show each member's selected factions
+- [x] Member directory entries show each member's selected factions
 - [x] Users can only manage their own faction associations
 
 ## Implementation

@@ -35,20 +35,26 @@ Grimdark League is a web app for Warhammer 40k tabletop gaming communities. It p
 | Feature | Status |
 |---|---|
 | Email/password authentication (Supabase Auth) | Done |
+| Social media login (Discord) | Done |
 | Profile creation on first login | Done |
 | Protected routes with middleware | Done |
-| Role-based access control (user, member, admin) | In Progress |
+| Role-based access control (user, member, admin) | Done |
+| Admin user management | Done |
 | Member profile pages with faction display | Done |
 | Edit own profile (display name, bio, factions) | Done |
-| Profile picture (avatar from OAuth provider) | In Progress |
+| Profile picture (avatar from OAuth provider) | Done |
+| Change profile picture (upload) | Done |
+| Member directory | Done |
 | Faction data model with hierarchical sub-factions | Done |
 | Faction selector (select + add/remove UX) | Done |
-| Social media login (Google, Discord) | Planned |
+| Select factions for profile | Done |
+| Battle report submission | Done |
+| Battle report feed & detail views | Done |
+| Responsive navbar (mobile) | Done |
 | Admin profile editing | Planned |
-| Member directory | Planned |
 | Browse factions page | Planned |
-| Battle report submission | Planned |
-| Battle report feed & detail views | Planned |
+| League landing page | Planned |
+| Season information | Planned |
 | Leaderboard & standings | Planned |
 | Season filtering | Planned |
 
