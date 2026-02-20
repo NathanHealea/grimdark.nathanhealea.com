@@ -1,0 +1,99 @@
+import type { FormState } from '@/types/forms'
+import type { Outcome } from '@/types/battle-report'
+
+export type BattleReportFormState = FormState<{
+  attacker_id: string
+  attacker_faction_id: string
+  attacker_score: string
+  attacker_outcome: string
+  defender_id: string
+  defender_faction_id: string
+  defender_score: string
+  defender_outcome: string
+  mission_id: string
+  deployment_id: string
+  battle_points_id: string
+  rounds: string
+}>
+
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+const VALID_OUTCOMES: Outcome[] = ['win', 'loss', 'draw']
+
+export function validatePlayerId(value: string): string | null {
+  if (!value) {
+    return 'Player is required.'
+  }
+
+  if (!UUID_PATTERN.test(value)) {
+    return 'Invalid player selection.'
+  }
+
+  return null
+}
+
+export function validateFactionId(value: string): string | null {
+  if (!value) {
+    return 'Faction is required.'
+  }
+
+  if (!UUID_PATTERN.test(value)) {
+    return 'Invalid faction selection.'
+  }
+
+  return null
+}
+
+export function validateScore(value: string): string | null {
+  if (!value) {
+    return 'Score is required.'
+  }
+
+  const num = Number(value)
+
+  if (!Number.isInteger(num) || num < 0) {
+    return 'Score must be a non-negative integer.'
+  }
+
+  return null
+}
+
+export function validateOutcome(value: string): string | null {
+  if (!value) {
+    return 'Outcome is required.'
+  }
+
+  if (!VALID_OUTCOMES.includes(value as Outcome)) {
+    return 'Outcome must be win, loss, or draw.'
+  }
+
+  return null
+}
+
+export function validateRounds(value: string): string | null {
+  if (!value) {
+    return 'Rounds is required.'
+  }
+
+  const num = Number(value)
+
+  if (!Number.isInteger(num) || num < 1 || num > 5) {
+    return 'Rounds must be between 1 and 5.'
+  }
+
+  return null
+}
+
+export function validateSelectId(value: string): string | null {
+  if (!value) {
+    return 'Selection is required.'
+  }
+
+  const num = Number(value)
+
+  if (!Number.isInteger(num) || num < 1) {
+    return 'Invalid selection.'
+  }
+
+  return null
+}

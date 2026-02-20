@@ -1,15 +1,20 @@
 import { getAuthUser } from '@/lib/supabase/auth'
+import { hasRole } from '@/lib/supabase/roles'
 import Link from 'next/link'
 import { signOut } from '@/app/(auth)/actions'
 import MobileNav from './mobile-nav'
 import UserMenu from './user-menu'
 
-const navLinks = [{ href: '/members', label: 'Members' }]
+const publicLinks = [{ href: '/members', label: 'Members' }]
+const memberLinks = [{ href: '/battle-reports/submit', label: 'Submit Battle Report' }]
 
 export default async function Navbar() {
   const auth = await getAuthUser({ withProfile: true })
   const user = auth?.user ?? null
   const profile = auth ? auth.profile : null
+
+  const isMember = user ? await hasRole(user.id, 'member') || await hasRole(user.id, 'admin') : false
+  const navLinks = isMember ? [...publicLinks, ...memberLinks] : publicLinks
 
   return (
     <nav className="navbar sticky top-0 z-40 bg-base-200">

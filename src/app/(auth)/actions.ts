@@ -2,14 +2,14 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
-import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL!
 
 type AuthState = { error?: string; success?: string } | null
 
 export async function signUp(prevState: AuthState, formData: FormData) {
   const supabase = await createClient()
-  const origin = (await headers()).get('origin')
 
   const email = formData.get('email') as string
   const password = formData.get('password') as string
@@ -18,7 +18,7 @@ export async function signUp(prevState: AuthState, formData: FormData) {
     email,
     password,
     options: {
-      emailRedirectTo: `${origin}/auth/callback`,
+      emailRedirectTo: `${siteUrl}/auth/callback`,
     },
   })
 
@@ -47,12 +47,11 @@ export async function signIn(prevState: AuthState, formData: FormData) {
 
 export async function signInWithGoogle() {
   const supabase = await createClient()
-  const origin = (await headers()).get('origin')
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `${origin}/auth/callback`,
+      redirectTo: `${siteUrl}/auth/callback`,
     },
   })
 
@@ -65,12 +64,11 @@ export async function signInWithGoogle() {
 
 export async function signInWithDiscord() {
   const supabase = await createClient()
-  const origin = (await headers()).get('origin')
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'discord',
     options: {
-      redirectTo: `${origin}/auth/callback`,
+      redirectTo: `${siteUrl}/auth/callback`,
     },
   })
 
@@ -85,5 +83,5 @@ export async function signOut() {
   const supabase = await createClient()
   await supabase.auth.signOut()
   revalidatePath('/', 'layout')
-  redirect('/sign-in')
+  redirect('/')
 }

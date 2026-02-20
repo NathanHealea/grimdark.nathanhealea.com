@@ -1,0 +1,73 @@
+import type { BattlePoints, Deployment, Mission } from '@/types/battle-report'
+import type { ProfileFaction } from '@/types/faction'
+import type { Profile } from '@/types/profile'
+import { createClient } from '@/lib/supabase/server'
+
+export async function getMissions(): Promise<Mission[]> {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase.from('missions').select('*').order('name')
+
+  if (error) {
+    console.error('Failed to fetch missions:', error)
+    return []
+  }
+
+  return data as Mission[]
+}
+
+export async function getDeployments(): Promise<Deployment[]> {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase.from('deployments').select('*').order('name')
+
+  if (error) {
+    console.error('Failed to fetch deployments:', error)
+    return []
+  }
+
+  return data as Deployment[]
+}
+
+export async function getBattlePoints(): Promise<BattlePoints[]> {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase.from('battle_points').select('*').order('size')
+
+  if (error) {
+    console.error('Failed to fetch battle points:', error)
+    return []
+  }
+
+  return data as BattlePoints[]
+}
+
+export async function getMembers(): Promise<Profile[]> {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('*, user_roles!inner(role_id, roles!inner(name))')
+    .eq('user_roles.roles.name', 'member')
+    .order('display_name')
+
+  if (error) {
+    console.error('Failed to fetch members:', error)
+    return []
+  }
+
+  return data as unknown as Profile[]
+}
+
+export async function getMemberFactions(): Promise<ProfileFaction[]> {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase.from('profile_factions').select('profile_id, faction_id')
+
+  if (error) {
+    console.error('Failed to fetch member factions:', error)
+    return []
+  }
+
+  return data as ProfileFaction[]
+}
