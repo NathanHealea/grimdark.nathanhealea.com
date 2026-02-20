@@ -5,10 +5,7 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import { useState } from 'react'
 
-type NavLink = {
-  href: string
-  label: string
-}
+import type { NavLink } from '@/routes'
 
 type MobileNavProps = {
   links: NavLink[]

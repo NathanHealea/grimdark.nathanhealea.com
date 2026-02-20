@@ -20,7 +20,7 @@ Admins can grant or revoke the `member` and `admin` roles through an admin inter
 - [x] New users are automatically assigned the `user` role upon profile creation
 - [x] The `user` role cannot be removed from any account
 - [ ] At least one admin is seeded or manually assigned in the database
-- [ ] Admins can grant or revoke the `member` and `admin` roles via an admin interface
+- [x] Admins can grant or revoke the `member` and `admin` roles via an admin interface
 - [x] RLS policies on `user_roles` prevent non-admin users from modifying role assignments
 - [x] A helper function or utility exists to check a user's roles on the server
 - [x] Role information is available in middleware for route-level access control
