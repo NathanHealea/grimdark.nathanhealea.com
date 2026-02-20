@@ -7,7 +7,7 @@ export default function ScrollBanner({ items }: ScrollBannerProps) {
     items.map((item, i) => (
       <li key={i} className="inline-flex items-center whitespace-nowrap px-8 text-sm font-medium">
         <span className="mr-8">{item}</span>
-        <span aria-hidden="true" className="opacity-40">✦</span>
+        <span aria-hidden="true" className="">✦</span>
       </li>
     ))
 
@@ -17,7 +17,7 @@ export default function ScrollBanner({ items }: ScrollBannerProps) {
       role="marquee"
       aria-label="Scrolling Warhammer 40k faction names"
     >
-      <div className="scroll-banner-track flex">
+      <div className="scroll-banner-track flex w-max">
         <ul className="flex shrink-0 list-none m-0 p-0 text-gold" aria-label="Announcements">
           {renderItems()}
           {renderItems()}

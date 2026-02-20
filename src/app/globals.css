@@ -114,7 +114,7 @@ body {
 }
 
 .scroll-banner-track {
-  animation: scroll-banner 120s linear infinite;
+  animation: scroll-banner 240s linear infinite;
 }
 
 .scroll-banner-track:hover {
