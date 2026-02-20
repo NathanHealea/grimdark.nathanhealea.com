@@ -1,4 +1,6 @@
+import ScrollBanner from '@/components/scroll-banner'
 import { createClient } from '@/lib/supabase/server'
+import { getFactions } from '@/modules/faction/queries'
 import Link from 'next/link'
 import { Suspense } from 'react'
 
@@ -77,7 +79,13 @@ async function Stats() {
   )
 }
 
-export default function Home() {
+export default async function Home() {
+  const factions = await getFactions()
+  const rootIds = new Set(factions.filter((f) => f.parent_id === null).map((f) => f.id))
+  const factionNames = factions
+    .filter((f) => f.parent_id !== null && rootIds.has(f.parent_id))
+    .map((f) => f.name.toUpperCase())
+
   return (
     <main className="flex flex-col items-center -mt-72 pt-72 min-h-screen w-full">
       <section className="hero-glow relative overflow-hidden py-28 px-6  w-full">
@@ -114,22 +122,9 @@ export default function Home() {
         </div>
       </section>
 
-      <div className="bg-base-200 border-y border-base-300 py-3 overflow-hidden">
-        <div className="ticker-track whitespace-nowrap">
-          <span className="text-xs tracking-[0.15em] uppercase text-primary">
-            ☠ SPACE MARINES &nbsp;·&nbsp; ☠ CHAOS SPACE MARINES &nbsp;·&nbsp; ☠ TYRANIDS &nbsp;·&nbsp; ☠ ORKS
-            &nbsp;·&nbsp; ☠ NECRONS &nbsp;·&nbsp; ☠ AELDARI &nbsp;·&nbsp; ☠ T&apos;AU EMPIRE &nbsp;·&nbsp; ☠ DEATH GUARD
-            &nbsp;·&nbsp; ☠ ASTRA MILITARUM &nbsp;·&nbsp; ☠ DRUKHARI &nbsp;·&nbsp; ☠ SISTERS OF BATTLE &nbsp;·&nbsp; ☠
-            GREY KNIGHTS &nbsp;·&nbsp; ☠ WORLD EATERS &nbsp;·&nbsp; ☠ THOUSAND SONS &nbsp;·&nbsp;
-          </span>
-          <span className="text-xs tracking-[0.15em] uppercase text-primary" aria-hidden="true">
-            ☠ SPACE MARINES &nbsp;·&nbsp; ☠ CHAOS SPACE MARINES &nbsp;·&nbsp; ☠ TYRANIDS &nbsp;·&nbsp; ☠ ORKS
-            &nbsp;·&nbsp; ☠ NECRONS &nbsp;·&nbsp; ☠ AELDARI &nbsp;·&nbsp; ☠ T&apos;AU EMPIRE &nbsp;·&nbsp; ☠ DEATH GUARD
-            &nbsp;·&nbsp; ☠ ASTRA MILITARUM &nbsp;·&nbsp; ☠ DRUKHARI &nbsp;·&nbsp; ☠ SISTERS OF BATTLE &nbsp;·&nbsp; ☠
-            GREY KNIGHTS &nbsp;·&nbsp; ☠ WORLD EATERS &nbsp;·&nbsp; ☠ THOUSAND SONS &nbsp;·&nbsp;
-          </span>
-        </div>
-      </div>
+      <section className="bg-base-200 border-y border-base-300 py-3 overflow-hidden">
+        <ScrollBanner items={factionNames} />
+      </section>
     </main>
   )
 }
