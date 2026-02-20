@@ -1,7 +1,10 @@
 import { getAuthUser } from '@/lib/supabase/auth'
 import Link from 'next/link'
 import { signOut } from '@/app/(auth)/actions'
+import MobileNav from './mobile-nav'
 import UserMenu from './user-menu'
+
+const navLinks = [{ href: '/members', label: 'Members' }]
 
 export default async function Navbar() {
   const auth = await getAuthUser({ withProfile: true })
@@ -10,15 +13,25 @@ export default async function Navbar() {
 
   return (
     <nav className="navbar sticky top-0 z-40 bg-base-200">
-      <div className="flex-1 gap-2">
+      <div className="navbar-start">
+        <MobileNav
+          links={navLinks}
+          isAuthenticated={!!user}
+          profileId={profile?.profile_id}
+          signOutAction={signOut}
+        />
         <Link href="/" className="btn btn-ghost text-xl">
           Grimdark League
         </Link>
-        <Link href="/members" className="btn btn-ghost btn-sm">
-          Members
-        </Link>
       </div>
-      <div className="flex gap-2">
+      <div className="navbar-end hidden lg:flex gap-4">
+        <ul className="menu menu-horizontal px-1">
+          {navLinks.map((link) => (
+            <li key={link.href}>
+              <Link href={link.href}>{link.label}</Link>
+            </li>
+          ))}
+        </ul>
         {user ? (
           <UserMenu
             profileId={profile?.profile_id}
