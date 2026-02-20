@@ -10,8 +10,8 @@ export default function SignUpPage() {
   const [state, formAction, pending] = useActionState(signUp, null)
 
   return (
-    <main className="flex flex-col items-center justify-center -mt-16 pt-16 min-h-screen">
-    <div className="card w-full max-w-md bg-base-200 shadow-xl">
+    <main className="flex flex-col items-center justify-center -mt-72 pt-72 min-h-screen w-full">
+    <div className="card w-full max-w-lg bg-base-200 shadow-xl">
       <div className="card-body gap-4">
         <h1 className="card-title text-2xl">Sign Up</h1>
 

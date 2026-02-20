@@ -39,3 +39,124 @@
   --depth: 1;
   --noise: 0;
 }
+
+body {
+  font-family: 'Georgia', serif;
+  overflow-x: hidden;
+}
+
+/* ── Gold gradient text ── */
+.text-gold {
+  background: linear-gradient(135deg, #c9a84c 0%, #f0d080 50%, #a0793a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Ornamental divider ── */
+.ornament {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--color-primary);
+}
+
+.ornament::before,
+.ornament::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #c9a84c, transparent);
+}
+
+/* ── Stat loading pulse ── */
+@keyframes stat-pulse {
+
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.stat-num {
+  background: linear-gradient(135deg, #c9a84c, #f0d080);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+
+.stat-loading {
+  animation: stat-pulse 1.5s ease-in-out infinite;
+}
+
+/* ── Hero atmospheric glow ── */
+.hero-glow {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201, 168, 76, 0.07) 0%, transparent 70%),
+    var(--color-base-100);
+}
+
+
+/* ── Scroll reveal ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.55s ease-in-out, transform 0.10s ease-in-out;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── Leaderboard row hover ── */
+.lb-row {
+  border-bottom: 1px solid var(--color-base-300);
+  transition: background 0.15s;
+}
+
+.lb-row:hover {
+  background: rgba(201, 168, 76, 0.04);
+}
+
+/* ── Army card faction banner ── */
+.faction-banner {
+  height: 5px;
+}
+
+@keyframes pulse-dot {
+
+  0%,
+  100% {
+    opacity: 1
+  }
+
+  50% {
+    opacity: 0.35
+  }
+}
+
+.pulse-dot {
+  animation: pulse-dot 2s infinite;
+}
+
+/* ── Ticker marquee ── */
+@keyframes ticker-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.ticker-track {
+  display: inline-flex;
+  animation: ticker-scroll 30s linear infinite;
+}
+
+.ticker-track > span {
+  flex-shrink: 0;
+  padding-right: 2rem;
+}
