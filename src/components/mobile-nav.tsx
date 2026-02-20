@@ -9,12 +9,13 @@ import type { NavLink } from '@/routes'
 
 type MobileNavProps = {
   links: NavLink[]
+  adminLinks?: NavLink[]
   isAuthenticated: boolean
   profileId?: number
   signOutAction?: () => Promise<void>
 }
 
-export default function MobileNav({ links, isAuthenticated, profileId, signOutAction }: MobileNavProps) {
+export default function MobileNav({ links, adminLinks = [], isAuthenticated, profileId, signOutAction }: MobileNavProps) {
   const [open, setOpen] = useState(false)
 
   return (
@@ -45,10 +46,25 @@ export default function MobileNav({ links, isAuthenticated, profileId, signOutAc
               </li>
             ))}
 
+            {adminLinks.length > 0 && (
+              <>
+                <div className="divider my-1" />
+                <li className="menu-title text-xs font-semibold uppercase tracking-widest text-primary">Admin</li>
+                {adminLinks.map((link) => (
+                  <li key={link.href}>
+                    <CloseButton as={Link} href={link.href}>
+                      {link.label}
+                    </CloseButton>
+                  </li>
+                ))}
+              </>
+            )}
+
             <div className="divider my-1" />
 
             {isAuthenticated ? (
               <>
+                <li className="menu-title text-xs font-semibold uppercase tracking-widest text-primary">Profile</li>
                 {profileId && (
                   <li>
                     <CloseButton as={Link} href={`/profile/${profileId}`}>
