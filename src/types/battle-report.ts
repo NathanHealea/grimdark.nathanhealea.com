@@ -14,6 +14,7 @@ export type BattleReport = {
   deployment_id: number
   battle_points_id: number
   rounds: number
+  event_date: string
   reported_by: string
   created_at: string
   updated_at: string

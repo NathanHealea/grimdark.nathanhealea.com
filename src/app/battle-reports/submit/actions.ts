@@ -11,6 +11,7 @@ import {
   validateOutcome,
   validateRounds,
   validateSelectId,
+  validateEventDate,
 } from '@/modules/battle-report/validation'
 
 export async function submitBattleReport(prevState: BattleReportFormState, formData: FormData): Promise<BattleReportFormState> {
@@ -31,6 +32,7 @@ export async function submitBattleReport(prevState: BattleReportFormState, formD
     return { error: 'You must be a member to submit battle reports.' }
   }
 
+  const eventDate = (formData.get('event_date') as string) ?? ''
   const attackerId = (formData.get('attacker_id') as string) ?? ''
   const attackerFactionId = (formData.get('attacker_faction_id') as string) ?? ''
   const attackerScore = (formData.get('attacker_score') as string) ?? ''
@@ -45,6 +47,9 @@ export async function submitBattleReport(prevState: BattleReportFormState, formD
   const rounds = (formData.get('rounds') as string) ?? ''
 
   const errors: Record<string, string> = {}
+
+  const eventDateError = validateEventDate(eventDate)
+  if (eventDateError) errors.event_date = eventDateError
 
   const attackerIdError = validatePlayerId(attackerId)
   if (attackerIdError) errors.attacker_id = attackerIdError
@@ -91,6 +96,7 @@ export async function submitBattleReport(prevState: BattleReportFormState, formD
   }
 
   const { error } = await supabase.from('battle_reports').insert({
+    event_date: eventDate,
     attacker_id: attackerId,
     attacker_faction_id: attackerFactionId,
     attacker_score: Number(attackerScore),

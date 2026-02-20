@@ -1,4 +1,4 @@
-import type { BattlePoints, Deployment, Mission } from '@/types/battle-report'
+import type { BattlePoints, BattleReport, Deployment, Mission } from '@/types/battle-report'
 import type { ProfileFaction } from '@/types/faction'
 import type { Profile } from '@/types/profile'
 import { createClient } from '@/lib/supabase/server'
@@ -40,6 +40,22 @@ export async function getBattlePoints(): Promise<BattlePoints[]> {
   }
 
   return data as BattlePoints[]
+}
+
+export async function getBattleReports(): Promise<BattleReport[]> {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
+    .from('battle_reports')
+    .select('*')
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error('Failed to fetch battle reports:', error)
+    return []
+  }
+
+  return data as BattleReport[]
 }
 
 export async function getMembers(): Promise<Profile[]> {

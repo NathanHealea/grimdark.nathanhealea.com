@@ -10,6 +10,7 @@ export type BattleReportFormState = FormState<{
   defender_faction_id: string
   defender_score: string
   defender_outcome: string
+  event_date: string
   mission_id: string
   deployment_id: string
   battle_points_id: string
@@ -79,6 +80,20 @@ export function validateRounds(value: string): string | null {
 
   if (!Number.isInteger(num) || num < 1 || num > 5) {
     return 'Rounds must be between 1 and 5.'
+  }
+
+  return null
+}
+
+export function validateEventDate(value: string): string | null {
+  if (!value) {
+    return 'Event date is required.'
+  }
+
+  const parsed = new Date(value)
+
+  if (isNaN(parsed.getTime())) {
+    return 'Invalid date format.'
   }
 
   return null

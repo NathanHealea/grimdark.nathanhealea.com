@@ -1,11 +1,14 @@
+import { signOut } from '@/app/(auth)/actions'
 import { getAuthUser } from '@/lib/supabase/auth'
 import { hasRole } from '@/lib/supabase/roles'
 import Link from 'next/link'
-import { signOut } from '@/app/(auth)/actions'
 import MobileNav from './mobile-nav'
 import UserMenu from './user-menu'
 
-const publicLinks = [{ href: '/members', label: 'Members' }]
+const publicLinks = [
+  { href: '/members', label: 'Members' },
+  { href: '/battle-reports', label: 'Battle Reports' },
+]
 const memberLinks = [{ href: '/battle-reports/submit', label: 'Submit Battle Report' }]
 
 export default async function Navbar() {
@@ -13,23 +16,21 @@ export default async function Navbar() {
   const user = auth?.user ?? null
   const profile = auth ? auth.profile : null
 
-  const isMember = user ? await hasRole(user.id, 'member') || await hasRole(user.id, 'admin') : false
+  const isMember = user ? (await hasRole(user.id, 'member')) || (await hasRole(user.id, 'admin')) : false
   const navLinks = isMember ? [...publicLinks, ...memberLinks] : publicLinks
 
   return (
-    <nav className="navbar sticky top-0 z-40 bg-base-200">
+    <nav className="navbar bg-base-100/90 backdrop-blur-md border-b border-base-300 sticky top-0 z-50">
       <div className="navbar-start">
-        <MobileNav
-          links={navLinks}
-          isAuthenticated={!!user}
-          profileId={profile?.profile_id}
-          signOutAction={signOut}
-        />
+        <MobileNav links={navLinks} isAuthenticated={!!user} profileId={profile?.profile_id} signOutAction={signOut} />
         <Link href="/" className="btn btn-ghost text-xl">
-          Grimdark League
+          <span className="font-bold tracking-widest text-primary text-sm uppercase">
+            Grimdark<span className="text-base-content font-light ml-1">League</span>
+          </span>
         </Link>
       </div>
-      <div className="navbar-end hidden lg:flex gap-4">
+
+      <div className="navbar-center hidden lg:flex gap-4">
         <ul className="menu menu-horizontal px-1">
           {navLinks.map((link) => (
             <li key={link.href}>
@@ -37,6 +38,8 @@ export default async function Navbar() {
             </li>
           ))}
         </ul>
+      </div>
+      <div className="navbar-end hidden lg:flex gap-4">
         {user ? (
           <UserMenu
             profileId={profile?.profile_id}
