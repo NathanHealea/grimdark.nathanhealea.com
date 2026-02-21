@@ -40,7 +40,7 @@ export default function MobileNav({ links, adminLinks = [], isAuthenticated, pro
           <ul className="menu w-full gap-1 p-4 text-base">
             {links.map((link) => (
               <li key={link.href}>
-                <CloseButton as={Link} href={link.href}>
+                <CloseButton as={Link} href={link.href} className={link.className}>
                   {link.label}
                 </CloseButton>
               </li>
@@ -52,7 +52,7 @@ export default function MobileNav({ links, adminLinks = [], isAuthenticated, pro
                 <li className="menu-title text-xs font-semibold uppercase tracking-widest text-primary">Admin</li>
                 {adminLinks.map((link) => (
                   <li key={link.href}>
-                    <CloseButton as={Link} href={link.href}>
+                    <CloseButton as={Link} href={link.href} className={link.className}>
                       {link.label}
                     </CloseButton>
                   </li>

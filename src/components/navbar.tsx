@@ -37,10 +37,10 @@ export default async function Navbar() {
       </div>
 
       <div className="navbar-center hidden lg:flex gap-4">
-        <ul className="menu menu-horizontal px-1">
+        <ul className="menu menu-horizontal gap-2">
           {navLinks.map((link) => (
             <li key={link.href}>
-              <Link href={link.href}>{link.label}</Link>
+              <Link href={link.href} className={link.className}>{link.label}</Link>
             </li>
           ))}
         </ul>

@@ -30,7 +30,7 @@ export default function AdminMenu({ links }: AdminMenuProps) {
             <MenuItem key={link.href}>
               <Link
                 href={link.href}
-                className="btn btn-ghost block w-full rounded-btn px-3 py-2 text-left text-sm data-[focus]:bg-base-300"
+                className={`btn btn-ghost block w-full rounded-btn px-3 py-2 text-left text-sm data-[focus]:bg-base-300${link.className ? ` ${link.className}` : ''}`}
               >
                 {link.label}
               </Link>

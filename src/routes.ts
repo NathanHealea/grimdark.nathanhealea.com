@@ -1,6 +1,7 @@
 export type NavLink = {
   href: string
   label: string
+  className?: string
 }
 
 export const publicLinks: NavLink[] = [
@@ -10,7 +11,7 @@ export const publicLinks: NavLink[] = [
 ]
 
 export const memberLinks: NavLink[] = [
-  { href: '/battle-reports/submit', label: 'Submit Battle Report' },
+  { href: '/battle-reports/submit', label: 'Submit Battle Report', className: 'btn btn-outline btn-primary btn-sm' },
 ]
 
 export const adminLinks: NavLink[] = [
