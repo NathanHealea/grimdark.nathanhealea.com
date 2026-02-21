@@ -1,5 +1,5 @@
 import { getSeasons } from '@/modules/season/queries'
-import { getBattlePoints } from '@/modules/battle-report/queries'
+import { getBattlePoints, getBattleReportCountsBySeasonId } from '@/modules/battle-report/queries'
 import type { BattlePoints } from '@/types/battle-report'
 import type { Season } from '@/types/season'
 import Link from 'next/link'
@@ -12,9 +12,10 @@ function formatDate(dateString: string): string {
   })
 }
 
-function SeasonCard({ season, battlePointsMap, highlighted }: {
+function SeasonCard({ season, battlePointsMap, reportCount, highlighted }: {
   season: Season
   battlePointsMap: Map<number, BattlePoints>
+  reportCount: number
   highlighted?: boolean
 }) {
   const bp = battlePointsMap.get(season.battle_points_id)
@@ -33,6 +34,7 @@ function SeasonCard({ season, battlePointsMap, highlighted }: {
         <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-base-content/60">
           <span>{formatDate(season.start_date)} &ndash; {formatDate(season.end_date)}</span>
           {bp && <span>{bp.name} ({bp.size} pts)</span>}
+          <span>{reportCount} {reportCount === 1 ? 'battle report' : 'battle reports'}</span>
         </div>
 
         {season.description && <p className="text-base-content/70">{season.description}</p>}
@@ -42,7 +44,11 @@ function SeasonCard({ season, battlePointsMap, highlighted }: {
 }
 
 export default async function SeasonsPage() {
-  const [seasons, battlePoints] = await Promise.all([getSeasons(), getBattlePoints()])
+  const [seasons, battlePoints, reportCounts] = await Promise.all([
+    getSeasons(),
+    getBattlePoints(),
+    getBattleReportCountsBySeasonId(),
+  ])
 
   const battlePointsMap = new Map<number, BattlePoints>(battlePoints.map((bp) => [bp.id, bp]))
 
@@ -64,7 +70,7 @@ export default async function SeasonsPage() {
           {activeSeason && (
             <div className="mb-8">
               <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Current Season</h2>
-              <SeasonCard season={activeSeason} battlePointsMap={battlePointsMap} highlighted />
+              <SeasonCard season={activeSeason} battlePointsMap={battlePointsMap} reportCount={reportCounts.get(activeSeason.id) ?? 0} highlighted />
             </div>
           )}
 
@@ -74,7 +80,7 @@ export default async function SeasonsPage() {
               <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Past Seasons</h2>
               <div className="grid gap-4">
                 {pastSeasons.map((season) => (
-                  <SeasonCard key={season.id} season={season} battlePointsMap={battlePointsMap} />
+                  <SeasonCard key={season.id} season={season} battlePointsMap={battlePointsMap} reportCount={reportCounts.get(season.id) ?? 0} />
                 ))}
               </div>
             </div>

@@ -92,6 +92,25 @@ export async function getBattleReportsBySeasonId(seasonId: number): Promise<Batt
   return data as BattleReport[]
 }
 
+export async function getBattleReportCountsBySeasonId(): Promise<Map<number, number>> {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase.from('battle_reports').select('season_id')
+
+  if (error) {
+    console.error('Failed to fetch battle report counts:', error)
+    return new Map()
+  }
+
+  const counts = new Map<number, number>()
+  for (const row of data) {
+    if (row.season_id != null) {
+      counts.set(row.season_id, (counts.get(row.season_id) ?? 0) + 1)
+    }
+  }
+  return counts
+}
+
 export async function getBattleReportById(id: string): Promise<BattleReport | null> {
   const supabase = await createClient()
 
