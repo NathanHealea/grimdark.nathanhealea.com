@@ -65,90 +65,90 @@ export default async function BattleReportsPage() {
 
   return (
     <main className="flex flex-col items-center -mt-72 pt-72 min-h-screen w-full">
-    <div className="w-full px-4 py-12">
-      <div className="mx-auto max-w-4xl">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold">Battle Reports</h1>
-          <p className="mt-2 text-base-content/60">
-            Browse all submitted battle reports from the league.
-          </p>
-        </div>
-
-        {battleReports.length === 0 ? (
-          <p className="text-base-content/50 italic">No battle reports yet.</p>
-        ) : (
-          <div className="grid gap-4">
-            {battleReports.map((report) => {
-              const attacker = profileMap.get(report.attacker_id)
-              const defender = profileMap.get(report.defender_id)
-              const mission = missionMap.get(report.mission_id)
-              const deployment = deploymentMap.get(report.deployment_id)
-              const bp = battlePointsMap.get(report.battle_points_id)
-
-              return (
-                <Link
-                  key={report.id}
-                  href={`/battle-reports/${report.id}`}
-                  className="card bg-base-200 shadow-sm transition-shadow hover:shadow-md"
-                >
-                  <div className="card-body gap-4 p-4">
-                    {/* Players */}
-                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                      {/* Attacker */}
-                      <div className="flex items-center justify-between gap-2 rounded-lg bg-base-300 p-3">
-                        <div className="min-w-0">
-                          <p className="text-xs font-medium uppercase text-base-content/50">
-                            Attacker
-                          </p>
-                          <p className="truncate font-semibold">
-                            {attacker?.display_name ?? 'Unknown'}
-                          </p>
-                          <p className="truncate text-sm text-base-content/60">
-                            {getFactionLabel(report.attacker_faction_id, factionMap)}
-                          </p>
-                        </div>
-                        <div className="flex flex-col items-end gap-1">
-                          <span className="text-xl font-bold">{report.attacker_score}</span>
-                          {outcomeBadge(report.attacker_outcome)}
-                        </div>
-                      </div>
-
-                      {/* Defender */}
-                      <div className="flex items-center justify-between gap-2 rounded-lg bg-base-300 p-3">
-                        <div className="min-w-0">
-                          <p className="text-xs font-medium uppercase text-base-content/50">
-                            Defender
-                          </p>
-                          <p className="truncate font-semibold">
-                            {defender?.display_name ?? 'Unknown'}
-                          </p>
-                          <p className="truncate text-sm text-base-content/60">
-                            {getFactionLabel(report.defender_faction_id, factionMap)}
-                          </p>
-                        </div>
-                        <div className="flex flex-col items-end gap-1">
-                          <span className="text-xl font-bold">{report.defender_score}</span>
-                          {outcomeBadge(report.defender_outcome)}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Game details */}
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-base-content/60">
-                      {mission && <span>{mission.name}</span>}
-                      {deployment && <span>{deployment.name}</span>}
-                      {bp && <span>{bp.name}</span>}
-                      <span>{report.rounds} {report.rounds === 1 ? 'round' : 'rounds'}</span>
-                      <span className="ml-auto">{formatDate(report.event_date)}</span>
-                    </div>
-                  </div>
-                </Link>
-              )
-            })}
+      <div className="w-full px-4 py-12">
+        <div className="mx-auto max-w-4xl">
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold">Battle Reports</h1>
+            <p className="mt-1 text-sm text-base-content/50">
+              Browse all submitted battle reports from the league.
+            </p>
           </div>
-        )}
+
+          {/* Battle Reports */}
+          <div>
+            <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">
+              All Reports ({battleReports.length})
+            </h2>
+
+            {battleReports.length === 0 ? (
+              <p className="text-base-content/50 italic">No battle reports yet.</p>
+            ) : (
+              <div className="grid gap-4">
+                {battleReports.map((report) => {
+                  const attacker = profileMap.get(report.attacker_id)
+                  const defender = profileMap.get(report.defender_id)
+                  const mission = missionMap.get(report.mission_id)
+                  const deployment = deploymentMap.get(report.deployment_id)
+                  const bp = battlePointsMap.get(report.battle_points_id)
+
+                  return (
+                    <Link
+                      key={report.id}
+                      href={`/battle-reports/${report.id}`}
+                      className="card bg-base-200 shadow-sm transition-shadow hover:shadow-md"
+                    >
+                      <div className="card-body gap-4 p-4">
+                        {/* Players */}
+                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                          {/* Attacker */}
+                          <div className="flex items-center justify-between gap-2 rounded-lg bg-base-300 p-3">
+                            <div className="min-w-0">
+                              <p className="text-xs font-medium uppercase text-base-content/50">Attacker</p>
+                              <p className="truncate font-semibold">{attacker?.display_name ?? 'Unknown'}</p>
+                              <p className="truncate text-sm text-base-content/60">
+                                {getFactionLabel(report.attacker_faction_id, factionMap)}
+                              </p>
+                            </div>
+                            <div className="flex flex-col items-end gap-1">
+                              <span className="text-xl font-bold">{report.attacker_score}</span>
+                              {outcomeBadge(report.attacker_outcome)}
+                            </div>
+                          </div>
+
+                          {/* Defender */}
+                          <div className="flex items-center justify-between gap-2 rounded-lg bg-base-300 p-3">
+                            <div className="min-w-0">
+                              <p className="text-xs font-medium uppercase text-base-content/50">Defender</p>
+                              <p className="truncate font-semibold">{defender?.display_name ?? 'Unknown'}</p>
+                              <p className="truncate text-sm text-base-content/60">
+                                {getFactionLabel(report.defender_faction_id, factionMap)}
+                              </p>
+                            </div>
+                            <div className="flex flex-col items-end gap-1">
+                              <span className="text-xl font-bold">{report.defender_score}</span>
+                              {outcomeBadge(report.defender_outcome)}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Game details */}
+                        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-base-content/60">
+                          {mission && <span>{mission.name}</span>}
+                          {deployment && <span>{deployment.name}</span>}
+                          {bp && <span>{bp.name}</span>}
+                          <span>{report.rounds} {report.rounds === 1 ? 'round' : 'rounds'}</span>
+                          <span className="ml-auto">{formatDate(report.event_date)}</span>
+                        </div>
+                      </div>
+                    </Link>
+                  )
+                })}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
-    </div>
     </main>
   )
 }

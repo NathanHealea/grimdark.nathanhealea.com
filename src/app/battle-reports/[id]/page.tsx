@@ -1,3 +1,5 @@
+import { getAuthUser } from '@/lib/supabase/auth'
+import { hasRole } from '@/lib/supabase/roles'
 import { createClient } from '@/lib/supabase/server'
 import { getFactions } from '@/modules/faction/queries'
 import {
@@ -48,10 +50,13 @@ function formatDate(dateString: string): string {
 export default async function BattleReportDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
 
-  const [report, { data: profiles }, factions, missions, deployments, battlePoints] =
+  const supabase = await createClient()
+
+  const [report, auth, { data: profiles }, factions, missions, deployments, battlePoints] =
     await Promise.all([
       getBattleReportById(id),
-      (await createClient()).from('profiles').select('*'),
+      getAuthUser(),
+      supabase.from('profiles').select('*'),
       getFactions(),
       getMissions(),
       getDeployments(),
@@ -61,6 +66,8 @@ export default async function BattleReportDetailPage({ params }: { params: Promi
   if (!report) {
     notFound()
   }
+
+  const isAdmin = auth ? await hasRole(auth.user.id, 'admin') : false
 
   const profileMap = new Map((profiles as Profile[] ?? []).map((p) => [p.id, p]))
   const factionMap = new Map(factions.map((f) => [f.id, f]))
@@ -77,25 +84,35 @@ export default async function BattleReportDetailPage({ params }: { params: Promi
 
   return (
     <main className="flex flex-col items-center -mt-72 pt-72 min-h-screen w-full">
-    <div className="w-full px-4 py-12">
-      <div className="mx-auto max-w-2xl">
-        <div className="mb-6">
-          <Link href="/battle-reports" className="link link-hover text-sm text-base-content/60">
-            &larr; Back to Battle Reports
-          </Link>
-        </div>
-
-        <div className="card bg-base-200 shadow-xl">
-          <div className="card-body gap-6">
-            <div>
-              <h1 className="card-title text-2xl">Battle Report</h1>
-              <p className="text-sm text-base-content/60">{formatDate(report.event_date)}</p>
+      <div className="w-full px-4 py-12">
+        <div className="mx-auto max-w-4xl">
+          {/* Header */}
+          <div className="mb-8">
+            <Link href="/battle-reports" className="btn btn-ghost btn-sm mb-4 -ml-2">
+              &larr; All Battle Reports
+            </Link>
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <h1 className="text-3xl font-bold">Battle Report</h1>
+                <p className="mt-1 text-sm text-base-content/50">{formatDate(report.event_date)}</p>
+              </div>
+              {isAdmin && (
+                <Link href={`/battle-reports/${id}/edit`} className="btn btn-outline btn-sm shrink-0">
+                  Edit Report
+                </Link>
+              )}
             </div>
+            <p className="mt-2 text-xs text-base-content/40">
+              Reported by {reportedBy?.display_name ?? 'Unknown'} on {formatDate(report.created_at)}
+            </p>
+          </div>
 
-            {/* Players */}
+          {/* Players */}
+          <div className="mb-8">
+            <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Players</h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {/* Attacker */}
-              <div className="rounded-lg bg-base-300 p-4">
+              <div className="rounded-lg bg-base-200 p-4">
                 <p className="text-xs font-medium uppercase text-base-content/50 mb-2">Attacker</p>
                 <div className="flex items-center justify-between gap-2">
                   <div className="min-w-0">
@@ -117,7 +134,7 @@ export default async function BattleReportDetailPage({ params }: { params: Promi
               </div>
 
               {/* Defender */}
-              <div className="rounded-lg bg-base-300 p-4">
+              <div className="rounded-lg bg-base-200 p-4">
                 <p className="text-xs font-medium uppercase text-base-content/50 mb-2">Defender</p>
                 <div className="flex items-center justify-between gap-2">
                   <div className="min-w-0">
@@ -138,10 +155,12 @@ export default async function BattleReportDetailPage({ params }: { params: Promi
                 </div>
               </div>
             </div>
+          </div>
 
-            {/* Game Details */}
-            <div className="rounded-lg bg-base-300 p-4">
-              <p className="text-xs font-medium uppercase text-base-content/50 mb-3">Game Details</p>
+          {/* Game Details */}
+          <div>
+            <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Game Details</h2>
+            <div className="rounded-lg bg-base-200 p-4">
               <div className="grid grid-cols-2 gap-y-3 gap-x-4 text-sm">
                 <div>
                   <p className="text-base-content/50">Mission</p>
@@ -161,15 +180,9 @@ export default async function BattleReportDetailPage({ params }: { params: Promi
                 </div>
               </div>
             </div>
-
-            {/* Meta */}
-            <div className="text-xs text-base-content/40">
-              Reported by {reportedBy?.display_name ?? 'Unknown'} on {formatDate(report.created_at)}
-            </div>
           </div>
         </div>
       </div>
-    </div>
     </main>
   )
 }
