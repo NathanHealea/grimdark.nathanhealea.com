@@ -3,8 +3,13 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Grimdark League',
-  description: 'A Warhammer 40k league management platform. Track battles, showcase your army, and climb the leaderboard.',
+  metadataBase: new URL('https://grimdark.nathanhealea.com'),
+  title: {
+    default: 'Grimdark League',
+    template: '%s | Grimdark League',
+  },
+  description: 'A local Warhammer 40,000 league based in Eugene/Springfield, Oregon. Battle reports, standings, and league seasons.',
+  keywords: ['Warhammer 40k', 'league', 'battle reports', 'standings', 'tabletop gaming', 'Grimdark League'],
   icons: {
     icon: [
       { url: '/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
@@ -16,6 +21,14 @@ export const metadata: Metadata = {
   manifest: '/site.webmanifest',
   appleWebApp: {
     title: 'Grimdark',
+  },
+  openGraph: {
+    siteName: 'Grimdark League',
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
   },
 }
 
