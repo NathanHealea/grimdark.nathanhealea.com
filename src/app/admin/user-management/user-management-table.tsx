@@ -1,6 +1,7 @@
 'use client'
 
 import ActionsMenu from '@/components/actions-menu'
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { useActionState, useEffect, useState } from 'react'
 import { toggleRole, type ToggleRoleState } from './actions'
 
@@ -72,15 +73,19 @@ function AddRoleButton({
   }, [state, onResult])
 
   return (
-    <li>
+    <MenuItem>
       <form action={formAction}>
         <input type="hidden" name="userId" value={userId} />
         <input type="hidden" name="role" value={role} />
-        <button type="submit" disabled={isPending} className="w-full text-left">
+        <button
+          type="submit"
+          disabled={isPending}
+          className="btn btn-ghost block w-full rounded-btn px-3 py-2 text-left text-sm data-[focus]:bg-base-300"
+        >
           {isPending ? <span className="loading loading-spinner loading-xs" /> : role}
         </button>
       </form>
-    </li>
+    </MenuItem>
   )
 }
 
@@ -156,24 +161,26 @@ export default function UserManagementTable({ users, currentUserId, assignableRo
                         ))}
 
                     {!isSelf && availableRoles.length > 0 && (
-                      <div className="dropdown dropdown-end">
-                        <div
-                          tabIndex={0}
-                          role="button"
+                      <Menu as="div" className="relative inline-block">
+                        <MenuButton
                           className="badge badge-sm badge-dash cursor-pointer hover:badge-success"
                           aria-label="Add role"
                         >
                           +
-                        </div>
-                        <ul
-                          tabIndex={0}
-                          className="dropdown-content menu bg-base-200 rounded-box z-10 w-40 p-2 shadow-sm"
+                        </MenuButton>
+                        <MenuItems
+                          anchor="bottom end"
+                          modal={false}
+                          transition
+                          className="z-50 mt-2 w-40 origin-top-right rounded-box bg-base-200 shadow-lg ring-1 ring-base-300 transition duration-100 ease-out [--anchor-gap:0.5rem] data-[closed]:scale-95 data-[closed]:opacity-0"
                         >
-                          {availableRoles.map((role) => (
-                            <AddRoleButton key={role} userId={u.id} role={role} onResult={handleResult} />
-                          ))}
-                        </ul>
-                      </div>
+                          <div className="p-2">
+                            {availableRoles.map((role) => (
+                              <AddRoleButton key={role} userId={u.id} role={role} onResult={handleResult} />
+                            ))}
+                          </div>
+                        </MenuItems>
+                      </Menu>
                     )}
 
                     {isSelf && <span className="text-xs italic text-base-content/50 ml-1">(you)</span>}
