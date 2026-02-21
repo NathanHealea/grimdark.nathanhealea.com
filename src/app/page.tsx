@@ -113,7 +113,6 @@ export default async function Home() {
             <Link href={'/sign-up'} className="btn btn-primary btn-lg">
               Join the League
             </Link>
-            <button className="btn btn-outline btn-primary btn-lg">View Rankings</button>
           </div>
 
           <Suspense fallback={<StatsLoading />}>
