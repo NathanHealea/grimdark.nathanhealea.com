@@ -1,8 +1,8 @@
 'use client'
 
+import ActionsMenu from '@/components/actions-menu'
 import { useActionState, useEffect, useState } from 'react'
 import { toggleRole, type ToggleRoleState } from './actions'
-import Link from 'next/link'
 
 type UserWithRoles = {
   id: string
@@ -180,21 +180,12 @@ export default function UserManagementTable({ users, currentUserId, assignableRo
                   </div>
                 </td>
                 <td>
-                  <div className="dropdown dropdown-end">
-                    <div tabIndex={0} role="button" className="btn btn-ghost btn-xs">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-                        <path d="M3 10a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM8.5 10a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM15.5 8.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Z" />
-                      </svg>
-                    </div>
-                    <ul tabIndex={0} className="dropdown-content menu bg-base-200 rounded-box z-10 w-48 p-2 shadow-sm">
-                      <li>
-                        <Link href={`/profile/${u.profile_id}`}>View Profile</Link>
-                      </li>
-                      <li>
-                        <Link href={`/admin/user-management/${u.profile_id}/edit`}>Edit User</Link>
-                      </li>
-                    </ul>
-                  </div>
+                  <ActionsMenu
+                    items={[
+                      { label: 'View Profile', href: `/profile/${u.profile_id}` },
+                      { label: 'Edit User', href: `/admin/user-management/${u.profile_id}/edit` },
+                    ]}
+                  />
                 </td>
               </tr>
             )

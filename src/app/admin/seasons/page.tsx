@@ -1,5 +1,6 @@
-import { getSeasons } from '@/modules/season/queries'
+import ActionsMenu from '@/components/actions-menu'
 import { getBattlePoints } from '@/modules/battle-report/queries'
+import { getSeasons } from '@/modules/season/queries'
 import type { BattlePoints } from '@/types/battle-report'
 import Link from 'next/link'
 import SeasonForm from './season-form'
@@ -56,48 +57,46 @@ export default async function AdminSeasonsPage({
           {seasons.length === 0 ? (
             <p className="text-base-content/50 italic">No seasons yet.</p>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Dates</th>
-                    <th>Battle Size</th>
-                    <th>Status</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {seasons.map((season) => {
-                    const bp = battlePointsMap.get(season.battle_points_id)
-                    return (
-                      <tr key={season.id} className="hover">
-                        <td className="font-semibold">{season.name}</td>
-                        <td className="text-sm text-base-content/60">
-                          {formatDate(season.start_date)} &ndash; {formatDate(season.end_date)}
-                        </td>
-                        <td className="text-sm">{bp ? `${bp.name} (${bp.size} pts)` : '—'}</td>
-                        <td>
-                          {season.is_active ? (
-                            <span className="badge badge-success">Active</span>
-                          ) : (
-                            <span className="badge badge-ghost">Inactive</span>
-                          )}
-                        </td>
-                        <td>
-                          <Link
-                            href={`/admin/seasons?edit=${season.id}`}
-                            className="btn btn-ghost btn-xs"
-                          >
-                            Edit
-                          </Link>
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
-            </div>
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Dates</th>
+                  <th>Battle Size</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {seasons.map((season) => {
+                  const bp = battlePointsMap.get(season.battle_points_id)
+                  return (
+                    <tr key={season.id} className="hover">
+                      <td className="font-semibold">{season.name}</td>
+                      <td className="text-sm text-base-content/60">
+                        {formatDate(season.start_date)} &ndash; {formatDate(season.end_date)}
+                      </td>
+                      <td className="text-sm">{bp ? `${bp.name} (${bp.size} pts)` : '—'}</td>
+                      <td>
+                        {season.is_active ? (
+                          <span className="badge badge-success">Active</span>
+                        ) : (
+                          <span className="badge badge-ghost">Inactive</span>
+                        )}
+                      </td>
+                      <td>
+                        <ActionsMenu
+                          items={[
+                            { label: 'View Season', href: `/seasons/${season.id}` },
+                            { label: 'Edit Season', href: `/admin/seasons?edit=${season.id}` },
+                          ]}
+                        />
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
           )}
         </div>
       </div>
