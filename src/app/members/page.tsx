@@ -1,4 +1,7 @@
+import type { Metadata } from 'next'
 import Avatar from '@/components/avatar'
+export const metadata: Metadata = { title: 'Members' }
+
 import { createClient } from '@/lib/supabase/server'
 import { getFactions } from '@/modules/faction/queries'
 import type { Faction } from '@/types/faction'

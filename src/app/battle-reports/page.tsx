@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { getFactions } from '@/modules/faction/queries'
 import {
@@ -6,6 +7,8 @@ import {
   getDeployments,
   getBattlePoints,
 } from '@/modules/battle-report/queries'
+export const metadata: Metadata = { title: 'Battle Reports' }
+
 import type { Outcome } from '@/types/battle-report'
 import type { Profile } from '@/types/profile'
 import type { Faction } from '@/types/faction'

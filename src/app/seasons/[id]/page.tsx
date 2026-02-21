@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { getSeasonById } from '@/modules/season/queries'
 import { getFactions } from '@/modules/faction/queries'
@@ -45,6 +46,14 @@ function formatDate(dateString: string): string {
     month: 'short',
     day: 'numeric',
   })
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params
+  const seasonId = Number(id)
+  if (!seasonId) return { title: 'Season' }
+  const season = await getSeasonById(seasonId)
+  return { title: season?.name ?? 'Season' }
 }
 
 export default async function SeasonDetailPage({ params }: { params: Promise<{ id: string }> }) {

@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import Avatar from '@/components/avatar'
 import { getAuthUser } from '@/lib/supabase/auth'
 import { hasRole } from '@/lib/supabase/roles'
@@ -46,6 +47,15 @@ function formatDate(dateString: string): string {
     month: 'short',
     day: 'numeric',
   })
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ profileId: string }> }): Promise<Metadata> {
+  const { profileId } = await params
+  const id = Number(profileId)
+  if (Number.isNaN(id)) return { title: 'Profile' }
+  const supabase = await createClient()
+  const { data: profile } = await supabase.from('profiles').select('display_name').eq('profile_id', id).single()
+  return { title: profile?.display_name ?? 'Profile' }
 }
 
 export default async function ProfilePage({ params }: { params: Promise<{ profileId: string }> }) {

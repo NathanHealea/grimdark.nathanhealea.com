@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { getAuthUser } from '@/lib/supabase/auth'
 import { hasRole } from '@/lib/supabase/roles'
 import { createClient } from '@/lib/supabase/server'
@@ -45,6 +46,18 @@ function formatDate(dateString: string): string {
     month: 'short',
     day: 'numeric',
   })
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params
+  const supabase = await createClient()
+  const report = await getBattleReportById(id)
+  if (!report) return { title: 'Battle Report' }
+  const { data: profiles } = await supabase.from('profiles').select('id, display_name')
+  const profileMap = new Map((profiles ?? []).map((p) => [p.id, p.display_name ?? 'Unknown']))
+  const attacker = profileMap.get(report.attacker_id) ?? 'Unknown'
+  const defender = profileMap.get(report.defender_id) ?? 'Unknown'
+  return { title: `Battle Report — ${attacker} vs ${defender}` }
 }
 
 export default async function BattleReportDetailPage({ params }: { params: Promise<{ id: string }> }) {

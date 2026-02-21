@@ -1,4 +1,7 @@
+import type { Metadata } from 'next'
 import { getSeasons } from '@/modules/season/queries'
+export const metadata: Metadata = { title: 'Seasons' }
+
 import { getBattlePoints, getBattleReportCountsBySeasonId } from '@/modules/battle-report/queries'
 import type { BattlePoints } from '@/types/battle-report'
 import type { Season } from '@/types/season'
