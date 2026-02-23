@@ -43,7 +43,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Check if authenticated user has a profile
-  const { data: profile } = await supabase.from('profiles').select('id').eq('id', user.id).single()
+  const { data: profile } = await supabase.from('profiles').select('id').eq('user_id', user.id).single()
 
   // Already has profile but visiting setup page — redirect to home
   if (pathname === PROFILE_SETUP_ROUTE && profile) {

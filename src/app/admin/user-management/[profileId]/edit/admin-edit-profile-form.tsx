@@ -7,7 +7,7 @@ import { type ProfileFormState, validateBio, validateDisplayName } from '@/modul
 import type { Faction } from '@/types/faction'
 import type { Profile } from '@/types/profile'
 import { startTransition, useActionState, useEffect, useRef, useState } from 'react'
-import { adminUpdateProfile } from './actions'
+import { adminUpdateProfile, unlinkProfileAction } from './actions'
 import { toggleRole, type ToggleRoleState } from '../../actions'
 
 type AdminEditProfileFormProps = {
@@ -99,6 +99,10 @@ export default function AdminEditProfileForm({
     adminUpdateProfile,
     null,
   )
+  const [unlinkState, unlinkAction, unlinkPending] = useActionState<ProfileFormState, FormData>(
+    unlinkProfileAction,
+    null,
+  )
   const displayNameRef = useRef<HTMLInputElement>(null)
   const bioRef = useRef<HTMLTextAreaElement>(null)
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
@@ -173,6 +177,7 @@ export default function AdminEditProfileForm({
   const displayNameFieldError = profileState?.errors?.display_name
   const bioFieldError = profileState?.errors?.bio
   const factionFieldError = profileState?.errors?.faction_ids
+  const isLinked = !!profile.user_id
 
   const removableRoles = currentRoles.filter((r) => assignableRoles.includes(r))
   const protectedRoles = currentRoles.filter((r) => PROTECTED_ROLES.includes(r))
@@ -198,7 +203,7 @@ export default function AdminEditProfileForm({
           )}
 
           <form action={handleSubmit} className="flex flex-col gap-4">
-            <input type="hidden" name="target_user_id" value={profile.id} />
+            <input type="hidden" name="target_profile_id" value={profile.id} />
 
             <ImageUpload
               currentImageUrl={profile.avatar_url}
@@ -242,6 +247,34 @@ export default function AdminEditProfileForm({
               />
               {bioFieldError && <p className="mt-1 text-sm text-error">{bioFieldError}</p>}
 
+              <label className="label" htmlFor="link_id">
+                Link ID
+              </label>
+              <input
+                id="link_id"
+                name="link_id"
+                type="text"
+                defaultValue={profile.link_id ?? ''}
+                placeholder="Discord user ID (for auto-linking)"
+                className="input input-bordered w-full"
+              />
+              <p className="text-xs text-base-content/50 mt-1">
+                Used to auto-link this profile when the user signs in via Discord.
+              </p>
+
+              <label className="label" htmlFor="role">
+                League Role
+              </label>
+              <select
+                id="role"
+                name="role"
+                defaultValue={profile.role}
+                className="select select-bordered w-full"
+              >
+                <option value="member">Member</option>
+                <option value="organizer">Organizer</option>
+              </select>
+
               <label className="fieldset-label">Factions</label>
               <FactionSelector factions={factions} selectedIds={selectedFactionIds} error={factionFieldError} />
             </fieldset>
@@ -253,68 +286,105 @@ export default function AdminEditProfileForm({
         </div>
       </div>
 
-      {/* Section 2: Roles */}
-      <div className="card bg-base-200 shadow-xl">
-        <div className="card-body gap-4">
-          <h2 className="card-title text-xl">Roles</h2>
+      {/* Section 2: Auth Roles */}
+      {isLinked && (
+        <div className="card bg-base-200 shadow-xl">
+          <div className="card-body gap-4">
+            <h2 className="card-title text-xl">Auth Roles</h2>
 
-          {isSelf && (
-            <div role="alert" className="alert alert-warning">
-              <span>You cannot modify your own roles.</span>
-            </div>
-          )}
-
-          {roleAlert?.success && (
-            <div role="alert" className="alert alert-success">
-              <span>{roleAlert.success}</span>
-            </div>
-          )}
-
-          {roleAlert?.error && (
-            <div role="alert" className="alert alert-error">
-              <span>{roleAlert.error}</span>
-            </div>
-          )}
-
-          <div className="flex flex-wrap items-center gap-2">
-            {protectedRoles.map((role) => (
-              <span key={role} className="badge badge-ghost">{role}</span>
-            ))}
-
-            {isSelf
-              ? removableRoles.map((role) => (
-                  <span key={role} className="badge badge-outline">{role}</span>
-                ))
-              : removableRoles.map((role) => (
-                  <RemoveRoleButton key={role} userId={profile.id} role={role} onResult={handleRoleResult} />
-                ))}
-
-            {!isSelf && availableRoles.length > 0 && (
-              <div className="dropdown dropdown-end">
-                <div
-                  tabIndex={0}
-                  role="button"
-                  className="badge badge-dash cursor-pointer hover:badge-success"
-                  aria-label="Add role"
-                >
-                  +
-                </div>
-                <ul tabIndex={0} className="dropdown-content menu bg-base-200 rounded-box z-10 w-40 p-2 shadow-sm">
-                  {availableRoles.map((role) => (
-                    <AddRoleButton key={role} userId={profile.id} role={role} onResult={handleRoleResult} />
-                  ))}
-                </ul>
+            {isSelf && (
+              <div role="alert" className="alert alert-warning">
+                <span>You cannot modify your own roles.</span>
               </div>
             )}
+
+            {roleAlert?.success && (
+              <div role="alert" className="alert alert-success">
+                <span>{roleAlert.success}</span>
+              </div>
+            )}
+
+            {roleAlert?.error && (
+              <div role="alert" className="alert alert-error">
+                <span>{roleAlert.error}</span>
+              </div>
+            )}
+
+            <div className="flex flex-wrap items-center gap-2">
+              {protectedRoles.map((role) => (
+                <span key={role} className="badge badge-ghost">{role}</span>
+              ))}
+
+              {isSelf
+                ? removableRoles.map((role) => (
+                    <span key={role} className="badge badge-outline">{role}</span>
+                  ))
+                : removableRoles.map((role) => (
+                    <RemoveRoleButton key={role} userId={profile.user_id!} role={role} onResult={handleRoleResult} />
+                  ))}
+
+              {!isSelf && availableRoles.length > 0 && (
+                <div className="dropdown dropdown-end">
+                  <div
+                    tabIndex={0}
+                    role="button"
+                    className="badge badge-dash cursor-pointer hover:badge-success"
+                    aria-label="Add role"
+                  >
+                    +
+                  </div>
+                  <ul tabIndex={0} className="dropdown-content menu bg-base-200 rounded-box z-10 w-40 p-2 shadow-sm">
+                    {availableRoles.map((role) => (
+                      <AddRoleButton key={role} userId={profile.user_id!} role={role} onResult={handleRoleResult} />
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
-      {/* Section 3: Admin Actions */}
+      {/* Section 3: Link Status */}
       <div className="card bg-base-200 shadow-xl">
         <div className="card-body gap-4">
-          <h2 className="card-title text-xl">Admin Actions</h2>
-          <p className="text-base-content/50 italic">No additional actions available.</p>
+          <h2 className="card-title text-xl">Link Status</h2>
+
+          {unlinkState?.success && (
+            <div role="alert" className="alert alert-success">
+              <span>{unlinkState.success}</span>
+            </div>
+          )}
+
+          {unlinkState?.error && (
+            <div role="alert" className="alert alert-error">
+              <span>{unlinkState.error}</span>
+            </div>
+          )}
+
+          {isLinked ? (
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="badge badge-success badge-sm mr-2">Linked</span>
+                <span className="text-sm text-base-content/70">Auth account connected</span>
+              </div>
+              {!isSelf && (
+                <form action={unlinkAction}>
+                  <input type="hidden" name="profile_id" value={profile.id} />
+                  <button type="submit" className="btn btn-error btn-sm btn-outline" disabled={unlinkPending}>
+                    {unlinkPending ? <span className="loading loading-spinner loading-xs" /> : 'Unlink'}
+                  </button>
+                </form>
+              )}
+            </div>
+          ) : (
+            <div>
+              <span className="badge badge-warning badge-sm mr-2">Unlinked</span>
+              <span className="text-sm text-base-content/70">
+                No auth account — {profile.link_id ? 'will auto-link on matching Discord sign-in' : 'set a Link ID to enable auto-linking'}
+              </span>
+            </div>
+          )}
         </div>
       </div>
     </div>

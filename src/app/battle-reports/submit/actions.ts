@@ -1,5 +1,6 @@
 'use server'
 
+import { getAuthUser } from '@/lib/supabase/auth'
 import { createClient } from '@/lib/supabase/server'
 import { hasRole } from '@/lib/supabase/roles'
 import { revalidatePath } from 'next/cache'
@@ -15,17 +16,14 @@ import {
 } from '@/modules/battle-report/validation'
 
 export async function submitBattleReport(prevState: BattleReportFormState, formData: FormData): Promise<BattleReportFormState> {
-  const supabase = await createClient()
+  const auth = await getAuthUser({ withProfile: true })
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) {
+  if (!auth) {
     return { error: 'You must be signed in to submit a battle report.' }
   }
 
-  const isMember = await hasRole(user.id, 'member')
+  const { user, profile } = auth
+  const isMember = profile.role === 'member' || profile.role === 'organizer'
   const isAdmin = await hasRole(user.id, 'admin')
 
   if (!isMember && !isAdmin) {
@@ -95,6 +93,8 @@ export async function submitBattleReport(prevState: BattleReportFormState, formD
     return { errors: { defender_id: 'Attacker and defender cannot be the same player.' } }
   }
 
+  const supabase = await createClient()
+
   const { error } = await supabase.from('battle_reports').insert({
     event_date: eventDate,
     attacker_id: attackerId,
@@ -109,7 +109,7 @@ export async function submitBattleReport(prevState: BattleReportFormState, formD
     deployment_id: Number(deploymentId),
     battle_points_id: Number(battlePointsId),
     rounds: Number(rounds),
-    reported_by: user.id,
+    reported_by: profile.id,
   })
 
   if (error) {

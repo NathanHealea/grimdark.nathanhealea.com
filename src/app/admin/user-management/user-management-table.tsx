@@ -7,10 +7,12 @@ import { toggleRole, type ToggleRoleState } from './actions'
 
 type UserWithRoles = {
   id: string
+  user_id: string | null
   profile_id: number
   display_name: string
   avatar_url: string | null
-  roles: string[]
+  role: 'member' | 'organizer'
+  authRoles: string[]
 }
 
 type UserManagementTableProps = {
@@ -113,16 +115,18 @@ export default function UserManagementTable({ users, currentUserId, assignableRo
         <thead>
           <tr>
             <th>User</th>
-            <th>Roles</th>
+            <th>League Role</th>
+            <th>Auth Roles</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           {users.map((u) => {
-            const isSelf = u.id === currentUserId
-            const removableRoles = u.roles.filter((r) => assignableRoles.includes(r))
-            const protectedRoles = u.roles.filter((r) => !assignableRoles.includes(r))
-            const availableRoles = assignableRoles.filter((r) => !u.roles.includes(r))
+            const isSelf = u.user_id === currentUserId
+            const isLinked = !!u.user_id
+            const removableRoles = u.authRoles.filter((r) => assignableRoles.includes(r))
+            const protectedRoles = u.authRoles.filter((r) => !assignableRoles.includes(r))
+            const availableRoles = assignableRoles.filter((r) => !u.authRoles.includes(r))
 
             return (
               <tr key={u.id}>
@@ -139,52 +143,64 @@ export default function UserManagementTable({ users, currentUserId, assignableRo
                         )}
                       </div>
                     </div>
-                    <span className="font-medium">{u.display_name}</span>
+                    <div>
+                      <span className="font-medium">{u.display_name}</span>
+                      {!isLinked && (
+                        <span className="badge badge-ghost badge-xs ml-2">unlinked</span>
+                      )}
+                    </div>
                   </div>
                 </td>
                 <td>
-                  <div className="flex flex-wrap items-center gap-1">
-                    {protectedRoles.map((role) => (
-                      <span key={role} className="badge badge-sm badge-ghost">
-                        {role}
-                      </span>
-                    ))}
+                  <span className="badge badge-sm badge-outline">{u.role}</span>
+                </td>
+                <td>
+                  {isLinked ? (
+                    <div className="flex flex-wrap items-center gap-1">
+                      {protectedRoles.map((role) => (
+                        <span key={role} className="badge badge-sm badge-ghost">
+                          {role}
+                        </span>
+                      ))}
 
-                    {isSelf
-                      ? removableRoles.map((role) => (
-                          <span key={role} className="badge badge-sm badge-outline">
-                            {role}
-                          </span>
-                        ))
-                      : removableRoles.map((role) => (
-                          <RemoveRoleButton key={role} userId={u.id} role={role} onResult={handleResult} />
-                        ))}
+                      {isSelf
+                        ? removableRoles.map((role) => (
+                            <span key={role} className="badge badge-sm badge-outline">
+                              {role}
+                            </span>
+                          ))
+                        : removableRoles.map((role) => (
+                            <RemoveRoleButton key={role} userId={u.user_id!} role={role} onResult={handleResult} />
+                          ))}
 
-                    {!isSelf && availableRoles.length > 0 && (
-                      <Menu as="div" className="relative inline-block">
-                        <MenuButton
-                          className="badge badge-sm badge-dash cursor-pointer hover:badge-success"
-                          aria-label="Add role"
-                        >
-                          +
-                        </MenuButton>
-                        <MenuItems
-                          anchor="bottom end"
-                          modal={false}
-                          transition
-                          className="z-50 mt-2 w-40 origin-top-right rounded-box bg-base-200 shadow-lg ring-1 ring-base-300 transition duration-100 ease-out [--anchor-gap:0.5rem] data-[closed]:scale-95 data-[closed]:opacity-0"
-                        >
-                          <div className="p-2">
-                            {availableRoles.map((role) => (
-                              <AddRoleButton key={role} userId={u.id} role={role} onResult={handleResult} />
-                            ))}
-                          </div>
-                        </MenuItems>
-                      </Menu>
-                    )}
+                      {!isSelf && availableRoles.length > 0 && (
+                        <Menu as="div" className="relative inline-block">
+                          <MenuButton
+                            className="badge badge-sm badge-dash cursor-pointer hover:badge-success"
+                            aria-label="Add role"
+                          >
+                            +
+                          </MenuButton>
+                          <MenuItems
+                            anchor="bottom end"
+                            modal={false}
+                            transition
+                            className="z-50 mt-2 w-40 origin-top-right rounded-box bg-base-200 shadow-lg ring-1 ring-base-300 transition duration-100 ease-out [--anchor-gap:0.5rem] data-[closed]:scale-95 data-[closed]:opacity-0"
+                          >
+                            <div className="p-2">
+                              {availableRoles.map((role) => (
+                                <AddRoleButton key={role} userId={u.user_id!} role={role} onResult={handleResult} />
+                              ))}
+                            </div>
+                          </MenuItems>
+                        </Menu>
+                      )}
 
-                    {isSelf && <span className="text-xs italic text-base-content/50 ml-1">(you)</span>}
-                  </div>
+                      {isSelf && <span className="text-xs italic text-base-content/50 ml-1">(you)</span>}
+                    </div>
+                  ) : (
+                    <span className="text-xs text-base-content/50">No auth account</span>
+                  )}
                 </td>
                 <td>
                   <ActionsMenu

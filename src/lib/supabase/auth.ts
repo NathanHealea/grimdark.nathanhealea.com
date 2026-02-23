@@ -21,7 +21,7 @@ export async function getAuthUser(options?: {
   if (!user) return null
 
   if (options?.withProfile) {
-    const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
+    const { data: profile } = await supabase.from('profiles').select('*').eq('user_id', user.id).single()
 
     if (!profile) return null
 

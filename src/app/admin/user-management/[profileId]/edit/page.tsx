@@ -25,22 +25,28 @@ export default async function AdminEditProfilePage({ params }: { params: Promise
   }
 
   const typedProfile = profile as Profile
-  const isSelf = auth?.user.id === typedProfile.id
+  const isSelf = auth?.user.id === typedProfile.user_id
 
-  const [factions, selectedFactionIds, { data: userRoles }, { data: roles }] = await Promise.all([
+  const [factions, selectedFactionIds] = await Promise.all([
     getFactions(),
     getProfileFactionIds(typedProfile.id),
-    supabase.from('user_roles').select('user_id, roles(name)').eq('user_id', typedProfile.id),
-    supabase.from('roles').select('*'),
   ])
 
-  // Build current role names for the target user
-  const currentRoles = (userRoles ?? []).map((ur) => (ur.roles as unknown as { name: string }).name)
+  // Only fetch auth roles if profile is linked
+  let currentRoles: string[] = []
+  let assignableRoles: string[] = []
 
-  // Assignable roles — exclude protected roles
-  const assignableRoles = (roles ?? [])
-    .map((r) => r.name as string)
-    .filter((name) => !PROTECTED_ROLES.includes(name))
+  if (typedProfile.user_id) {
+    const [{ data: userRoles }, { data: roles }] = await Promise.all([
+      supabase.from('user_roles').select('user_id, roles(name)').eq('user_id', typedProfile.user_id),
+      supabase.from('roles').select('*'),
+    ])
+
+    currentRoles = (userRoles ?? []).map((ur) => (ur.roles as unknown as { name: string }).name)
+    assignableRoles = (roles ?? [])
+      .map((r) => r.name as string)
+      .filter((name) => !PROTECTED_ROLES.includes(name))
+  }
 
   return (
     <div className="w-full px-4 py-12">

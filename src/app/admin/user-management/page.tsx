@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import type { Profile } from '@/types/profile'
+import Link from 'next/link'
 import UserManagementTable from './user-management-table'
 
 const PROTECTED_ROLES = ['user']
@@ -17,7 +18,7 @@ export default async function UserManagementPage() {
     supabase.from('roles').select('*'),
   ])
 
-  // Build a map of user_id → role names
+  // Build a map of auth user_id → role names
   const roleMap = new Map<string, string[]>()
   for (const ur of userRoles ?? []) {
     const roleName = (ur.roles as unknown as { name: string }).name
@@ -26,13 +27,15 @@ export default async function UserManagementPage() {
     roleMap.set(ur.user_id, existing)
   }
 
-  // Combine profiles with their roles
+  // Combine profiles with their auth roles
   const usersWithRoles = ((profiles as Profile[]) ?? []).map((p) => ({
     id: p.id,
+    user_id: p.user_id,
     profile_id: p.profile_id,
     display_name: p.display_name,
     avatar_url: p.avatar_url,
-    roles: roleMap.get(p.id) ?? ['user'],
+    role: p.role,
+    authRoles: p.user_id ? roleMap.get(p.user_id) ?? ['user'] : [],
   }))
 
   // Assignable roles — exclude protected roles that cannot be toggled
@@ -44,11 +47,16 @@ export default async function UserManagementPage() {
     <main className="flex flex-col items-center -mt-72 pt-72 min-h-screen w-full">
       <div className="w-full px-4 py-12">
         <div className="mx-auto max-w-4xl">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold">User Management</h1>
-            <p className="mt-2 text-base-content/60">
-              Manage user roles across the league.
-            </p>
+          <div className="mb-8 flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold">User Management</h1>
+              <p className="mt-2 text-base-content/60">
+                Manage user roles across the league.
+              </p>
+            </div>
+            <Link href="/admin/user-management/create" className="btn btn-primary btn-sm">
+              Create Profile
+            </Link>
           </div>
 
           <UserManagementTable

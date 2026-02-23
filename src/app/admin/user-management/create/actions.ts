@@ -1,11 +1,15 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
+import { hasRole } from '@/lib/supabase/roles'
+import { type ProfileFormState, validateDisplayName, validateFactionIds } from '@/modules/profile/validation'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { type ProfileFormState, validateDisplayName, validateFactionIds } from '@/modules/profile/validation'
 
-export async function setupProfile(prevState: ProfileFormState, formData: FormData): Promise<ProfileFormState> {
+export async function createUnlinkedProfile(
+  prevState: ProfileFormState,
+  formData: FormData
+): Promise<ProfileFormState> {
   const supabase = await createClient()
 
   const {
@@ -13,14 +17,22 @@ export async function setupProfile(prevState: ProfileFormState, formData: FormDa
   } = await supabase.auth.getUser()
 
   if (!user) {
-    return { error: 'You must be signed in to create a profile.' }
+    return { error: 'You must be signed in.' }
+  }
+
+  const isAdmin = await hasRole(user.id, 'admin')
+  if (!isAdmin) {
+    return { error: 'You do not have permission to create profiles.' }
   }
 
   const displayName = (formData.get('display_name') as string) ?? ''
-  const fieldError = validateDisplayName(displayName)
+  const bio = (formData.get('bio') as string) ?? ''
+  const linkId = (formData.get('link_id') as string)?.trim() || null
+  const role = (formData.get('role') as string) || 'member'
 
-  if (fieldError) {
-    return { errors: { display_name: fieldError } }
+  const displayNameError = validateDisplayName(displayName)
+  if (displayNameError) {
+    return { errors: { display_name: displayNameError } }
   }
 
   const factionIds = formData.getAll('faction_ids') as string[]
@@ -41,8 +53,10 @@ export async function setupProfile(prevState: ProfileFormState, formData: FormDa
   const { data: profile, error } = await supabase
     .from('profiles')
     .insert({
-      user_id: user.id,
       display_name: trimmed,
+      bio: bio.trim() || null,
+      link_id: linkId,
+      role,
     })
     .select('id')
     .single()
@@ -54,7 +68,7 @@ export async function setupProfile(prevState: ProfileFormState, formData: FormDa
     return { error: 'Failed to create profile. Please try again.' }
   }
 
-  // Insert faction associations (non-blocking — profile already created)
+  // Insert faction associations
   if (factionIds.length > 0) {
     const rows = factionIds.map((faction_id) => ({ profile_id: profile.id, faction_id }))
     const { error: factionInsertError } = await supabase.from('profile_factions').insert(rows)
@@ -64,5 +78,5 @@ export async function setupProfile(prevState: ProfileFormState, formData: FormDa
   }
 
   revalidatePath('/', 'layout')
-  redirect('/')
+  redirect('/admin/user-management')
 }

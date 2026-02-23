@@ -13,7 +13,7 @@ export default async function Navbar() {
   const profile = auth ? auth.profile : null
 
   const isAdmin = user ? await hasRole(user.id, 'admin') : false
-  const isMember = user ? isAdmin || (await hasRole(user.id, 'member')) : false
+  const isMember = profile ? isAdmin || profile.role === 'member' || profile.role === 'organizer' : false
   const navLinks = [
     ...publicLinks,
     ...(isMember ? memberLinks : []),
