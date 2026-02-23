@@ -11,12 +11,11 @@ import { updateProfile } from './actions'
 
 type EditProfileFormProps = {
   profile: Profile
-  userId: string
   factions: Faction[]
   selectedFactionIds: string[]
 }
 
-export default function EditProfileForm({ profile, userId, factions, selectedFactionIds }: EditProfileFormProps) {
+export default function EditProfileForm({ profile, factions, selectedFactionIds }: EditProfileFormProps) {
   const [state, formAction, pending] = useActionState<ProfileFormState, FormData>(updateProfile, null)
   const displayNameRef = useRef<HTMLInputElement>(null)
   const bioRef = useRef<HTMLTextAreaElement>(null)
@@ -51,7 +50,7 @@ export default function EditProfileForm({ profile, userId, factions, selectedFac
       try {
         const supabase = createClient()
         const ext = avatarFile.name.split('.').pop() ?? 'jpg'
-        const filePath = `${userId}/avatar.${ext}`
+        const filePath = `${profile.id}/avatar.${ext}`
 
         const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, avatarFile, {
           upsert: true,

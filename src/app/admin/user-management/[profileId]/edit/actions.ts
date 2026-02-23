@@ -21,9 +21,9 @@ export async function adminUpdateProfile(prevState: ProfileFormState, formData: 
     return { error: 'You do not have permission to edit profiles.' }
   }
 
-  const targetUserId = formData.get('target_user_id') as string
-  if (!targetUserId) {
-    return { error: 'Missing target user.' }
+  const targetProfileId = formData.get('target_profile_id') as string
+  if (!targetProfileId) {
+    return { error: 'Missing target profile.' }
   }
 
   const displayName = (formData.get('display_name') as string) ?? ''
@@ -46,15 +46,17 @@ export async function adminUpdateProfile(prevState: ProfileFormState, formData: 
   }
 
   const avatarUrl = formData.get('avatar_url') as string | null
+  const linkId = (formData.get('link_id') as string)?.trim() || null
+  const role = formData.get('role') as string
 
   const trimmed = displayName.trim()
 
-  // Check uniqueness (case-insensitive), excluding the target user's own row
+  // Check uniqueness (case-insensitive), excluding the target profile's own row
   const { data: existing } = await supabase
     .from('profiles')
     .select('id')
     .ilike('display_name', trimmed)
-    .neq('id', targetUserId)
+    .neq('id', targetProfileId)
     .single()
 
   if (existing) {
@@ -64,13 +66,15 @@ export async function adminUpdateProfile(prevState: ProfileFormState, formData: 
   const updateData: Record<string, string | null> = {
     display_name: trimmed,
     bio: bio.trim() || null,
+    link_id: linkId,
+    role: role || 'member',
   }
 
   if (avatarUrl) {
     updateData.avatar_url = avatarUrl
   }
 
-  const { error } = await supabase.from('profiles').update(updateData).eq('id', targetUserId)
+  const { error } = await supabase.from('profiles').update(updateData).eq('id', targetProfileId)
 
   if (error) {
     if (error.code === '23505') {
@@ -80,10 +84,10 @@ export async function adminUpdateProfile(prevState: ProfileFormState, formData: 
   }
 
   // Clear-and-replace faction associations
-  await supabase.from('profile_factions').delete().eq('profile_id', targetUserId)
+  await supabase.from('profile_factions').delete().eq('profile_id', targetProfileId)
 
   if (factionIds.length > 0) {
-    const rows = factionIds.map((faction_id) => ({ profile_id: targetUserId, faction_id }))
+    const rows = factionIds.map((faction_id) => ({ profile_id: targetProfileId, faction_id }))
     const { error: factionInsertError } = await supabase.from('profile_factions').insert(rows)
     if (factionInsertError) {
       console.error('Failed to update faction associations:', factionInsertError)
@@ -92,4 +96,35 @@ export async function adminUpdateProfile(prevState: ProfileFormState, formData: 
 
   revalidatePath('/', 'layout')
   return { success: 'Profile updated successfully.' }
+}
+
+export async function unlinkProfileAction(prevState: ProfileFormState, formData: FormData): Promise<ProfileFormState> {
+  const supabase = await createClient()
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    return { error: 'You must be signed in.' }
+  }
+
+  const isAdmin = await hasRole(user.id, 'admin')
+  if (!isAdmin) {
+    return { error: 'You do not have permission to unlink profiles.' }
+  }
+
+  const profileId = formData.get('profile_id') as string
+  if (!profileId) {
+    return { error: 'Missing profile ID.' }
+  }
+
+  const { error } = await supabase.rpc('unlink_profile', { profile_uuid: profileId })
+
+  if (error) {
+    return { error: `Failed to unlink profile: ${error.message}` }
+  }
+
+  revalidatePath('/', 'layout')
+  return { success: 'Profile unlinked successfully.' }
 }

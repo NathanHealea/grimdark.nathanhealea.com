@@ -6,13 +6,15 @@ import { redirect } from 'next/navigation'
 import BattleReportForm from './battle-report-form'
 
 export default async function SubmitBattleReportPage() {
-  const auth = await getAuthUser()
+  const auth = await getAuthUser({ withProfile: true })
 
   if (!auth) {
     redirect('/sign-in')
   }
 
-  const [isMember, isAdmin] = await Promise.all([hasRole(auth.user.id, 'member'), hasRole(auth.user.id, 'admin')])
+  const { user, profile } = auth
+  const isMember = profile.role === 'member' || profile.role === 'organizer'
+  const isAdmin = await hasRole(user.id, 'admin')
 
   if (!isMember && !isAdmin) {
     return (

@@ -85,7 +85,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ profil
       getDeployments(),
       getBattlePoints(),
     ])
-  const isOwner = auth?.user.id === typedProfile.id
+  const isOwner = auth?.user.id === typedProfile.user_id
   const isAdmin = auth ? await hasRole(auth.user.id, 'admin') : false
 
   const factionMap = new Map(factions.map((f) => [f.id, f]))

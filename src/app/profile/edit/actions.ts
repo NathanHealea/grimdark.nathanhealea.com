@@ -1,19 +1,18 @@
 'use server'
 
+import { getAuthUser } from '@/lib/supabase/auth'
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { type ProfileFormState, validateBio, validateDisplayName, validateFactionIds } from '@/modules/profile/validation'
 
 export async function updateProfile(prevState: ProfileFormState, formData: FormData): Promise<ProfileFormState> {
-  const supabase = await createClient()
+  const auth = await getAuthUser({ withProfile: true })
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) {
+  if (!auth) {
     return { error: 'You must be signed in to edit your profile.' }
   }
+
+  const { profile } = auth
 
   const displayName = (formData.get('display_name') as string) ?? ''
   const bio = (formData.get('bio') as string) ?? ''
@@ -38,12 +37,14 @@ export async function updateProfile(prevState: ProfileFormState, formData: FormD
 
   const trimmed = displayName.trim()
 
+  const supabase = await createClient()
+
   // Check uniqueness (case-insensitive), excluding the current user's own row
   const { data: existing } = await supabase
     .from('profiles')
     .select('id')
     .ilike('display_name', trimmed)
-    .neq('id', user.id)
+    .neq('id', profile.id)
     .single()
 
   if (existing) {
@@ -59,7 +60,7 @@ export async function updateProfile(prevState: ProfileFormState, formData: FormD
     updateData.avatar_url = avatarUrl
   }
 
-  const { error } = await supabase.from('profiles').update(updateData).eq('id', user.id)
+  const { error } = await supabase.from('profiles').update(updateData).eq('id', profile.id)
 
   if (error) {
     if (error.code === '23505') {
@@ -69,10 +70,10 @@ export async function updateProfile(prevState: ProfileFormState, formData: FormD
   }
 
   // Clear-and-replace faction associations
-  await supabase.from('profile_factions').delete().eq('profile_id', user.id)
+  await supabase.from('profile_factions').delete().eq('profile_id', profile.id)
 
   if (factionIds.length > 0) {
-    const rows = factionIds.map((faction_id) => ({ profile_id: user.id, faction_id }))
+    const rows = factionIds.map((faction_id) => ({ profile_id: profile.id, faction_id }))
     const { error: factionInsertError } = await supabase.from('profile_factions').insert(rows)
     if (factionInsertError) {
       console.error('Failed to update faction associations:', factionInsertError)

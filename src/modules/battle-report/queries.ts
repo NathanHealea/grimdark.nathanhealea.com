@@ -133,8 +133,8 @@ export async function getMembers(): Promise<Profile[]> {
 
   const { data, error } = await supabase
     .from('profiles')
-    .select('*, user_roles!inner(role_id, roles!inner(name))')
-    .eq('user_roles.roles.name', 'member')
+    .select('*')
+    .in('role', ['member', 'organizer'])
     .order('display_name')
 
   if (error) {
@@ -142,7 +142,7 @@ export async function getMembers(): Promise<Profile[]> {
     return []
   }
 
-  return data as unknown as Profile[]
+  return data as Profile[]
 }
 
 export async function getMemberFactions(): Promise<ProfileFaction[]> {
