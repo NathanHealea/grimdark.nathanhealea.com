@@ -74,12 +74,11 @@ export default async function ProfilePage({ params }: { params: Promise<{ profil
   }
 
   const typedProfile = profile as Profile
-  const [auth, factions, factionIds, battleReports, { data: profiles }, missions, deployments, battlePoints] =
+  const [auth, factions, factionIds, { data: profiles }, missions, deployments, battlePoints] =
     await Promise.all([
       getAuthUser(),
       getFactions(),
       getProfileFactionIds(typedProfile.id),
-      getBattleReportsByPlayerId(typedProfile.id),
       supabase.from('profiles').select('*'),
       getMissions(),
       getDeployments(),
@@ -87,6 +86,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ profil
     ])
   const isOwner = auth?.user.id === typedProfile.user_id
   const isAdmin = auth ? await hasRole(auth.user.id, 'admin') : false
+  const battleReports = await getBattleReportsByPlayerId(typedProfile.id, { includeAll: isAdmin })
 
   const factionMap = new Map(factions.map((f) => [f.id, f]))
   const factionLabels = factionIds.map((id) => ({

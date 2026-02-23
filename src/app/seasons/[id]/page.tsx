@@ -1,4 +1,6 @@
 import type { Metadata } from 'next'
+import { getAuthUser } from '@/lib/supabase/auth'
+import { hasRole } from '@/lib/supabase/roles'
 import { createClient } from '@/lib/supabase/server'
 import { getSeasonById } from '@/modules/season/queries'
 import { getFactions } from '@/modules/faction/queries'
@@ -67,9 +69,11 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ i
   if (!season) notFound()
 
   const supabase = await createClient()
+  const auth = await getAuthUser()
+  const isAdmin = auth ? await hasRole(auth.user.id, 'admin') : false
 
   const [battleReports, { data: profiles }, factions, missions, deployments, battlePoints] = await Promise.all([
-    getBattleReportsBySeasonId(seasonId),
+    getBattleReportsBySeasonId(seasonId, { includeAll: isAdmin }),
     supabase.from('profiles').select('*'),
     getFactions(),
     getMissions(),

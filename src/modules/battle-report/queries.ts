@@ -42,14 +42,16 @@ export async function getBattlePoints(): Promise<BattlePoints[]> {
   return data as BattlePoints[]
 }
 
-export async function getBattleReports(): Promise<BattleReport[]> {
+export async function getBattleReports({ includeAll = false } = {}): Promise<BattleReport[]> {
   const supabase = await createClient()
 
-  const { data, error } = await supabase
+  let query = supabase
     .from('battle_reports')
     .select('*')
-    .eq('status', 'published')
-    .order('created_at', { ascending: false })
+
+  if (!includeAll) query = query.eq('status', 'published')
+
+  const { data, error } = await query.order('created_at', { ascending: false })
 
   if (error) {
     console.error('Failed to fetch battle reports:', error)
@@ -59,15 +61,17 @@ export async function getBattleReports(): Promise<BattleReport[]> {
   return data as BattleReport[]
 }
 
-export async function getBattleReportsByPlayerId(playerId: string): Promise<BattleReport[]> {
+export async function getBattleReportsByPlayerId(playerId: string, { includeAll = false } = {}): Promise<BattleReport[]> {
   const supabase = await createClient()
 
-  const { data, error } = await supabase
+  let query = supabase
     .from('battle_reports')
     .select('*')
-    .eq('status', 'published')
     .or(`attacker_id.eq.${playerId},defender_id.eq.${playerId}`)
-    .order('created_at', { ascending: false })
+
+  if (!includeAll) query = query.eq('status', 'published')
+
+  const { data, error } = await query.order('created_at', { ascending: false })
 
   if (error) {
     console.error('Failed to fetch battle reports for player:', error)
@@ -77,15 +81,17 @@ export async function getBattleReportsByPlayerId(playerId: string): Promise<Batt
   return data as BattleReport[]
 }
 
-export async function getBattleReportsBySeasonId(seasonId: number): Promise<BattleReport[]> {
+export async function getBattleReportsBySeasonId(seasonId: number, { includeAll = false } = {}): Promise<BattleReport[]> {
   const supabase = await createClient()
 
-  const { data, error } = await supabase
+  let query = supabase
     .from('battle_reports')
     .select('*')
-    .eq('status', 'published')
     .eq('season_id', seasonId)
-    .order('created_at', { ascending: false })
+
+  if (!includeAll) query = query.eq('status', 'published')
+
+  const { data, error } = await query.order('created_at', { ascending: false })
 
   if (error) {
     console.error('Failed to fetch battle reports for season:', error)

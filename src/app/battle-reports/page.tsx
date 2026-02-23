@@ -1,4 +1,6 @@
 import type { Metadata } from 'next'
+import { getAuthUser } from '@/lib/supabase/auth'
+import { hasRole } from '@/lib/supabase/roles'
 import { createClient } from '@/lib/supabase/server'
 import { getFactions } from '@/modules/faction/queries'
 import {
@@ -49,10 +51,12 @@ function formatDate(dateString: string): string {
 
 export default async function BattleReportsPage() {
   const supabase = await createClient()
+  const auth = await getAuthUser()
+  const isAdmin = auth ? await hasRole(auth.user.id, 'admin') : false
 
   const [battleReports, { data: profiles }, factions, missions, deployments, battlePoints] =
     await Promise.all([
-      getBattleReports(),
+      getBattleReports({ includeAll: isAdmin }),
       supabase.from('profiles').select('*'),
       getFactions(),
       getMissions(),
@@ -102,6 +106,9 @@ export default async function BattleReportsPage() {
                       className="card bg-base-200 shadow-sm transition-shadow hover:shadow-md"
                     >
                       <div className="card-body gap-4 p-4">
+                        {report.status === 'draft' && (
+                          <span className="badge badge-warning badge-sm self-start">Draft</span>
+                        )}
                         {/* Players */}
                         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                           {/* Attacker */}
