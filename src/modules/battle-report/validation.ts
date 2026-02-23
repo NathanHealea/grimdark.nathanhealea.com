@@ -1,5 +1,5 @@
 import type { FormState } from '@/types/forms'
-import type { Outcome } from '@/types/battle-report'
+import type { Outcome, BattleReportStatus } from '@/types/battle-report'
 
 export type BattleReportFormState = FormState<{
   attacker_id: string
@@ -15,7 +15,22 @@ export type BattleReportFormState = FormState<{
   deployment_id: string
   battle_points_id: string
   rounds: string
+  status: string
 }>
+
+const VALID_STATUSES: BattleReportStatus[] = ['draft', 'published']
+
+export function validateStatus(value: string): string | null {
+  if (!value) {
+    return 'Status is required.'
+  }
+
+  if (!VALID_STATUSES.includes(value as BattleReportStatus)) {
+    return 'Status must be draft or published.'
+  }
+
+  return null
+}
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 

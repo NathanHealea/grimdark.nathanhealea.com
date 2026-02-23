@@ -127,11 +127,11 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ i
             ) : (
               <div className="grid gap-4">
                 {battleReports.map((report) => {
-                  const attacker = profileMap.get(report.attacker_id)
-                  const defender = profileMap.get(report.defender_id)
-                  const mission = missionMap.get(report.mission_id)
-                  const deployment = deploymentMap.get(report.deployment_id)
-                  const reportBp = battlePointsMap.get(report.battle_points_id)
+                  const attacker = report.attacker_id ? profileMap.get(report.attacker_id) : null
+                  const defender = report.defender_id ? profileMap.get(report.defender_id) : null
+                  const mission = report.mission_id ? missionMap.get(report.mission_id) : null
+                  const deployment = report.deployment_id ? deploymentMap.get(report.deployment_id) : null
+                  const reportBp = report.battle_points_id ? battlePointsMap.get(report.battle_points_id) : null
 
                   return (
                     <Link
@@ -147,12 +147,12 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ i
                               <p className="text-xs font-medium uppercase text-base-content/50">Attacker</p>
                               <p className="truncate font-semibold">{attacker?.display_name ?? 'Unknown'}</p>
                               <p className="truncate text-sm text-base-content/60">
-                                {getFactionLabel(report.attacker_faction_id, factionMap)}
+                                {report.attacker_faction_id ? getFactionLabel(report.attacker_faction_id, factionMap) : 'Unknown Faction'}
                               </p>
                             </div>
                             <div className="flex flex-col items-end gap-1">
-                              <span className="text-xl font-bold">{report.attacker_score}</span>
-                              {outcomeBadge(report.attacker_outcome)}
+                              <span className="text-xl font-bold">{report.attacker_score ?? 0}</span>
+                              {report.attacker_outcome && outcomeBadge(report.attacker_outcome)}
                             </div>
                           </div>
 
@@ -162,12 +162,12 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ i
                               <p className="text-xs font-medium uppercase text-base-content/50">Defender</p>
                               <p className="truncate font-semibold">{defender?.display_name ?? 'Unknown'}</p>
                               <p className="truncate text-sm text-base-content/60">
-                                {getFactionLabel(report.defender_faction_id, factionMap)}
+                                {report.defender_faction_id ? getFactionLabel(report.defender_faction_id, factionMap) : 'Unknown Faction'}
                               </p>
                             </div>
                             <div className="flex flex-col items-end gap-1">
-                              <span className="text-xl font-bold">{report.defender_score}</span>
-                              {outcomeBadge(report.defender_outcome)}
+                              <span className="text-xl font-bold">{report.defender_score ?? 0}</span>
+                              {report.defender_outcome && outcomeBadge(report.defender_outcome)}
                             </div>
                           </div>
                         </div>
@@ -176,8 +176,8 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ i
                           {mission && <span>{mission.name}</span>}
                           {deployment && <span>{deployment.name}</span>}
                           {reportBp && <span>{reportBp.name}</span>}
-                          <span>{report.rounds} {report.rounds === 1 ? 'round' : 'rounds'}</span>
-                          <span className="ml-auto">{formatDate(report.event_date)}</span>
+                          {report.rounds != null && <span>{report.rounds} {report.rounds === 1 ? 'round' : 'rounds'}</span>}
+                          {report.event_date && <span className="ml-auto">{formatDate(report.event_date)}</span>}
                         </div>
                       </div>
                     </Link>

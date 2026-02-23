@@ -1,20 +1,24 @@
 export type Outcome = 'win' | 'loss' | 'draw'
 
+export type BattleReportStatus = 'draft' | 'published'
+
 export type BattleReport = {
   id: string
-  attacker_id: string
-  attacker_faction_id: string
-  attacker_score: number
-  attacker_outcome: Outcome
-  defender_id: string
-  defender_faction_id: string
-  defender_score: number
-  defender_outcome: Outcome
-  mission_id: number
-  deployment_id: number
-  battle_points_id: number
-  rounds: number
-  event_date: string
+  status: BattleReportStatus
+  attacker_id: string | null
+  attacker_faction_id: string | null
+  attacker_score: number | null
+  attacker_outcome: Outcome | null
+  defender_id: string | null
+  defender_faction_id: string | null
+  defender_score: number | null
+  defender_outcome: Outcome | null
+  mission_id: number | null
+  deployment_id: number | null
+  battle_points_id: number | null
+  rounds: number | null
+  event_date: string | null
+  season_id: number | null
   reported_by: string
   created_at: string
   updated_at: string

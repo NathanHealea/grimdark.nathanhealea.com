@@ -48,6 +48,7 @@ export async function getBattleReports(): Promise<BattleReport[]> {
   const { data, error } = await supabase
     .from('battle_reports')
     .select('*')
+    .eq('status', 'published')
     .order('created_at', { ascending: false })
 
   if (error) {
@@ -64,6 +65,7 @@ export async function getBattleReportsByPlayerId(playerId: string): Promise<Batt
   const { data, error } = await supabase
     .from('battle_reports')
     .select('*')
+    .eq('status', 'published')
     .or(`attacker_id.eq.${playerId},defender_id.eq.${playerId}`)
     .order('created_at', { ascending: false })
 
@@ -81,6 +83,7 @@ export async function getBattleReportsBySeasonId(seasonId: number): Promise<Batt
   const { data, error } = await supabase
     .from('battle_reports')
     .select('*')
+    .eq('status', 'published')
     .eq('season_id', seasonId)
     .order('created_at', { ascending: false })
 
@@ -95,7 +98,7 @@ export async function getBattleReportsBySeasonId(seasonId: number): Promise<Batt
 export async function getBattleReportCountsBySeasonId(): Promise<Map<number, number>> {
   const supabase = await createClient()
 
-  const { data, error } = await supabase.from('battle_reports').select('season_id')
+  const { data, error } = await supabase.from('battle_reports').select('season_id').eq('status', 'published')
 
   if (error) {
     console.error('Failed to fetch battle report counts:', error)
@@ -126,6 +129,24 @@ export async function getBattleReportById(id: string): Promise<BattleReport | nu
   }
 
   return data as BattleReport
+}
+
+export async function getDraftBattleReports(profileId: string): Promise<BattleReport[]> {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
+    .from('battle_reports')
+    .select('*')
+    .eq('status', 'draft')
+    .eq('reported_by', profileId)
+    .order('updated_at', { ascending: false })
+
+  if (error) {
+    console.error('Failed to fetch draft battle reports:', error)
+    return []
+  }
+
+  return data as BattleReport[]
 }
 
 export async function getMembers(): Promise<Profile[]> {

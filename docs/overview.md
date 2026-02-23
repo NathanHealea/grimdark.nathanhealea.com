@@ -116,6 +116,7 @@ Epic Template:
 - [x] [Submit a battle report (players, factions, points, outcome, mission)](./features/battle-reports/submit-battle-report.md)
 - [x] [Battle report detail view with game summary](./features/battle-reports/battle-report-detail-view.md)
 - [x] [Battle report feed/history viewable by all members](./features/battle-reports/battle-report-feed.md)
+- [x] [Draft/published status with save draft and edit support](./features/battle-reports/battle-report-draft-status.md)
 
 ### Epic: Standings & Leaderboard
 
