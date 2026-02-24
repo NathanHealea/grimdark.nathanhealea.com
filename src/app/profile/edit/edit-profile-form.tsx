@@ -88,32 +88,32 @@ export default function EditProfileForm({ profile, factions, selectedFactionIds 
   const factionFieldError = state?.errors?.faction_ids
 
   return (
-    <div className="card w-full max-w-md bg-base-200 shadow-xl">
-      <div className="card-body gap-4">
-        <h1 className="card-title text-2xl">Edit Profile</h1>
-        <p className="text-base-content/70">Update your display name and bio.</p>
+    <>
+      {state?.success && (
+        <div role="alert" className="alert alert-success">
+          <span>{state.success}</span>
+        </div>
+      )}
+      {state?.error && (
+        <div role="alert" className="alert alert-error">
+          <span>{state.error}</span>
+        </div>
+      )}
 
-        {state?.success && (
-          <div role="alert" className="alert alert-success">
-            <span>{state.success}</span>
-          </div>
-        )}
+      <form action={handleSubmit} className="flex flex-col gap-6">
+        {/* Avatar & Profile Info Section */}
+        <div>
+          <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Profile</h2>
+          <fieldset className="fieldset bg-base-300 rounded-box p-5">
+            <div className="mb-4">
+              <ImageUpload
+                currentImageUrl={profile.avatar_url}
+                displayName={profile.display_name}
+                onFileSelect={setAvatarFile}
+                error={avatarError}
+              />
+            </div>
 
-        {state?.error && (
-          <div role="alert" className="alert alert-error">
-            <span>{state.error}</span>
-          </div>
-        )}
-
-        <form action={handleSubmit} className="flex flex-col gap-4">
-          <ImageUpload
-            currentImageUrl={profile.avatar_url}
-            displayName={profile.display_name}
-            onFileSelect={setAvatarFile}
-            error={avatarError}
-          />
-
-          <fieldset className="fieldset">
             <label className="label" htmlFor="display_name">
               Display Name
             </label>
@@ -124,7 +124,7 @@ export default function EditProfileForm({ profile, factions, selectedFactionIds 
               type="text"
               defaultValue={profile.display_name}
               placeholder="Your display name"
-              className={`input input-bordered w-full ${displayNameFieldError ? 'input-error' : ''}`}
+              className={`input input-lg input-bordered w-full ${displayNameFieldError ? 'input-error' : ''}`}
               required
               minLength={2}
               maxLength={50}
@@ -141,22 +141,27 @@ export default function EditProfileForm({ profile, factions, selectedFactionIds 
               name="bio"
               defaultValue={profile.bio ?? ''}
               placeholder="Tell us about yourself (optional)"
-              className={`textarea textarea-bordered w-full ${bioFieldError ? 'textarea-error' : ''}`}
+              className={`textarea textarea-lg textarea-bordered w-full ${bioFieldError ? 'textarea-error' : ''}`}
               maxLength={500}
               rows={4}
               onChange={() => bioRef.current?.setCustomValidity('')}
             />
             {bioFieldError && <p className="mt-1 text-sm text-error">{bioFieldError}</p>}
+          </fieldset>
+        </div>
 
-            <label className="fieldset-label">Factions</label>
+        {/* Factions Section */}
+        <div>
+          <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Factions</h2>
+          <fieldset className="fieldset bg-base-300 rounded-box p-5">
             <FactionSelector factions={factions} selectedIds={selectedFactionIds} error={factionFieldError} />
           </fieldset>
+        </div>
 
-          <button type="submit" className="btn btn-success w-full" disabled={isSubmitting}>
-            {isSubmitting ? <span className="loading loading-spinner loading-sm" /> : 'Save Changes'}
-          </button>
-        </form>
-      </div>
-    </div>
+        <button type="submit" className="btn btn-primary btn-lg w-full" disabled={isSubmitting}>
+          {isSubmitting ? <span className="loading loading-spinner loading-md" /> : 'Save Changes'}
+        </button>
+      </form>
+    </>
   )
 }
