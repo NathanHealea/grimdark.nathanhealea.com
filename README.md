@@ -57,7 +57,7 @@ Grimdark League is a web app for Warhammer 40k tabletop gaming communities. It p
 | Member directory with battle & season stats | Done |
 | Responsive navbar (mobile) | Done |
 | Season management (admin CRUD) | Done |
-| Admin profile editing | In Progress |
+| Admin profile editing | Done |
 | Browse factions page | Planned |
 | League landing page | Planned |
 | Leaderboard & standings | Planned |
