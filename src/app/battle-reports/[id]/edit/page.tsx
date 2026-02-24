@@ -12,7 +12,7 @@ import { getFactions } from '@/modules/faction/queries'
 import { getSeasons } from '@/modules/season/queries'
 import type { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
-import BattleReportForm from '../../../../components/battle-report-form'
+import BattleReportForm from '@/modules/battle-report/components/battle-report-form'
 import Link from 'next/link';
 
 export const metadata: Metadata = { title: 'Edit Battle Report' }

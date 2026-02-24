@@ -11,7 +11,7 @@ import { getFactions } from '@/modules/faction/queries'
 import { getSeasons } from '@/modules/season/queries'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import BattleReportForm from '../../../components/battle-report-form'
+import BattleReportForm from '@/modules/battle-report/components/battle-report-form'
 
 export default async function SubmitBattleReportPage() {
   const auth = await getAuthUser({ withProfile: true })

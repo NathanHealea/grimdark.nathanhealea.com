@@ -43,6 +43,7 @@ next-env.d.ts
 # ai generated files
 CLAUDE.md
 .claude/
+.mcp.json
 
 # ide files
 .vscode/

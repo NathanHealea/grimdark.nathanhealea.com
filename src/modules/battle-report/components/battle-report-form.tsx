@@ -16,8 +16,8 @@ import type { Faction, ProfileFaction } from '@/types/faction'
 import type { Profile } from '@/types/profile'
 import type { Season } from '@/types/season'
 import { startTransition, useActionState, useEffect, useMemo, useRef, useState } from 'react'
-import { updateBattleReport } from '../app/battle-reports/[id]/edit/actions'
-import { submitBattleReport } from '../app/battle-reports/submit/actions'
+import { updateBattleReport } from '@/app/battle-reports/[id]/edit/actions'
+import { submitBattleReport } from '@/app/battle-reports/submit/actions'
 
 type BattleReportFormProps = {
   missions: Mission[]
@@ -517,8 +517,8 @@ export default function BattleReportForm({
             {state?.errors?.status && <p className="mt-1 text-sm text-error">{state.errors.status}</p>}
             <p className="mt-2 text-sm text-base-content/50">
               {status === 'draft'
-                ? 'Save as a draft to finish later. Drafts are only visible to you.'
-                : 'Publish this report. All fields are required for published reports.'}
+                ? 'Save as a draft to finish later. Drafts reports will only be visible to you/organizers/admins and will not update stats.'
+                : 'Publish this report. Report will be visible to all members and update stats.'}
             </p>
           </fieldset>
         </div>
