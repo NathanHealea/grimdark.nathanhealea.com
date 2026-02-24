@@ -14,6 +14,7 @@ import {
   validateSelectId,
   validateEventDate,
   validateStatus,
+  validateSeasonId,
 } from '@/modules/battle-report/validation'
 
 export async function updateBattleReport(
@@ -60,6 +61,7 @@ export async function updateBattleReport(
   const deploymentId = (formData.get('deployment_id') as string) ?? ''
   const battlePointsId = (formData.get('battle_points_id') as string) ?? ''
   const rounds = (formData.get('rounds') as string) ?? ''
+  const seasonId = (formData.get('season_id') as string) ?? ''
 
   const errors: Record<string, string> = {}
 
@@ -107,12 +109,23 @@ export async function updateBattleReport(
     if (roundsError) errors.rounds = roundsError
   }
 
+  const seasonIdError = validateSeasonId(seasonId)
+  if (seasonIdError) errors.season_id = seasonIdError
+
   if (Object.keys(errors).length > 0) {
     return { errors }
   }
 
   if (attackerId && defenderId && attackerId === defenderId) {
     return { errors: { defender_id: 'Attacker and defender cannot be the same player.' } }
+  }
+
+  // Non-admins can only assign active seasons
+  if (seasonId && !isAdmin) {
+    const { data: season } = await supabase.from('seasons').select('is_active').eq('id', Number(seasonId)).single()
+    if (!season?.is_active) {
+      return { errors: { season_id: 'You can only assign battle reports to active seasons.' } }
+    }
   }
 
   const updateData: Record<string, unknown> = {
@@ -130,6 +143,7 @@ export async function updateBattleReport(
     deployment_id: deploymentId ? Number(deploymentId) : null,
     battle_points_id: battlePointsId ? Number(battlePointsId) : null,
     rounds: rounds ? Number(rounds) : null,
+    season_id: seasonId ? Number(seasonId) : null,
   }
 
   const { error } = await supabase

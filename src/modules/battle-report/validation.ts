@@ -16,6 +16,7 @@ export type BattleReportFormState = FormState<{
   battle_points_id: string
   rounds: string
   status: string
+  season_id: string
 }>
 
 const VALID_STATUSES: BattleReportStatus[] = ['draft', 'published']
@@ -61,9 +62,6 @@ export function validateFactionId(value: string): string | null {
 }
 
 export function validateScore(value: string): string | null {
-  if (!value) {
-    return 'Score is required.'
-  }
 
   const num = Number(value)
 
@@ -109,6 +107,18 @@ export function validateEventDate(value: string): string | null {
 
   if (isNaN(parsed.getTime())) {
     return 'Invalid date format.'
+  }
+
+  return null
+}
+
+export function validateSeasonId(value: string): string | null {
+  if (!value) return null // optional field
+
+  const num = Number(value)
+
+  if (!Number.isInteger(num) || num < 1) {
+    return 'Invalid season selection.'
   }
 
   return null

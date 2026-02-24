@@ -1,6 +1,4 @@
 import type { Metadata } from 'next'
-import { getAuthUser } from '@/lib/supabase/auth'
-import { hasRole } from '@/lib/supabase/roles'
 import { createClient } from '@/lib/supabase/server'
 import { getFactions } from '@/modules/faction/queries'
 import {
@@ -9,6 +7,7 @@ import {
   getDeployments,
   getBattlePoints,
 } from '@/modules/battle-report/queries'
+import { getSeasons } from '@/modules/season/queries'
 export const metadata: Metadata = { title: 'Battle Reports' }
 
 import type { Outcome } from '@/types/battle-report'
@@ -51,17 +50,16 @@ function formatDate(dateString: string): string {
 
 export default async function BattleReportsPage() {
   const supabase = await createClient()
-  const auth = await getAuthUser()
-  const isAdmin = auth ? await hasRole(auth.user.id, 'admin') : false
 
-  const [battleReports, { data: profiles }, factions, missions, deployments, battlePoints] =
+  const [battleReports, { data: profiles }, factions, missions, deployments, battlePoints, seasons] =
     await Promise.all([
-      getBattleReports({ includeAll: isAdmin }),
+      getBattleReports(),
       supabase.from('profiles').select('*'),
       getFactions(),
       getMissions(),
       getDeployments(),
       getBattlePoints(),
+      getSeasons(),
     ])
 
   const profileMap = new Map((profiles as Profile[] ?? []).map((p) => [p.id, p]))
@@ -69,6 +67,7 @@ export default async function BattleReportsPage() {
   const missionMap = new Map(missions.map((m) => [m.id, m]))
   const deploymentMap = new Map(deployments.map((d) => [d.id, d]))
   const battlePointsMap = new Map(battlePoints.map((bp) => [bp.id, bp]))
+  const seasonMap = new Map(seasons.map((s) => [s.id, s]))
 
   return (
     <main className="flex flex-col items-center -mt-72 pt-72 min-h-screen w-full">
@@ -98,6 +97,7 @@ export default async function BattleReportsPage() {
                   const mission = report.mission_id ? missionMap.get(report.mission_id) : null
                   const deployment = report.deployment_id ? deploymentMap.get(report.deployment_id) : null
                   const bp = report.battle_points_id ? battlePointsMap.get(report.battle_points_id) : null
+                  const season = report.season_id ? seasonMap.get(report.season_id) : null
 
                   return (
                     <Link
@@ -106,9 +106,6 @@ export default async function BattleReportsPage() {
                       className="card bg-base-200 shadow-sm transition-shadow hover:shadow-md"
                     >
                       <div className="card-body gap-4 p-4">
-                        {report.status === 'draft' && (
-                          <span className="badge badge-warning badge-sm self-start">Draft</span>
-                        )}
                         {/* Players */}
                         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                           {/* Attacker */}
@@ -148,6 +145,14 @@ export default async function BattleReportsPage() {
                           {deployment && <span>{deployment.name}</span>}
                           {bp && <span>{bp.name}</span>}
                           {report.rounds != null && <span>{report.rounds} {report.rounds === 1 ? 'round' : 'rounds'}</span>}
+                          {season && (
+                            <Link
+                              href={`/seasons/${season.id}`}
+                              className="link link-hover link-primary"
+                            >
+                              {season.name}
+                            </Link>
+                          )}
                           {report.event_date && <span className="ml-auto">{formatDate(report.event_date)}</span>}
                         </div>
                       </div>

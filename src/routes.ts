@@ -11,11 +11,11 @@ export const publicLinks: NavLink[] = [
 ]
 
 export const memberLinks: NavLink[] = [
-  { href: '/battle-reports/drafts', label: 'My Drafts' },
   { href: '/battle-reports/submit', label: 'Submit Battle Report', className: 'btn btn-outline btn-primary btn-sm' },
 ]
 
 export const adminLinks: NavLink[] = [
   { href: '/admin/user-management', label: 'Users' },
+  { href: '/admin/battle-reports', label: 'Battle Reports' },
   { href: '/admin/seasons', label: 'Seasons' },
 ]

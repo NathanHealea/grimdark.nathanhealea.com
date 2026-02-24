@@ -15,7 +15,13 @@ type MobileNavProps = {
   signOutAction?: () => Promise<void>
 }
 
-export default function MobileNav({ links, adminLinks = [], isAuthenticated, profileId, signOutAction }: MobileNavProps) {
+export default function MobileNav({
+  links,
+  adminLinks = [],
+  isAuthenticated,
+  profileId,
+  signOutAction,
+}: MobileNavProps) {
   const [open, setOpen] = useState(false)
 
   return (
@@ -64,6 +70,16 @@ export default function MobileNav({ links, adminLinks = [], isAuthenticated, pro
 
             {isAuthenticated ? (
               <>
+                <li className="menu-title text-xs font-semibold uppercase tracking-widest text-primary">
+                  Battle Reports
+                </li>
+                <li>
+                  <CloseButton as={Link} href={`/battle-reports/drafts`}>
+                    My Drafts
+                  </CloseButton>
+                </li>
+                <div className="divider my-1" />
+
                 <li className="menu-title text-xs font-semibold uppercase tracking-widest text-primary">Profile</li>
                 {profileId && (
                   <li>

@@ -14,6 +14,7 @@ import {
   validateSelectId,
   validateEventDate,
   validateStatus,
+  validateSeasonId,
 } from '@/modules/battle-report/validation'
 
 export async function submitBattleReport(prevState: BattleReportFormState, formData: FormData): Promise<BattleReportFormState> {
@@ -45,6 +46,7 @@ export async function submitBattleReport(prevState: BattleReportFormState, formD
   const deploymentId = (formData.get('deployment_id') as string) ?? ''
   const battlePointsId = (formData.get('battle_points_id') as string) ?? ''
   const rounds = (formData.get('rounds') as string) ?? ''
+  const seasonId = (formData.get('season_id') as string) ?? ''
 
   const errors: Record<string, string> = {}
 
@@ -93,6 +95,9 @@ export async function submitBattleReport(prevState: BattleReportFormState, formD
     if (roundsError) errors.rounds = roundsError
   }
 
+  const seasonIdError = validateSeasonId(seasonId)
+  if (seasonIdError) errors.season_id = seasonIdError
+
   if (Object.keys(errors).length > 0) {
     return { errors }
   }
@@ -102,6 +107,14 @@ export async function submitBattleReport(prevState: BattleReportFormState, formD
   }
 
   const supabase = await createClient()
+
+  // Non-admins can only assign active seasons
+  if (seasonId && !isAdmin) {
+    const { data: season } = await supabase.from('seasons').select('is_active').eq('id', Number(seasonId)).single()
+    if (!season?.is_active) {
+      return { errors: { season_id: 'You can only assign battle reports to active seasons.' } }
+    }
+  }
 
   const insertData: Record<string, unknown> = {
     status,
@@ -122,6 +135,7 @@ export async function submitBattleReport(prevState: BattleReportFormState, formD
   if (deploymentId) insertData.deployment_id = Number(deploymentId)
   if (battlePointsId) insertData.battle_points_id = Number(battlePointsId)
   if (rounds) insertData.rounds = Number(rounds)
+  if (seasonId) insertData.season_id = Number(seasonId)
 
   const { error } = await supabase.from('battle_reports').insert(insertData)
 
