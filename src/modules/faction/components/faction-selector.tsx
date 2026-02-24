@@ -111,11 +111,11 @@ export default function FactionSelector({
       {selected.length > 0 && (
         <ul className="mt-3 flex flex-col gap-2">
           {selected.map((id) => (
-            <li key={id} className="flex items-center justify-between rounded-lg bg-base-300 px-3 py-2">
+            <li key={id} className="flex items-center justify-between rounded-lg bg-base-300 pl-2 py-2">
               <span className="text-sm">{getFactionLabel(id)}</span>
               <button
                 type="button"
-                className="btn btn-ghost btn-xs text-error"
+                className="btn btn-error btn-xs "
                 onClick={() => handleRemove(id)}
               >
                 Remove
