@@ -184,128 +184,142 @@ export default function AdminEditProfileForm({
   const availableRoles = assignableRoles.filter((r) => !currentRoles.includes(r))
 
   return (
-    <div className="flex flex-col gap-6">
-      {/* Section 1: Profile */}
-      <div className="card bg-base-200 shadow-xl">
-        <div className="card-body gap-4">
-          <h2 className="card-title text-xl">Profile</h2>
-
-          {profileState?.success && (
-            <div role="alert" className="alert alert-success">
-              <span>{profileState.success}</span>
-            </div>
-          )}
-
-          {profileState?.error && (
-            <div role="alert" className="alert alert-error">
-              <span>{profileState.error}</span>
-            </div>
-          )}
-
-          <form action={handleSubmit} className="flex flex-col gap-4">
-            <input type="hidden" name="target_profile_id" value={profile.id} />
-
-            <ImageUpload
-              currentImageUrl={profile.avatar_url}
-              displayName={profile.display_name}
-              onFileSelect={setAvatarFile}
-              error={avatarError}
-            />
-
-            <fieldset className="fieldset">
-              <label className="label" htmlFor="display_name">
-                Display Name
-              </label>
-              <input
-                ref={displayNameRef}
-                id="display_name"
-                name="display_name"
-                type="text"
-                defaultValue={profile.display_name}
-                placeholder="Display name"
-                className={`input input-bordered w-full ${displayNameFieldError ? 'input-error' : ''}`}
-                required
-                minLength={2}
-                maxLength={50}
-                onChange={() => displayNameRef.current?.setCustomValidity('')}
-              />
-              {displayNameFieldError && <p className="mt-1 text-sm text-error">{displayNameFieldError}</p>}
-
-              <label className="label" htmlFor="bio">
-                Bio
-              </label>
-              <textarea
-                ref={bioRef}
-                id="bio"
-                name="bio"
-                defaultValue={profile.bio ?? ''}
-                placeholder="Bio (optional)"
-                className={`textarea textarea-bordered w-full ${bioFieldError ? 'textarea-error' : ''}`}
-                maxLength={500}
-                rows={4}
-                onChange={() => bioRef.current?.setCustomValidity('')}
-              />
-              {bioFieldError && <p className="mt-1 text-sm text-error">{bioFieldError}</p>}
-
-              <label className="label" htmlFor="link_id">
-                Link ID
-              </label>
-              <input
-                id="link_id"
-                name="link_id"
-                type="text"
-                defaultValue={profile.link_id ?? ''}
-                placeholder="Discord user ID (for auto-linking)"
-                className="input input-bordered w-full"
-              />
-              <p className="text-xs text-base-content/50 mt-1">
-                Used to auto-link this profile when the user signs in via Discord.
-              </p>
-
-              <label className="label" htmlFor="role">
-                League Role
-              </label>
-              <select
-                id="role"
-                name="role"
-                defaultValue={profile.role}
-                className="select select-bordered w-full"
-              >
-                <option value="member">Member</option>
-                <option value="organizer">Organizer</option>
-              </select>
-
-              <label className="fieldset-label">Factions</label>
-              <FactionSelector factions={factions} selectedIds={selectedFactionIds} error={factionFieldError} />
-            </fieldset>
-
-            <button type="submit" className="btn btn-success w-full" disabled={isSubmitting}>
-              {isSubmitting ? <span className="loading loading-spinner loading-sm" /> : 'Save Changes'}
-            </button>
-          </form>
+    <>
+      {profileState?.success && (
+        <div role="alert" className="alert alert-success">
+          <span>{profileState.success}</span>
         </div>
-      </div>
+      )}
+      {profileState?.error && (
+        <div role="alert" className="alert alert-error">
+          <span>{profileState.error}</span>
+        </div>
+      )}
 
-      {/* Section 2: Auth Roles */}
+      <form action={handleSubmit} className="flex flex-col gap-6">
+        <input type="hidden" name="target_profile_id" value={profile.id} />
+
+        {/* Section 1: Profile */}
+        <div>
+          <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Profile</h2>
+          <fieldset className="fieldset bg-base-300 rounded-box p-5">
+            <div className="mb-4">
+              <ImageUpload
+                currentImageUrl={profile.avatar_url}
+                displayName={profile.display_name}
+                onFileSelect={setAvatarFile}
+                error={avatarError}
+              />
+            </div>
+
+            <label className="label" htmlFor="display_name">
+              Display Name
+            </label>
+            <input
+              ref={displayNameRef}
+              id="display_name"
+              name="display_name"
+              type="text"
+              defaultValue={profile.display_name}
+              placeholder="Display name"
+              className={`input input-lg input-bordered w-full ${displayNameFieldError ? 'input-error' : ''}`}
+              required
+              minLength={2}
+              maxLength={50}
+              onChange={() => displayNameRef.current?.setCustomValidity('')}
+            />
+            {displayNameFieldError && <p className="mt-1 text-sm text-error">{displayNameFieldError}</p>}
+
+            <label className="label" htmlFor="bio">
+              Bio
+            </label>
+            <textarea
+              ref={bioRef}
+              id="bio"
+              name="bio"
+              defaultValue={profile.bio ?? ''}
+              placeholder="Bio (optional)"
+              className={`textarea textarea-lg textarea-bordered w-full ${bioFieldError ? 'textarea-error' : ''}`}
+              maxLength={500}
+              rows={4}
+              onChange={() => bioRef.current?.setCustomValidity('')}
+            />
+            {bioFieldError && <p className="mt-1 text-sm text-error">{bioFieldError}</p>}
+          </fieldset>
+        </div>
+
+        {/* Section 2: Admin Settings */}
+        <div>
+          <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Admin Settings</h2>
+          <fieldset className="fieldset bg-base-300 rounded-box p-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="label" htmlFor="link_id">
+                  Link ID
+                </label>
+                <input
+                  id="link_id"
+                  name="link_id"
+                  type="text"
+                  defaultValue={profile.link_id ?? ''}
+                  placeholder="Discord user ID"
+                  className="input input-lg input-bordered w-full"
+                />
+                <p className="text-xs text-base-content/50 mt-1">
+                  Used to auto-link this profile when the user signs in via Discord.
+                </p>
+              </div>
+
+              <div>
+                <label className="label" htmlFor="role">
+                  League Role
+                </label>
+                <select
+                  id="role"
+                  name="role"
+                  defaultValue={profile.role}
+                  className="select select-lg select-bordered w-full"
+                >
+                  <option value="member">Member</option>
+                  <option value="organizer">Organizer</option>
+                </select>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+
+        {/* Section 3: Factions */}
+        <div>
+          <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Factions</h2>
+          <fieldset className="fieldset bg-base-300 rounded-box p-5">
+            <FactionSelector factions={factions} selectedIds={selectedFactionIds} error={factionFieldError} />
+          </fieldset>
+        </div>
+
+        <button type="submit" className="btn btn-primary btn-lg w-full" disabled={isSubmitting}>
+          {isSubmitting ? <span className="loading loading-spinner loading-md" /> : 'Save Changes'}
+        </button>
+      </form>
+
+      {/* Section 4: Auth Roles */}
       {isLinked && (
-        <div className="card bg-base-200 shadow-xl">
-          <div className="card-body gap-4">
-            <h2 className="card-title text-xl">Auth Roles</h2>
-
+        <div>
+          <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Auth Roles</h2>
+          <fieldset className="fieldset bg-base-300 rounded-box p-5">
             {isSelf && (
-              <div role="alert" className="alert alert-warning">
+              <div role="alert" className="alert alert-warning mb-4">
                 <span>You cannot modify your own roles.</span>
               </div>
             )}
 
             {roleAlert?.success && (
-              <div role="alert" className="alert alert-success">
+              <div role="alert" className="alert alert-success mb-4">
                 <span>{roleAlert.success}</span>
               </div>
             )}
 
             {roleAlert?.error && (
-              <div role="alert" className="alert alert-error">
+              <div role="alert" className="alert alert-error mb-4">
                 <span>{roleAlert.error}</span>
               </div>
             )}
@@ -341,23 +355,22 @@ export default function AdminEditProfileForm({
                 </div>
               )}
             </div>
-          </div>
+          </fieldset>
         </div>
       )}
 
-      {/* Section 3: Link Status */}
-      <div className="card bg-base-200 shadow-xl">
-        <div className="card-body gap-4">
-          <h2 className="card-title text-xl">Link Status</h2>
-
+      {/* Section 5: Link Status */}
+      <div>
+        <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Link Status</h2>
+        <fieldset className="fieldset bg-base-300 rounded-box p-5">
           {unlinkState?.success && (
-            <div role="alert" className="alert alert-success">
+            <div role="alert" className="alert alert-success mb-4">
               <span>{unlinkState.success}</span>
             </div>
           )}
 
           {unlinkState?.error && (
-            <div role="alert" className="alert alert-error">
+            <div role="alert" className="alert alert-error mb-4">
               <span>{unlinkState.error}</span>
             </div>
           )}
@@ -385,8 +398,8 @@ export default function AdminEditProfileForm({
               </span>
             </div>
           )}
-        </div>
+        </fieldset>
       </div>
-    </div>
+    </>
   )
 }
