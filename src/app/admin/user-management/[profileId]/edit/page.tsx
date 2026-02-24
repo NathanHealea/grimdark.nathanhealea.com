@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getAuthUser } from '@/lib/supabase/auth'
 import { getFactions, getProfileFactionIds } from '@/modules/faction/queries'
 import type { Profile } from '@/types/profile'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import AdminEditProfileForm from './admin-edit-profile-form'
 
@@ -49,24 +50,29 @@ export default async function AdminEditProfilePage({ params }: { params: Promise
   }
 
   return (
-    <div className="w-full px-4 py-12">
-      <div className="mx-auto max-w-lg">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold">Edit User</h1>
-          <p className="mt-2 text-base-content/60">
-            Managing profile for <span className="font-semibold">{typedProfile.display_name}</span>
-          </p>
-        </div>
+    <main className="flex flex-col items-center -mt-72 pt-72 min-h-screen w-full">
+      <div className="w-full px-4 py-12">
+        <div className="mx-auto max-w-4xl">
+          <div className="mb-8">
+            <Link href={`/profile/${typedProfile.profile_id}`} className="btn btn-ghost btn-sm mb-4 -ml-2">
+              &larr; View Profile
+            </Link>
+            <h1 className="text-3xl font-bold">Edit User</h1>
+            <p className="mt-1 text-sm text-base-content/50">
+              Managing profile for <span className="font-semibold">{typedProfile.display_name}</span>
+            </p>
+          </div>
 
-        <AdminEditProfileForm
-          profile={typedProfile}
-          factions={factions}
-          selectedFactionIds={selectedFactionIds}
-          currentRoles={currentRoles}
-          assignableRoles={assignableRoles}
-          isSelf={isSelf}
-        />
+          <AdminEditProfileForm
+            profile={typedProfile}
+            factions={factions}
+            selectedFactionIds={selectedFactionIds}
+            currentRoles={currentRoles}
+            assignableRoles={assignableRoles}
+            isSelf={isSelf}
+          />
+        </div>
       </div>
-    </div>
+    </main>
   )
 }
