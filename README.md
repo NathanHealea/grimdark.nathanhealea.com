@@ -50,13 +50,17 @@ Grimdark League is a web app for Warhammer 40k tabletop gaming communities. It p
 | Select factions for profile | Done |
 | Battle report submission | Done |
 | Battle report feed & detail views | Done |
+| Battle report draft/published status | Done |
+| Season selection on battle reports | Done |
+| Non-admins cannot unpublish reports | Done |
+| Admin battle reports management | Done |
+| Member directory with battle & season stats | Done |
 | Responsive navbar (mobile) | Done |
+| Season management (admin CRUD) | Done |
 | Admin profile editing | In Progress |
 | Browse factions page | Planned |
 | League landing page | Planned |
-| Season information | Planned |
 | Leaderboard & standings | Planned |
-| Season filtering | Planned |
 
 ## Getting Started
 
@@ -138,8 +142,10 @@ src/
   components/           # Shared UI components (navbar, user menu)
   lib/supabase/         # Supabase client, auth helpers, role utilities
   modules/              # Feature modules
+    battle-report/      # Battle report queries, validation, and components
     faction/            # Faction queries, utilities, and components
     profile/            # Profile validation
+    season/             # Season queries
   types/                # TypeScript type definitions
 docs/
   overview.md           # Project overview & epic tracking

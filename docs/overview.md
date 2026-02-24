@@ -18,7 +18,7 @@ The core loop: **members join, play games, record results, and track standings.*
 - **Battle Reports** — Game records capturing attacker/defender, factions, scores, outcome (win/loss/draw), mission, deployment, battle size, and rounds.
 - **Battle Sizes** — Standard point levels: Combat Patrol (500), Incursion (1000), Strike Force (2000), Onslaught (3000).
 - **Missions & Deployments** — Predefined game scenarios and map configurations from the official rules.
-- **Seasons** — Time-bounded league periods with battle size and date ranges. Battle reports are auto-assigned to the active season. Admins manage seasons through the admin panel.
+- **Seasons** — Time-bounded league periods with battle size and date ranges. Members can assign battle reports to active seasons; admins can assign to any season. Admins manage seasons through the admin panel.
 - **Standings** — Win/loss/draw records and rankings derived from battle reports, filtered by season. *(Planned)*
 
 ## Product Direction
@@ -91,7 +91,7 @@ Epic Template:
 **High-Level Scope:**
 
 - [x] [Member profile page (display name, faction/army, bio)](./features/member-profiles/member-profile-page.md)
-- [x] [Member directory listing all active league participants](./features/member-profiles/member-directory.md)
+- [x] [Member directory listing all active league participants (with battle and season counts)](./features/member-profiles/member-directory.md)
 - [x] [Members can edit their own profile](./features/member-profiles/edit-own-profile.md)
 - [x] [Admins can edit any member's profile](./features/member-profiles/admin-edit-profile.md)
 - [x] [Profile picture display (avatar from OAuth provider)](./features/member-profiles/profile-picture.md)
@@ -117,6 +117,9 @@ Epic Template:
 - [x] [Battle report detail view with game summary](./features/battle-reports/battle-report-detail-view.md)
 - [x] [Battle report feed/history viewable by all members](./features/battle-reports/battle-report-feed.md)
 - [x] [Draft/published status with save draft and edit support](./features/battle-reports/battle-report-draft-status.md)
+- [x] Season selection on battle report submit and edit (members: active seasons; admins: all seasons)
+- [x] Non-admins cannot unpublish a published battle report
+- [x] Admin battle reports management page
 
 ### Epic: Standings & Leaderboard
 
