@@ -64,6 +64,7 @@ export default function BattleReportForm({
   reportId,
 }: BattleReportFormProps) {
   const isEditMode = !!reportId
+  const statusLocked = isEditMode && defaultValues?.status === 'published' && !isAdmin
   const action = isEditMode
     ? (prev: BattleReportFormState, formData: FormData) => updateBattleReport(reportId, prev, formData)
     : submitBattleReport
@@ -510,15 +511,18 @@ export default function BattleReportForm({
               className={`select select-lg select-bordered w-full ${state?.errors?.status ? 'select-error' : ''}`}
               value={status}
               onChange={(e) => setStatus(e.target.value as 'draft' | 'published')}
+              disabled={statusLocked}
             >
               <option value="draft">Draft</option>
-              <option value="published">Published</option>
+              <option value="published">Publish</option>
             </select>
             {state?.errors?.status && <p className="mt-1 text-sm text-error">{state.errors.status}</p>}
             <p className="mt-2 text-sm text-base-content/50">
-              {status === 'draft'
-                ? 'Save as a draft to finish later. Drafts reports will only be visible to you/organizers/admins and will not update stats.'
-                : 'Publish this report. Report will be visible to all members and update stats.'}
+              {statusLocked
+                ? 'Published reports cannot be reverted to draft. Contact an organizer or admin if needed.'
+                : status === 'draft'
+                  ? 'Save as a draft to finish later. Drafts reports will only be visible to you/organizers/admins and will not update stats.'
+                  : 'Publish this report. Report will be visible to all members and update stats.'}
             </p>
           </fieldset>
         </div>

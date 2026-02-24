@@ -48,6 +48,11 @@ export async function updateBattleReport(
   }
 
   const status = (formData.get('status') as string) ?? 'published'
+
+  // Non-admins cannot unpublish a published report
+  if (existing.status === 'published' && status === 'draft' && !isAdmin) {
+    return { errors: { status: 'Published reports cannot be reverted to draft.' } }
+  }
   const eventDate = (formData.get('event_date') as string) ?? ''
   const attackerId = (formData.get('attacker_id') as string) ?? ''
   const attackerFactionId = (formData.get('attacker_faction_id') as string) ?? ''
