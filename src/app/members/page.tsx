@@ -59,7 +59,7 @@ export default async function MembersPage() {
 
   const members = ((profiles as Profile[]) ?? []).map((profile) => ({
     ...profile,
-    factions: factionsByProfile.get(profile.id) ?? [],
+    factions: (factionsByProfile.get(profile.id) ?? []).sort((a, b) => a.label.localeCompare(b.label)),
     battleCount: battleCountByProfile.get(profile.id) ?? 0,
     seasonCount: seasonsByProfile.get(profile.id)?.size ?? 0,
   }))
@@ -99,7 +99,7 @@ export default async function MembersPage() {
                         </span>
                       </div>
                       {member.factions.length > 0 && (
-                        <div className="mt-1 flex flex-wrap gap-1">
+                        <div className="mt-1 flex flex-col items-center gap-1">
                           {member.factions.map(({ id, label }) => (
                             <span key={id} className="badge badge-sm badge-outline">
                               {label}
