@@ -68,6 +68,22 @@ See `docs/overview.md` for the full epic tracker with acceptance criteria. See `
 
 - **Dropdowns**: Use Headless UI `Menu` (`@headlessui/react`) for all dropdown menus instead of DaisyUI's native `dropdown` class. The Headless UI Menu auto-closes on item click, provides proper focus management, and keyboard navigation. See `src/components/user-menu.tsx`, `src/components/admin-menu.tsx`, and `src/components/actions-menu.tsx` for reference implementations.
 
+## Release Workflow
+
+Use `/release` to run the full release workflow from a feature branch. This custom slash command (`.claude/commands/release.md`) automates: build + lint verification, version bump, commit, push, PR creation, merge, and branch cleanup.
+
+**Version bump rules** (based on branch prefix):
+
+| Branch prefix | Bump type | Example            |
+|---------------|-----------|--------------------|
+| `feature/*`   | minor     | 2.4.0 → 2.5.0     |
+| `fix/*`       | patch     | 2.4.0 → 2.4.1     |
+| `refactor/*`  | patch     | 2.4.0 → 2.4.1     |
+| `breaking/*`  | major     | 2.4.0 → 3.0.0     |
+| anything else | patch     | 2.4.0 → 2.4.1     |
+
+**Branching convention**: `feature/*`, `fix/*`, `refactor/*`, `breaking/*` — always branch from and merge back to `main`.
+
 ## Code Style
 
 - **No semicolons**, single quotes, 120 char line width, trailing commas (ES5)

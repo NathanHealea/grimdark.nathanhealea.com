@@ -79,7 +79,7 @@ export default function BattleReportForm({
   useEffect(() => {
     if (state?.success && !isEditMode) {
       setValues(toFormValues()) // eslint-disable-line react-hooks/set-state-in-effect
-      setStatus('draft') // eslint-disable-line react-hooks/set-state-in-effect
+      setStatus('draft')
       setSamePlayerError('')
     }
   }, [state, isEditMode])

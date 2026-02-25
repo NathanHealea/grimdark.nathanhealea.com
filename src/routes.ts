@@ -5,6 +5,7 @@ export type NavLink = {
 };
 
 export const publicLinks: NavLink[] = [
+  { href: '/leaderboard', label: 'Leaderboard' },
   { href: '/seasons', label: 'Seasons' },
   { href: '/battle-reports', label: 'Battle Reports' },
   { href: '/members', label: 'Members' },
