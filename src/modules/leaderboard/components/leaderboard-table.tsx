@@ -51,12 +51,14 @@ export default function LeaderboardTable({ entries, profileMap }: LeaderboardTab
             {entries.map((entry) => {
               const profile = profileMap.get(entry.profileId)
               return (
-                <tr key={entry.profileId}>
+                <tr key={entry.profileId} className="h-16">
                   <td className="font-bold text-base-content/50">{entry.rank}</td>
                   <td>
                     {profile ? (
-                      <Link href={`/profile/${profile.profile_id}`} className="flex items-center gap-3 hover:underline">
-                        <Avatar src={profile.avatar_url} displayName={profile.display_name} size="sm" />
+                      <Link href={`/profile/${profile.profile_id}`} className="flex gap-4 hover:underline">
+                        <div>
+                          <Avatar src={profile.avatar_url} displayName={profile.display_name} size="sm" />
+                        </div>
                         <span className="font-medium">{profile.display_name}</span>
                       </Link>
                     ) : (
