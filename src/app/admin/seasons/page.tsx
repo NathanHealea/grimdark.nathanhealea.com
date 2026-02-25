@@ -2,8 +2,8 @@ import ActionsMenu from '@/components/actions-menu'
 import { getBattlePoints } from '@/modules/battle-report/queries'
 import { getSeasons } from '@/modules/season/queries'
 import type { BattlePoints } from '@/types/battle-report'
+import { formatSeasonName } from '@/types/season'
 import Link from 'next/link'
-import SeasonForm from './season-form'
 
 function formatDate(dateString: string): string {
   return new Date(dateString + 'T00:00:00').toLocaleDateString('en-US', {
@@ -13,19 +13,10 @@ function formatDate(dateString: string): string {
   })
 }
 
-export default async function AdminSeasonsPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ edit?: string; new?: string }>
-}) {
-  const params = await searchParams
+export default async function AdminSeasonsPage() {
   const [seasons, battlePoints] = await Promise.all([getSeasons(), getBattlePoints()])
 
   const battlePointsMap = new Map<number, BattlePoints>(battlePoints.map((bp) => [bp.id, bp]))
-
-  const editSeasonId = params.edit ? Number(params.edit) : null
-  const showNewForm = params.new === 'true'
-  const editSeason = editSeasonId ? seasons.find((s) => s.id === editSeasonId) : null
 
   return (
     <main className="flex flex-col items-center -mt-72 pt-72 min-h-screen w-full">
@@ -36,22 +27,10 @@ export default async function AdminSeasonsPage({
               <h1 className="text-3xl font-bold">Season Management</h1>
               <p className="mt-2 text-base-content/60">Create and manage league seasons.</p>
             </div>
-            {!showNewForm && !editSeason && (
-              <Link href="/admin/seasons?new=true" className="btn btn-primary">
-                Create Season
-              </Link>
-            )}
+            <Link href="/admin/seasons/new" className="btn btn-primary">
+              Create Season
+            </Link>
           </div>
-
-          {/* New/Edit Form */}
-          {(showNewForm || editSeason) && (
-            <div className="mb-8">
-              <SeasonForm battlePoints={battlePoints} season={editSeason ?? undefined} />
-              <Link href="/admin/seasons" className="btn btn-ghost btn-sm mt-4">
-                Cancel
-              </Link>
-            </div>
-          )}
 
           {/* Seasons Table */}
           {seasons.length === 0 ? (
@@ -72,7 +51,7 @@ export default async function AdminSeasonsPage({
                   const bp = battlePointsMap.get(season.battle_points_id)
                   return (
                     <tr key={season.id} className="hover">
-                      <td className="font-semibold">{season.name}</td>
+                      <td className="font-semibold">{formatSeasonName(season)}</td>
                       <td className="text-sm text-base-content/60">
                         {formatDate(season.start_date)} &ndash; {formatDate(season.end_date)}
                       </td>
@@ -88,7 +67,7 @@ export default async function AdminSeasonsPage({
                         <ActionsMenu
                           items={[
                             { label: 'View Season', href: `/seasons/${season.id}` },
-                            { label: 'Edit Season', href: `/admin/seasons?edit=${season.id}` },
+                            { label: 'Edit Season', href: `/admin/seasons/${season.id}/edit` },
                           ]}
                         />
                       </td>

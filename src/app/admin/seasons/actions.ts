@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { hasRole } from '@/lib/supabase/roles'
+import { getNextSeasonNumber } from '@/modules/season/queries'
 import { revalidatePath } from 'next/cache'
 import type { FormState } from '@/types/forms'
 
@@ -11,6 +12,7 @@ export type SeasonFormState = FormState<{
   end_date: string
   battle_points_id: string
   description: string
+  rules: string
 }>
 
 export async function createSeason(prevState: SeasonFormState, formData: FormData): Promise<SeasonFormState> {
@@ -34,12 +36,12 @@ export async function createSeason(prevState: SeasonFormState, formData: FormDat
   const endDate = (formData.get('end_date') as string) ?? ''
   const battlePointsId = (formData.get('battle_points_id') as string) ?? ''
   const description = (formData.get('description') as string)?.trim() ?? ''
+  const rules = (formData.get('rules') as string)?.trim() ?? ''
   const isActive = formData.get('is_active') === 'on'
   const backfill = formData.get('backfill') === 'on'
 
   const errors: Record<string, string> = {}
 
-  if (!name) errors.name = 'Name is required.'
   if (!startDate) errors.start_date = 'Start date is required.'
   if (!endDate) errors.end_date = 'End date is required.'
   if (!battlePointsId) errors.battle_points_id = 'Battle size is required.'
@@ -49,6 +51,8 @@ export async function createSeason(prevState: SeasonFormState, formData: FormDat
     return { errors }
   }
 
+  const nextNumber = await getNextSeasonNumber()
+
   // If activating this season, deactivate any currently active season first
   if (isActive) {
     await supabase.from('seasons').update({ is_active: false }).eq('is_active', true)
@@ -57,11 +61,13 @@ export async function createSeason(prevState: SeasonFormState, formData: FormDat
   const { data: newSeason, error } = await supabase
     .from('seasons')
     .insert({
-      name,
+      number: nextNumber,
+      name: name || null,
       start_date: startDate,
       end_date: endDate,
       battle_points_id: Number(battlePointsId),
       description: description || null,
+      rules: rules || null,
       is_active: isActive,
     })
     .select('id')
@@ -113,6 +119,7 @@ export async function updateSeason(prevState: SeasonFormState, formData: FormDat
   const endDate = (formData.get('end_date') as string) ?? ''
   const battlePointsId = (formData.get('battle_points_id') as string) ?? ''
   const description = (formData.get('description') as string)?.trim() ?? ''
+  const rules = (formData.get('rules') as string)?.trim() ?? ''
   const isActive = formData.get('is_active') === 'on'
 
   if (!seasonId) {
@@ -121,7 +128,6 @@ export async function updateSeason(prevState: SeasonFormState, formData: FormDat
 
   const errors: Record<string, string> = {}
 
-  if (!name) errors.name = 'Name is required.'
   if (!startDate) errors.start_date = 'Start date is required.'
   if (!endDate) errors.end_date = 'End date is required.'
   if (!battlePointsId) errors.battle_points_id = 'Battle size is required.'
@@ -139,11 +145,12 @@ export async function updateSeason(prevState: SeasonFormState, formData: FormDat
   const { error } = await supabase
     .from('seasons')
     .update({
-      name,
+      name: name || null,
       start_date: startDate,
       end_date: endDate,
       battle_points_id: Number(battlePointsId),
       description: description || null,
+      rules: rules || null,
       is_active: isActive,
     })
     .eq('id', seasonId)
