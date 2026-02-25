@@ -303,7 +303,7 @@ export default function AdminEditProfileForm({
 
       {/* Section 4: Auth Roles */}
       {isLinked && (
-        <div>
+        <div className='pt-6'>
           <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Auth Roles</h2>
           <fieldset className="fieldset bg-base-300 rounded-box p-5">
             {isSelf && (
@@ -360,7 +360,7 @@ export default function AdminEditProfileForm({
       )}
 
       {/* Section 5: Link Status */}
-      <div>
+      <div className='pt-6'>
         <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Link Status</h2>
         <fieldset className="fieldset bg-base-300 rounded-box p-5">
           {unlinkState?.success && (
