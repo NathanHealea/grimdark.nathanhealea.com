@@ -2,7 +2,7 @@ import ActionsMenu from '@/components/actions-menu'
 import { getBattlePoints } from '@/modules/battle-report/queries'
 import { getSeasons } from '@/modules/season/queries'
 import type { BattlePoints } from '@/types/battle-report'
-import { formatSeasonName } from '@/types/season'
+import { formatSeasonName, isCurrentSeason } from '@/types/season'
 import Link from 'next/link'
 
 function formatDate(dateString: string): string {
@@ -14,7 +14,7 @@ function formatDate(dateString: string): string {
 }
 
 export default async function AdminSeasonsPage() {
-  const [seasons, battlePoints] = await Promise.all([getSeasons(), getBattlePoints()])
+  const [seasons, battlePoints] = await Promise.all([getSeasons({ includeAll: true }), getBattlePoints()])
 
   const battlePointsMap = new Map<number, BattlePoints>(battlePoints.map((bp) => [bp.id, bp]))
 
@@ -56,12 +56,13 @@ export default async function AdminSeasonsPage() {
                         {formatDate(season.start_date)} &ndash; {formatDate(season.end_date)}
                       </td>
                       <td className="text-sm">{bp ? `${bp.name} (${bp.size} pts)` : '—'}</td>
-                      <td>
-                        {season.is_active ? (
-                          <span className="badge badge-success">Active</span>
+                      <td className="flex flex-wrap gap-1">
+                        {season.status === 'draft' ? (
+                          <span className="badge badge-warning">Draft</span>
                         ) : (
-                          <span className="badge badge-ghost">Inactive</span>
+                          <span className="badge badge-success">Published</span>
                         )}
+                        {isCurrentSeason(season) && <span className="badge badge-info">Current</span>}
                       </td>
                       <td>
                         <ActionsMenu

@@ -1,10 +1,14 @@
 import type { Season } from '@/types/season'
 import { createClient } from '@/lib/supabase/server'
 
-export async function getSeasons(): Promise<Season[]> {
+export async function getSeasons({ includeAll = false } = {}): Promise<Season[]> {
   const supabase = await createClient()
 
-  const { data, error } = await supabase.from('seasons').select('*').order('start_date', { ascending: false })
+  let query = supabase.from('seasons').select('*')
+
+  if (!includeAll) query = query.eq('status', 'published')
+
+  const { data, error } = await query.order('start_date', { ascending: false })
 
   if (error) {
     console.error('Failed to fetch seasons:', error)
@@ -14,14 +18,23 @@ export async function getSeasons(): Promise<Season[]> {
   return data as Season[]
 }
 
-export async function getActiveSeason(): Promise<Season | null> {
+export async function getCurrentSeason(): Promise<Season | null> {
   const supabase = await createClient()
+  const today = new Date().toISOString().split('T')[0]
 
-  const { data, error } = await supabase.from('seasons').select('*').eq('is_active', true).single()
+  const { data, error } = await supabase
+    .from('seasons')
+    .select('*')
+    .eq('status', 'published')
+    .lte('start_date', today)
+    .gte('end_date', today)
+    .order('start_date', { ascending: false })
+    .limit(1)
+    .single()
 
   if (error) {
     if (error.code === 'PGRST116') return null // no rows
-    console.error('Failed to fetch active season:', error)
+    console.error('Failed to fetch current season:', error)
     return null
   }
 

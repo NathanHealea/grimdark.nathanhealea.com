@@ -1,6 +1,4 @@
 import type { Metadata } from 'next'
-import { getAuthUser } from '@/lib/supabase/auth'
-import { hasRole } from '@/lib/supabase/roles'
 import { createClient } from '@/lib/supabase/server'
 import { getSeasonById } from '@/modules/season/queries'
 import { getFactions } from '@/modules/faction/queries'
@@ -13,7 +11,7 @@ import {
 import type { Outcome } from '@/types/battle-report'
 import type { Profile } from '@/types/profile'
 import type { Faction } from '@/types/faction'
-import { formatSeasonName } from '@/types/season'
+import { formatSeasonName, isCurrentSeason } from '@/types/season'
 import MarkdownRenderer from '@/modules/markdown/components/markdown-renderer'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -72,8 +70,6 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ i
   if (!season) notFound()
 
   const supabase = await createClient()
-  const auth = await getAuthUser()
-  const isAdmin = auth ? await hasRole(auth.user.id, 'admin') : false
 
   const [battleReports, { data: profiles }, factions, missions, deployments, battlePoints] = await Promise.all([
     getBattleReportsBySeasonId(seasonId),
@@ -103,7 +99,7 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ i
             </Link>
             <div className="flex items-start justify-between gap-2">
               <h1 className="text-3xl font-bold">{formatSeasonName(season)}</h1>
-              {season.is_active && <span className="badge badge-success shrink-0">Active</span>}
+              {isCurrentSeason(season) && <span className="badge badge-success shrink-0">Current</span>}
             </div>
             <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-base-content/60">
               <span>{formatDate(season.start_date)} &ndash; {formatDate(season.end_date)}</span>

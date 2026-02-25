@@ -125,11 +125,16 @@ export async function updateBattleReport(
     return { errors: { defender_id: 'Attacker and defender cannot be the same player.' } }
   }
 
-  // Non-admins can only assign active seasons
+  // Non-admins can only assign current (date-in-range) published seasons
   if (seasonId && !isAdmin) {
-    const { data: season } = await supabase.from('seasons').select('is_active').eq('id', Number(seasonId)).single()
-    if (!season?.is_active) {
-      return { errors: { season_id: 'You can only assign battle reports to active seasons.' } }
+    const today = new Date().toISOString().split('T')[0]
+    const { data: season } = await supabase
+      .from('seasons')
+      .select('start_date, end_date, status')
+      .eq('id', Number(seasonId))
+      .single()
+    if (!season || season.status !== 'published' || season.start_date > today || season.end_date < today) {
+      return { errors: { season_id: 'You can only assign battle reports to the current season.' } }
     }
   }
 

@@ -1,3 +1,5 @@
+export type SeasonStatus = 'draft' | 'published'
+
 export type Season = {
   id: number
   number: number
@@ -7,11 +9,26 @@ export type Season = {
   battle_points_id: number
   description: string | null
   rules: string | null
-  is_active: boolean
+  status: SeasonStatus
   created_at: string
   updated_at: string
 }
 
 export function formatSeasonName(season: Pick<Season, 'number' | 'name'>): string {
   return season.name ? `Season ${season.number} - ${season.name}` : `Season ${season.number}`
+}
+
+export function isCurrentSeason(season: Pick<Season, 'start_date' | 'end_date'>): boolean {
+  const today = new Date().toISOString().split('T')[0]
+  return season.start_date <= today && season.end_date >= today
+}
+
+export function isFutureSeason(season: Pick<Season, 'start_date'>): boolean {
+  const today = new Date().toISOString().split('T')[0]
+  return season.start_date > today
+}
+
+export function isPastSeason(season: Pick<Season, 'end_date'>): boolean {
+  const today = new Date().toISOString().split('T')[0]
+  return season.end_date < today
 }

@@ -4,7 +4,7 @@ export const metadata: Metadata = { title: 'Seasons' }
 
 import { getBattlePoints, getBattleReportCountsBySeasonId } from '@/modules/battle-report/queries'
 import type { BattlePoints } from '@/types/battle-report'
-import { formatSeasonName, type Season } from '@/types/season'
+import { formatSeasonName, isCurrentSeason, isFutureSeason, isPastSeason, type Season } from '@/types/season'
 import Link from 'next/link'
 
 function formatDate(dateString: string): string {
@@ -31,7 +31,7 @@ function SeasonCard({ season, battlePointsMap, reportCount, highlighted }: {
       <div className="card-body gap-3">
         <div className="flex items-start justify-between gap-2">
           <h2 className={`card-title ${highlighted ? 'text-gold' : ''}`}>{formatSeasonName(season)}</h2>
-          {season.is_active && <span className="badge badge-success shrink-0">Active</span>}
+          {isCurrentSeason(season) && <span className="badge badge-success shrink-0">Current</span>}
         </div>
 
         <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-base-content/60">
@@ -55,8 +55,9 @@ export default async function SeasonsPage() {
 
   const battlePointsMap = new Map<number, BattlePoints>(battlePoints.map((bp) => [bp.id, bp]))
 
-  const activeSeason = seasons.find((s) => s.is_active)
-  const pastSeasons = seasons.filter((s) => !s.is_active)
+  const currentSeason = seasons.find((s) => isCurrentSeason(s))
+  const futureSeasons = seasons.filter((s) => isFutureSeason(s))
+  const pastSeasons = seasons.filter((s) => isPastSeason(s))
 
   return (
     <main className="flex flex-col items-center -mt-72 pt-72 min-h-screen w-full">
@@ -69,11 +70,23 @@ export default async function SeasonsPage() {
             </p>
           </div>
 
-          {/* Active Season */}
-          {activeSeason && (
+          {/* Current Season */}
+          {currentSeason && (
             <div className="mb-8">
               <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Current Season</h2>
-              <SeasonCard season={activeSeason} battlePointsMap={battlePointsMap} reportCount={reportCounts.get(activeSeason.id) ?? 0} highlighted />
+              <SeasonCard season={currentSeason} battlePointsMap={battlePointsMap} reportCount={reportCounts.get(currentSeason.id) ?? 0} highlighted />
+            </div>
+          )}
+
+          {/* Future Seasons */}
+          {futureSeasons.length > 0 && (
+            <div className="mb-8">
+              <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Future Seasons</h2>
+              <div className="grid gap-4">
+                {futureSeasons.map((season) => (
+                  <SeasonCard key={season.id} season={season} battlePointsMap={battlePointsMap} reportCount={reportCounts.get(season.id) ?? 0} />
+                ))}
+              </div>
             </div>
           )}
 
