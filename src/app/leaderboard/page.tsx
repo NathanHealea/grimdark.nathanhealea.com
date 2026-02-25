@@ -23,10 +23,11 @@ export default async function LeaderboardPage() {
       <div className="w-full px-4 py-12">
         <div className="mx-auto max-w-4xl">
           <div className="mb-8">
-            <h1 className="ornament text-3xl font-bold">Leaderboard</h1>
+            <h1 className="text-3xl font-bold">Leaderboard</h1>
             <p className="mt-2 text-base-content/60">Rankings based on published battle reports.</p>
           </div>
 
+          <h2 className="text-xl ornament font-bold mb-4">Current Standings</h2>
           <LeaderboardTable entries={standings} profileMap={profileMap} />
         </div>
       </div>

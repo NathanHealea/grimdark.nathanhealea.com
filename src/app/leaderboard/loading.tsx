@@ -8,6 +8,7 @@ export default function LeaderboardLoading() {
             <div className="skeleton mt-2 h-5 w-80" />
           </div>
 
+          <div className="skeleton  h-5 w-80" />
           <div className="hidden sm:block overflow-x-auto">
             <table className="table bg-base-200 rounded-box">
               <thead>
