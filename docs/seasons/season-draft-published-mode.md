@@ -1,6 +1,6 @@
 # Season Draft & Published Mode
 
-**Epic:** League Information
+**Epic:** Seasons
 **Type:** Enhancement
 **Status:** In Progress
 
