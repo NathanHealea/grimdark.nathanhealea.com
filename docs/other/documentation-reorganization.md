@@ -2,7 +2,7 @@
 
 **Epic:** Other
 **Type:** Enhancement
-**Status:** In Progress
+**Status:** Completed
 
 <!--
 Status values:
@@ -26,16 +26,16 @@ The current structure nests all work items under `docs/features/`, `docs/bugs/`,
 
 ## Acceptance Criteria
 
-- [ ] Epic directories exist at `docs/` root: `authentication-and-user-accounts/`, `league-information/`, `member-profiles/`, `factions/`, `battle-reports/`, `standings-and-leaderboard/`, `other/`
-- [ ] `docs/features/`, `docs/bugs/`, `docs/enhancements/` directories are removed
-- [ ] All documents have `Epic` and `Type` metadata fields
-- [ ] `Type` values are: `Feature`, `Bug`, or `Enhancement`
-- [ ] Documents not belonging to an epic are in `docs/other/`
-- [ ] All links in `docs/overview.md` point to the new paths
-- [ ] Templates in `docs/contributions/templates/` include `Epic` and `Type` fields
-- [ ] `/document` and `/plan` commands reference the new directory structure
-- [ ] Inconsistent status values are normalized (`Done` → `Completed`)
-- [ ] `docs/contributions/` directory is unchanged (stays as-is)
+- [x] Epic directories exist at `docs/` root: `authentication-and-user-accounts/`, `league-information/`, `member-profiles/`, `factions/`, `battle-reports/`, `standings-and-leaderboard/`, `other/`
+- [x] `docs/features/`, `docs/bugs/`, `docs/enhancements/` directories are removed
+- [x] All documents have `Epic` and `Type` metadata fields
+- [x] `Type` values are: `Feature`, `Bug`, or `Enhancement`
+- [x] Documents not belonging to an epic are in `docs/other/`
+- [x] All links in `docs/overview.md` point to the new paths
+- [x] Templates in `docs/contributions/templates/` include `Epic` and `Type` fields
+- [x] `/document` and `/plan` commands reference the new directory structure
+- [x] Inconsistent status values are normalized (`Done` → `Completed`)
+- [x] `docs/contributions/` directory is unchanged (stays as-is)
 
 ## Approach
 

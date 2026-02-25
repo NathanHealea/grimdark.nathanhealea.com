@@ -1,8 +1,9 @@
 # [Bug Title]
 
+**Epic:** [Epic name — e.g., Member Profiles, Battle Reports, Other]
+**Type:** Bug
 **Status:** Todo
 **Severity:** [To be determined]
-**Area:** [To be determined]
 
 <!--
 Status values:

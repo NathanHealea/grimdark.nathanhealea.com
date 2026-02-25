@@ -68,11 +68,11 @@ Epic Template:
 
 **High-Level Scope:**
 
-- [x] [Sign up / sign in via Supabase Auth (email/password)](./features/authentication-and-user-accounts/sign-up-sign-in.md)
-- [x] [User profile creation on first login](./features/authentication-and-user-accounts/user-profile-creation-on-first-login.md)
-- [x] [Protected routes for authenticated features](./features/authentication-and-user-accounts/protected-routes.md)
-- [x] [User roles (user, member, admin)](./features/authentication-and-user-accounts/user-roles.md)
-- [x] [Social media login (Google, Discord)](./features/authentication-and-user-accounts/social-media-login.md)
+- [x] [Sign up / sign in via Supabase Auth (email/password)](./authentication-and-user-accounts/sign-up-sign-in.md)
+- [x] [User profile creation on first login](./authentication-and-user-accounts/user-profile-creation-on-first-login.md)
+- [x] [Protected routes for authenticated features](./authentication-and-user-accounts/protected-routes.md)
+- [x] [User roles (user, member, admin)](./authentication-and-user-accounts/user-roles.md)
+- [x] [Social media login (Google, Discord)](./authentication-and-user-accounts/social-media-login.md)
 
 ### Epic: League Information
 
@@ -80,9 +80,9 @@ Epic Template:
 
 **High-Level Scope:**
 
-- [ ] [League landing page with description, rules, and schedule](./features/league-information/landing-page.md)
-- [x] [Season information (start/end dates, format, point limits)](./features/league-information/season-information.md)
-- [ ] [Public visibility — no login required to view](./features/league-information/public-visibility.md)
+- [ ] [League landing page with description, rules, and schedule](./league-information/landing-page.md)
+- [x] [Season information (start/end dates, format, point limits)](./league-information/season-information.md)
+- [ ] [Public visibility — no login required to view](./league-information/public-visibility.md)
 
 ### Epic: Member Profiles
 
@@ -90,11 +90,11 @@ Epic Template:
 
 **High-Level Scope:**
 
-- [x] [Member profile page (display name, faction/army, bio)](./features/member-profiles/member-profile-page.md)
-- [x] [Member directory listing all active league participants (with battle and season counts)](./features/member-profiles/member-directory.md)
-- [x] [Members can edit their own profile](./features/member-profiles/edit-own-profile.md)
-- [x] [Admins can edit any member's profile](./features/member-profiles/admin-edit-profile.md)
-- [x] [Profile picture display (avatar from OAuth provider)](./features/member-profiles/profile-picture.md)
+- [x] [Member profile page (display name, faction/army, bio)](./member-profiles/member-profile-page.md)
+- [x] [Member directory listing all active league participants (with battle and season counts)](./member-profiles/member-directory.md)
+- [x] [Members can edit their own profile](./member-profiles/edit-own-profile.md)
+- [x] [Admins can edit any member's profile](./member-profiles/admin-edit-profile.md)
+- [x] [Profile picture display (avatar from OAuth provider)](./member-profiles/profile-picture.md)
 
 ### Epic: Factions
 
@@ -102,10 +102,10 @@ Epic Template:
 
 **High-Level Scope:**
 
-- [x] [Factions data model and seed data](./features/factions/factions-data-model.md)
-- [ ] [Browse factions page](./features/factions/browse-factions.md)
-- [x] [Select factions for profile](./features/factions/select-factions-for-profile.md)
-- [x] [Reusable faction selector component](./features/factions/faction-selector-component.md)
+- [x] [Factions data model and seed data](./factions/factions-data-model.md)
+- [ ] [Browse factions page](./factions/browse-factions.md)
+- [x] [Select factions for profile](./factions/select-factions-for-profile.md)
+- [x] [Reusable faction selector component](./factions/faction-selector-component.md)
 
 ### Epic: Battle Reports
 
@@ -113,10 +113,10 @@ Epic Template:
 
 **High-Level Scope:**
 
-- [x] [Submit a battle report (players, factions, points, outcome, mission)](./features/battle-reports/submit-battle-report.md)
-- [x] [Battle report detail view with game summary](./features/battle-reports/battle-report-detail-view.md)
-- [x] [Battle report feed/history viewable by all members](./features/battle-reports/battle-report-feed.md)
-- [x] [Draft/published status with save draft and edit support](./features/battle-reports/battle-report-draft-status.md)
+- [x] [Submit a battle report (players, factions, points, outcome, mission)](./battle-reports/submit-battle-report.md)
+- [x] [Battle report detail view with game summary](./battle-reports/battle-report-detail-view.md)
+- [x] [Battle report feed/history viewable by all members](./battle-reports/battle-report-feed.md)
+- [x] [Draft/published status with save draft and edit support](./battle-reports/battle-report-draft-status.md)
 - [x] Season selection on battle report submit and edit (members: active seasons; admins: all seasons)
 - [x] Non-admins cannot unpublish a published battle report
 - [x] Admin battle reports management page
@@ -127,6 +127,6 @@ Epic Template:
 
 **High-Level Scope:**
 
-- [x] [Leaderboard page with win/loss/draw records](./features/standings-and-leaderboard/leaderboard-page.md)
-- [x] [Rankings calculated from submitted battle reports](./features/standings-and-leaderboard/rankings-from-battle-reports.md)
-- [x] [Filter by current season](./features/standings-and-leaderboard/filter-by-season.md)
+- [x] [Leaderboard page with win/loss/draw records](./standings-and-leaderboard/leaderboard-page.md)
+- [x] [Rankings calculated from submitted battle reports](./standings-and-leaderboard/rankings-from-battle-reports.md)
+- [x] [Filter by current season](./standings-and-leaderboard/filter-by-season.md)
