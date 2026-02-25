@@ -40,3 +40,11 @@ export async function getSeasonById(id: number): Promise<Season | null> {
 
   return data as Season
 }
+
+export async function getNextSeasonNumber(): Promise<number> {
+  const supabase = await createClient()
+
+  const { data } = await supabase.from('seasons').select('number').order('number', { ascending: false }).limit(1)
+
+  return (data?.[0]?.number ?? 0) + 1
+}

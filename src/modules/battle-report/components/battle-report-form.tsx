@@ -14,7 +14,7 @@ import {
 import type { BattlePoints, BattleReport, Deployment, Mission } from '@/types/battle-report'
 import type { Faction, ProfileFaction } from '@/types/faction'
 import type { Profile } from '@/types/profile'
-import type { Season } from '@/types/season'
+import { formatSeasonName, type Season } from '@/types/season'
 import { startTransition, useActionState, useEffect, useMemo, useRef, useState } from 'react'
 import { updateBattleReport } from '@/app/battle-reports/[id]/edit/actions'
 import { submitBattleReport } from '@/app/battle-reports/submit/actions'
@@ -203,7 +203,7 @@ export default function BattleReportForm({
                   <option value="">No season</option>
                   {visibleSeasons.map((season) => (
                     <option key={season.id} value={season.id}>
-                      {season.name}
+                      {formatSeasonName(season)}
                       {!season.is_active ? ' (inactive)' : ''}
                     </option>
                   ))}

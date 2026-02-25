@@ -13,6 +13,7 @@ export const metadata: Metadata = { title: 'Battle Reports' }
 import type { Outcome } from '@/types/battle-report'
 import type { Profile } from '@/types/profile'
 import type { Faction } from '@/types/faction'
+import { formatSeasonName } from '@/types/season'
 import Link from 'next/link'
 
 function outcomeBadge(outcome: Outcome) {
@@ -150,7 +151,7 @@ export default async function BattleReportsPage() {
                               href={`/seasons/${season.id}`}
                               className="link link-hover link-primary"
                             >
-                              {season.name}
+                              {formatSeasonName(season)}
                             </Link>
                           )}
                           {report.event_date && <span className="ml-auto">{formatDate(report.event_date)}</span>}

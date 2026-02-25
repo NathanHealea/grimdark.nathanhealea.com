@@ -12,6 +12,7 @@ import ActionsMenu from '@/components/actions-menu'
 import type { Outcome } from '@/types/battle-report'
 import type { Profile } from '@/types/profile'
 import type { Faction } from '@/types/faction'
+import { formatSeasonName } from '@/types/season'
 import Link from 'next/link'
 
 export const metadata: Metadata = { title: 'Battle Report Management' }
@@ -164,7 +165,7 @@ export default async function AdminBattleReportsPage() {
                         <td className="text-sm">
                           {season ? (
                             <Link href={`/seasons/${season.id}`} className="link link-hover link-primary">
-                              {season.name}
+                              {formatSeasonName(season)}
                             </Link>
                           ) : (
                             <span className="text-base-content/40">&mdash;</span>

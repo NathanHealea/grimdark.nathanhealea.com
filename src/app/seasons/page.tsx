@@ -4,7 +4,7 @@ export const metadata: Metadata = { title: 'Seasons' }
 
 import { getBattlePoints, getBattleReportCountsBySeasonId } from '@/modules/battle-report/queries'
 import type { BattlePoints } from '@/types/battle-report'
-import type { Season } from '@/types/season'
+import { formatSeasonName, type Season } from '@/types/season'
 import Link from 'next/link'
 
 function formatDate(dateString: string): string {
@@ -30,7 +30,7 @@ function SeasonCard({ season, battlePointsMap, reportCount, highlighted }: {
     >
       <div className="card-body gap-3">
         <div className="flex items-start justify-between gap-2">
-          <h2 className={`card-title ${highlighted ? 'text-gold' : ''}`}>{season.name}</h2>
+          <h2 className={`card-title ${highlighted ? 'text-gold' : ''}`}>{formatSeasonName(season)}</h2>
           {season.is_active && <span className="badge badge-success shrink-0">Active</span>}
         </div>
 

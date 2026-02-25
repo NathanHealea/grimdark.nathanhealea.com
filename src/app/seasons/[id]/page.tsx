@@ -13,6 +13,8 @@ import {
 import type { Outcome } from '@/types/battle-report'
 import type { Profile } from '@/types/profile'
 import type { Faction } from '@/types/faction'
+import { formatSeasonName } from '@/types/season'
+import MarkdownRenderer from '@/modules/markdown/components/markdown-renderer'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { computeLeaderboard } from '@/modules/leaderboard/utils'
@@ -56,7 +58,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const seasonId = Number(id)
   if (!seasonId) return { title: 'Season' }
   const season = await getSeasonById(seasonId)
-  return { title: season?.name ?? 'Season' }
+  return { title: season ? formatSeasonName(season) : 'Season' }
 }
 
 export default async function SeasonDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -100,7 +102,7 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ i
               &larr; All Seasons
             </Link>
             <div className="flex items-start justify-between gap-2">
-              <h1 className="text-3xl font-bold">{season.name}</h1>
+              <h1 className="text-3xl font-bold">{formatSeasonName(season)}</h1>
               {season.is_active && <span className="badge badge-success shrink-0">Active</span>}
             </div>
             <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-base-content/60">
@@ -109,6 +111,14 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ i
             </div>
             {season.description && <p className="mt-3 text-base-content/70">{season.description}</p>}
           </div>
+
+          {/* Rules */}
+          {season.rules && (
+            <div className="mb-8">
+              <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Rules</h2>
+              <MarkdownRenderer content={season.rules} className="text-base-content/70" />
+            </div>
+          )}
 
           {/* Leaderboard */}
           <div className="mb-8">
