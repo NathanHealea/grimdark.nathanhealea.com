@@ -1,6 +1,7 @@
 # [Feature Name]
 
 **Epic:** [Epic name — e.g., Member Profiles, Battle Reports, Factions]
+**Type:** Feature
 **Status:** Todo
 
 <!--

@@ -1,8 +1,8 @@
-# [Enhancement Title]
+# Season WYSIWYG Editor for Rules and Description
 
-**Epic:** [Epic name — e.g., Member Profiles, Battle Reports, Other]
+**Epic:** Other
 **Type:** Enhancement
-**Status:** Todo
+**Status:** In Progress
 
 <!--
 Status values:
@@ -13,7 +13,7 @@ Status values:
 
 ## Summary
 
-[1-3 sentences describing what this enhancement improves, who benefits, and what value it provides.]
+Add a simple, reusable WYSIWYG editor component for editing season rules and description fields. The editor supports bold, italic, numbered lists, and bullet points. Content is stored as markdown in the database and rendered with a reusable markdown renderer component.
 
 ## Motivation
 
@@ -23,7 +23,7 @@ What problem does it solve? What user pain point does it address?
 What's wrong with the current approach?
 -->
 
-[Why this enhancement is needed]
+Season descriptions and rules currently lack rich text formatting, limiting organizers' ability to clearly communicate league structure, rules, and details to members. A lightweight WYSIWYG editor lets admins write formatted content without needing to know markdown syntax, while storing markdown in the database keeps the data portable and simple.
 
 ## Acceptance Criteria
 
@@ -65,7 +65,7 @@ what was chosen, what alternatives existed, and why this approach was picked.
 Number each decision for easy reference.
 -->
 
-1. **[Decision title]** — [Explanation of what was decided and why.]
+1. **Store markdown in the database** — Markdown is lightweight, human-readable, and easily rendered on the frontend. Alternatives like storing HTML or using a structured document format add complexity without clear benefit for this use case.
 
 ## Notes
 
