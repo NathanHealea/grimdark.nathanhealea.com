@@ -1,6 +1,12 @@
 import ScrollBanner from '@/components/scroll-banner'
 import { createClient } from '@/lib/supabase/server'
+import { getBattleReports, getBattleReportsBySeasonId } from '@/modules/battle-report/queries'
 import { getFactions } from '@/modules/faction/queries'
+import LeaderboardSection from '@/modules/leaderboard/components/leaderboard-section'
+import LeaderboardTable from '@/modules/leaderboard/components/leaderboard-table'
+import { computeLeaderboard } from '@/modules/leaderboard/utils'
+import { getActiveSeason } from '@/modules/season/queries'
+import type { Profile } from '@/types/profile'
 import Link from 'next/link'
 import { Suspense } from 'react'
 
@@ -79,6 +85,74 @@ async function Stats() {
   )
 }
 
+function HomeLeaderboardLoading() {
+  return (
+    <div>
+      <div className="flex justify-center mb-6">
+        <div className="join">
+          <div className="join-item skeleton h-8 w-24" />
+          <div className="join-item skeleton h-8 w-24" />
+        </div>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="table bg-base-200 rounded-box">
+          <thead>
+            <tr>
+              <th className="w-12">#</th>
+              <th>Player</th>
+              <th className="text-center">GP</th>
+              <th className="text-center">W</th>
+              <th className="text-center">L</th>
+              <th className="text-center">D</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <tr key={i}>
+                <td><div className="skeleton h-5 w-6" /></td>
+                <td>
+                  <div className="flex items-center gap-3">
+                    <div className="skeleton h-10 w-10 rounded-full" />
+                    <div className="skeleton h-5 w-32" />
+                  </div>
+                </td>
+                <td className="text-center"><div className="skeleton mx-auto h-5 w-8" /></td>
+                <td className="text-center"><div className="skeleton mx-auto h-5 w-8" /></td>
+                <td className="text-center"><div className="skeleton mx-auto h-5 w-8" /></td>
+                <td className="text-center"><div className="skeleton mx-auto h-5 w-8" /></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
+
+async function HomeLeaderboard() {
+  const supabase = await createClient()
+  const [activeSeason, allReports, { data: profiles }] = await Promise.all([
+    getActiveSeason(),
+    getBattleReports(),
+    supabase.from('profiles').select('*').in('role', ['member', 'organizer']),
+  ])
+
+  const seasonReports = activeSeason ? await getBattleReportsBySeasonId(activeSeason.id) : []
+
+  const profileMap = new Map(((profiles as Profile[]) ?? []).map((p) => [p.id, p]))
+  const overallStandings = computeLeaderboard(allReports)
+  const seasonStandings = activeSeason ? computeLeaderboard(seasonReports) : []
+
+  return (
+    <LeaderboardSection
+      overallTable={<LeaderboardTable entries={overallStandings} profileMap={profileMap} />}
+      seasonTable={activeSeason ? <LeaderboardTable entries={seasonStandings} profileMap={profileMap} /> : null}
+      seasonName={activeSeason?.name ?? null}
+      seasonId={activeSeason?.id ?? null}
+    />
+  )
+}
+
 export default async function Home() {
   const factions = await getFactions()
   const rootIds = new Set(factions.filter((f) => f.parent_id === null).map((f) => f.id))
@@ -118,11 +192,21 @@ export default async function Home() {
           <Suspense fallback={<StatsLoading />}>
             <Stats />
           </Suspense>
+
         </div>
       </section>
 
       <section className="bg-base-200 border-y border-base-300 py-3 overflow-hidden">
         <ScrollBanner items={factionNames} />
+      </section>
+
+      <section className="w-full px-4 py-12">
+        <div className="mx-auto max-w-4xl">
+          <h2 className="ornament mb-6 text-center text-sm font-semibold uppercase tracking-widest">Leaderboard</h2>
+          <Suspense fallback={<HomeLeaderboardLoading />}>
+            <HomeLeaderboard />
+          </Suspense>
+        </div>
       </section>
     </main>
   )

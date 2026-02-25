@@ -127,6 +127,6 @@ Epic Template:
 
 **High-Level Scope:**
 
-- [ ] [Leaderboard page with win/loss/draw records](./features/standings-and-leaderboard/leaderboard-page.md)
-- [ ] [Rankings calculated from submitted battle reports](./features/standings-and-leaderboard/rankings-from-battle-reports.md)
-- [ ] [Filter by current season](./features/standings-and-leaderboard/filter-by-season.md)
+- [x] [Leaderboard page with win/loss/draw records](./features/standings-and-leaderboard/leaderboard-page.md)
+- [x] [Rankings calculated from submitted battle reports](./features/standings-and-leaderboard/rankings-from-battle-reports.md)
+- [x] [Filter by current season](./features/standings-and-leaderboard/filter-by-season.md)

@@ -15,7 +15,8 @@ import type { Profile } from '@/types/profile'
 import type { Faction } from '@/types/faction'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { TrophyIcon } from '@heroicons/react/24/outline'
+import { computeLeaderboard } from '@/modules/leaderboard/utils'
+import LeaderboardTable from '@/modules/leaderboard/components/leaderboard-table'
 
 function outcomeBadge(outcome: Outcome) {
   const styles: Record<Outcome, string> = {
@@ -73,7 +74,7 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ i
   const isAdmin = auth ? await hasRole(auth.user.id, 'admin') : false
 
   const [battleReports, { data: profiles }, factions, missions, deployments, battlePoints] = await Promise.all([
-    getBattleReportsBySeasonId(seasonId, { includeAll: isAdmin }),
+    getBattleReportsBySeasonId(seasonId),
     supabase.from('profiles').select('*'),
     getFactions(),
     getMissions(),
@@ -109,15 +110,10 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ i
             {season.description && <p className="mt-3 text-base-content/70">{season.description}</p>}
           </div>
 
-          {/* Leaderboard Placeholder */}
+          {/* Leaderboard */}
           <div className="mb-8">
             <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Leaderboard</h2>
-            <div className="card bg-base-200 shadow-sm">
-              <div className="card-body items-center py-12 text-center">
-                <TrophyIcon className="size-12 text-base-content/20" />
-                <p className="mt-2 text-base-content/50">Leaderboard coming soon.</p>
-              </div>
-            </div>
+            <LeaderboardTable entries={computeLeaderboard(battleReports.filter((r) => r.status === 'published'))} profileMap={profileMap} />
           </div>
 
           {/* Battle Reports */}
