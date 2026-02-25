@@ -81,8 +81,17 @@ Epic Template:
 **High-Level Scope:**
 
 - [ ] [League landing page with description, rules, and schedule](./league-information/landing-page.md)
-- [x] [Season information (start/end dates, format, point limits)](./league-information/season-information.md)
 - [ ] [Public visibility — no login required to view](./league-information/public-visibility.md)
+
+### Epic: Seasons
+
+**Goal:** Organize league play into time-bounded seasons with defined formats, rules, and standings.
+
+**High-Level Scope:**
+
+- [x] [Season information (start/end dates, format, point limits)](./seasons/season-information.md)
+- [ ] [Season participants (admin-managed player rosters per season)](./seasons/season-participants.md)
+- [ ] [Draft/published mode for seasons](./seasons/season-draft-published-mode.md)
 
 ### Epic: Member Profiles
 

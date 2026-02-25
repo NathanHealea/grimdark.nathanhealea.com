@@ -1,6 +1,6 @@
 # Season Participants
 
-**Epic:** League Information
+**Epic:** Seasons
 **Type:** Feature
 **Status:** Todo
 

@@ -2,8 +2,8 @@
 
 import MarkdownEditor from '@/modules/markdown/components/markdown-editor'
 import type { BattlePoints } from '@/types/battle-report'
-import type { Season } from '@/types/season'
-import { startTransition, useActionState } from 'react'
+import type { Season, SeasonStatus } from '@/types/season'
+import { startTransition, useActionState, useState } from 'react'
 import { createSeason, updateSeason, type SeasonFormState } from './actions'
 
 type SeasonFormProps = {
@@ -14,6 +14,7 @@ type SeasonFormProps = {
 
 export default function SeasonForm({ battlePoints, season, nextNumber }: SeasonFormProps) {
   const seasonNumber = season?.number ?? nextNumber
+  const [status, setStatus] = useState<SeasonStatus>(season?.status ?? 'draft')
   const action = season ? updateSeason : createSeason
   const [state, formAction, pending] = useActionState<SeasonFormState, FormData>(action, null)
 
@@ -169,17 +170,24 @@ export default function SeasonForm({ battlePoints, season, nextNumber }: SeasonF
         <div>
           <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Settings</h2>
           <fieldset className="fieldset bg-base-300 rounded-box p-5">
-            <label className="label cursor-pointer justify-start gap-3">
-              <input
-                type="checkbox"
-                name="is_active"
-                className="checkbox checkbox-primary"
-                defaultChecked={season?.is_active ?? false}
-              />
-              <span>Active season</span>
+            <label className="label" htmlFor="status">
+              Status
             </label>
-            <p className="text-sm text-base-content/50">
-              Only one season can be active at a time. Activating this season will deactivate the current one.
+            <select
+              id="status"
+              name="status"
+              className={`select select-bordered w-full ${state?.errors?.status ? 'select-error' : ''}`}
+              value={status}
+              onChange={(e) => setStatus(e.target.value as SeasonStatus)}
+            >
+              <option value="draft">Draft</option>
+              <option value="published">Published</option>
+            </select>
+            {state?.errors?.status && <p className="mt-1 text-sm text-error">{state.errors.status}</p>}
+            <p className="mt-2 text-sm text-base-content/50">
+              {status === 'draft'
+                ? 'Draft seasons are only visible to admins.'
+                : 'Published seasons are visible to all users. A season is automatically current when today falls within its date range.'}
             </p>
 
             {!season && (

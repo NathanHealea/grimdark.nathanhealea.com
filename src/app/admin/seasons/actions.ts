@@ -8,12 +8,41 @@ import type { FormState } from '@/types/forms'
 
 export type SeasonFormState = FormState<{
   name: string
+  status: string
   start_date: string
   end_date: string
   battle_points_id: string
   description: string
   rules: string
 }>
+
+async function checkOverlap(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  startDate: string,
+  endDate: string,
+  status: string,
+  excludeId?: number
+): Promise<string | null> {
+  if (status !== 'published') return null
+
+  let query = supabase
+    .from('seasons')
+    .select('id, number, name')
+    .eq('status', 'published')
+    .lte('start_date', endDate)
+    .gte('end_date', startDate)
+
+  if (excludeId) query = query.neq('id', excludeId)
+
+  const { data } = await query
+
+  if (data && data.length > 0) {
+    const names = data.map((s) => s.name ? `Season ${s.number} - ${s.name}` : `Season ${s.number}`)
+    return `Date range overlaps with published season: ${names.join(', ')}. Change dates or unpublish the other season first.`
+  }
+
+  return null
+}
 
 export async function createSeason(prevState: SeasonFormState, formData: FormData): Promise<SeasonFormState> {
   const supabase = await createClient()
@@ -32,16 +61,17 @@ export async function createSeason(prevState: SeasonFormState, formData: FormDat
   }
 
   const name = (formData.get('name') as string)?.trim() ?? ''
+  const status = (formData.get('status') as string) ?? 'draft'
   const startDate = (formData.get('start_date') as string) ?? ''
   const endDate = (formData.get('end_date') as string) ?? ''
   const battlePointsId = (formData.get('battle_points_id') as string) ?? ''
   const description = (formData.get('description') as string)?.trim() ?? ''
   const rules = (formData.get('rules') as string)?.trim() ?? ''
-  const isActive = formData.get('is_active') === 'on'
   const backfill = formData.get('backfill') === 'on'
 
   const errors: Record<string, string> = {}
 
+  if (!status || !['draft', 'published'].includes(status)) errors.status = 'Status must be draft or published.'
   if (!startDate) errors.start_date = 'Start date is required.'
   if (!endDate) errors.end_date = 'End date is required.'
   if (!battlePointsId) errors.battle_points_id = 'Battle size is required.'
@@ -51,24 +81,25 @@ export async function createSeason(prevState: SeasonFormState, formData: FormDat
     return { errors }
   }
 
-  const nextNumber = await getNextSeasonNumber()
-
-  // If activating this season, deactivate any currently active season first
-  if (isActive) {
-    await supabase.from('seasons').update({ is_active: false }).eq('is_active', true)
+  // Check for overlapping published seasons
+  const overlapError = await checkOverlap(supabase, startDate, endDate, status)
+  if (overlapError) {
+    return { errors: { start_date: overlapError } }
   }
+
+  const nextNumber = await getNextSeasonNumber()
 
   const { data: newSeason, error } = await supabase
     .from('seasons')
     .insert({
       number: nextNumber,
       name: name || null,
+      status,
       start_date: startDate,
       end_date: endDate,
       battle_points_id: Number(battlePointsId),
       description: description || null,
       rules: rules || null,
-      is_active: isActive,
     })
     .select('id')
     .single()
@@ -115,12 +146,12 @@ export async function updateSeason(prevState: SeasonFormState, formData: FormDat
 
   const seasonId = Number(formData.get('season_id'))
   const name = (formData.get('name') as string)?.trim() ?? ''
+  const status = (formData.get('status') as string) ?? 'draft'
   const startDate = (formData.get('start_date') as string) ?? ''
   const endDate = (formData.get('end_date') as string) ?? ''
   const battlePointsId = (formData.get('battle_points_id') as string) ?? ''
   const description = (formData.get('description') as string)?.trim() ?? ''
   const rules = (formData.get('rules') as string)?.trim() ?? ''
-  const isActive = formData.get('is_active') === 'on'
 
   if (!seasonId) {
     return { error: 'Invalid season.' }
@@ -128,6 +159,7 @@ export async function updateSeason(prevState: SeasonFormState, formData: FormDat
 
   const errors: Record<string, string> = {}
 
+  if (!status || !['draft', 'published'].includes(status)) errors.status = 'Status must be draft or published.'
   if (!startDate) errors.start_date = 'Start date is required.'
   if (!endDate) errors.end_date = 'End date is required.'
   if (!battlePointsId) errors.battle_points_id = 'Battle size is required.'
@@ -137,21 +169,22 @@ export async function updateSeason(prevState: SeasonFormState, formData: FormDat
     return { errors }
   }
 
-  // If activating this season, deactivate any other currently active season first
-  if (isActive) {
-    await supabase.from('seasons').update({ is_active: false }).eq('is_active', true).neq('id', seasonId)
+  // Check for overlapping published seasons
+  const overlapError = await checkOverlap(supabase, startDate, endDate, status, seasonId)
+  if (overlapError) {
+    return { errors: { start_date: overlapError } }
   }
 
   const { error } = await supabase
     .from('seasons')
     .update({
       name: name || null,
+      status,
       start_date: startDate,
       end_date: endDate,
       battle_points_id: Number(battlePointsId),
       description: description || null,
       rules: rules || null,
-      is_active: isActive,
     })
     .eq('id', seasonId)
 

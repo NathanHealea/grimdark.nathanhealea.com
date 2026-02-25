@@ -14,7 +14,7 @@ import {
 import type { BattlePoints, BattleReport, Deployment, Mission } from '@/types/battle-report'
 import type { Faction, ProfileFaction } from '@/types/faction'
 import type { Profile } from '@/types/profile'
-import { formatSeasonName, type Season } from '@/types/season'
+import { formatSeasonName, isCurrentSeason, isPastSeason, type Season } from '@/types/season'
 import { startTransition, useActionState, useEffect, useMemo, useRef, useState } from 'react'
 import { updateBattleReport } from '@/app/battle-reports/[id]/edit/actions'
 import { submitBattleReport } from '@/app/battle-reports/submit/actions'
@@ -107,7 +107,7 @@ export default function BattleReportForm({
 
   const visibleSeasons = useMemo(() => {
     if (isAdmin) return seasons
-    return seasons.filter((s) => s.is_active)
+    return seasons.filter((s) => isCurrentSeason(s))
   }, [seasons, isAdmin])
 
   function handleSubmit(formData: FormData) {
@@ -204,7 +204,7 @@ export default function BattleReportForm({
                   {visibleSeasons.map((season) => (
                     <option key={season.id} value={season.id}>
                       {formatSeasonName(season)}
-                      {!season.is_active ? ' (inactive)' : ''}
+                      {isPastSeason(season) ? ' (past)' : ''}
                     </option>
                   ))}
                 </select>

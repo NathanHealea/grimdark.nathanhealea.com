@@ -58,7 +58,7 @@ export default async function EditBattleReportPage({ params }: { params: Promise
     getMembers(),
     getFactions(),
     getMemberFactions(),
-    getSeasons(),
+    getSeasons({ includeAll: isAdmin }),
   ])
 
   return (

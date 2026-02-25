@@ -5,7 +5,7 @@ import { getFactions } from '@/modules/faction/queries'
 import LeaderboardSection from '@/modules/leaderboard/components/leaderboard-section'
 import LeaderboardTable from '@/modules/leaderboard/components/leaderboard-table'
 import { computeLeaderboard } from '@/modules/leaderboard/utils'
-import { getActiveSeason } from '@/modules/season/queries'
+import { getCurrentSeason } from '@/modules/season/queries'
 import type { Profile } from '@/types/profile'
 import Link from 'next/link'
 import { Suspense } from 'react'
@@ -131,24 +131,24 @@ function HomeLeaderboardLoading() {
 
 async function HomeLeaderboard() {
   const supabase = await createClient()
-  const [activeSeason, allReports, { data: profiles }] = await Promise.all([
-    getActiveSeason(),
+  const [currentSeason, allReports, { data: profiles }] = await Promise.all([
+    getCurrentSeason(),
     getBattleReports(),
     supabase.from('profiles').select('*').in('role', ['member', 'organizer']),
   ])
 
-  const seasonReports = activeSeason ? await getBattleReportsBySeasonId(activeSeason.id) : []
+  const seasonReports = currentSeason ? await getBattleReportsBySeasonId(currentSeason.id) : []
 
   const profileMap = new Map(((profiles as Profile[]) ?? []).map((p) => [p.id, p]))
   const overallStandings = computeLeaderboard(allReports)
-  const seasonStandings = activeSeason ? computeLeaderboard(seasonReports) : []
+  const seasonStandings = currentSeason ? computeLeaderboard(seasonReports) : []
 
   return (
     <LeaderboardSection
       overallTable={<LeaderboardTable entries={overallStandings} profileMap={profileMap} />}
-      seasonTable={activeSeason ? <LeaderboardTable entries={seasonStandings} profileMap={profileMap} /> : null}
-      seasonName={activeSeason?.name ?? null}
-      seasonId={activeSeason?.id ?? null}
+      seasonTable={currentSeason ? <LeaderboardTable entries={seasonStandings} profileMap={profileMap} /> : null}
+      seasonName={currentSeason?.name ?? null}
+      seasonId={currentSeason?.id ?? null}
     />
   )
 }

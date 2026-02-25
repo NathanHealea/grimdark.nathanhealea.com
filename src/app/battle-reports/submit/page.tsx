@@ -46,7 +46,7 @@ export default async function SubmitBattleReportPage() {
     getMembers(),
     getFactions(),
     getMemberFactions(),
-    getSeasons(),
+    getSeasons({ includeAll: isAdmin }),
   ])
 
   return (
