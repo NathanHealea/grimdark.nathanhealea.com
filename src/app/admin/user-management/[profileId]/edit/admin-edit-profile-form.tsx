@@ -139,24 +139,24 @@ export default function AdminEditProfileForm({
   const [uploading, setUploading] = useState(false)
   const [roleAlert, setRoleAlert] = useState<ToggleRoleState>(null)
 
-  // Reset merge form state on success
-  useEffect(() => {
-    if (mergeState?.success) {
+  function handleMergeAction(formData: FormData) {
+    startTransition(() => {
       setSelectedMergeSource('')
       setMergePreview(null)
       setMergePreviewError(null)
       setShowMergeConfirm(false)
-    }
-  }, [mergeState])
+      mergeAction(formData)
+    })
+  }
 
-  // Reset link form state on success
-  useEffect(() => {
-    if (linkState?.success) {
+  function handleLinkAction(formData: FormData) {
+    startTransition(() => {
       setLinkSearch('')
       setSelectedLinkUser(null)
       setLinkDropdownOpen(false)
-    }
-  }, [linkState])
+      linkAction(formData)
+    })
+  }
 
   const filteredLinkUsers = linkSearch.trim()
     ? linkableUsers.filter((u) => {
@@ -487,7 +487,7 @@ export default function AdminEditProfileForm({
               </div>
             )}
 
-            <form action={linkAction} className="flex gap-2 items-end">
+            <form action={handleLinkAction} className="flex gap-2 items-end">
               <input type="hidden" name="profile_id" value={profile.id} />
               <input type="hidden" name="auth_user_id" value={selectedLinkUser?.id ?? ''} />
               <div className="flex-1 relative" ref={linkDropdownRef}>
@@ -663,7 +663,7 @@ export default function AdminEditProfileForm({
                       This action is irreversible. The source profile will be permanently deleted.
                     </p>
                     <div className="flex gap-2">
-                      <form action={mergeAction}>
+                      <form action={handleMergeAction}>
                         <input type="hidden" name="source_profile_id" value={selectedMergeSource} />
                         <input type="hidden" name="target_profile_id" value={profile.id} />
                         <button type="submit" className="btn btn-error btn-sm" disabled={mergePending}>
