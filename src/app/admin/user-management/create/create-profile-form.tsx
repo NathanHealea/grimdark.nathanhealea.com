@@ -32,21 +32,23 @@ export default function CreateProfileForm({ factions }: CreateProfileFormProps) 
   const factionFieldError = state?.errors?.faction_ids
 
   return (
-    <div className="card bg-base-200 shadow-xl">
-      <div className="card-body gap-4">
-        <h1 className="card-title text-2xl">Create Profile</h1>
-        <p className="text-base-content/70">
-          Create an unlinked profile for a player who hasn&apos;t signed up yet.
-        </p>
+    <>
+      {state?.success && (
+        <div role="alert" className="alert alert-success">
+          <span>{state.success}</span>
+        </div>
+      )}
+      {state?.error && (
+        <div role="alert" className="alert alert-error">
+          <span>{state.error}</span>
+        </div>
+      )}
 
-        {state?.error && (
-          <div role="alert" className="alert alert-error">
-            <span>{state.error}</span>
-          </div>
-        )}
-
-        <form action={handleSubmit} className="flex flex-col gap-4">
-          <fieldset className="fieldset">
+      <form action={handleSubmit} className="flex flex-col gap-6">
+        {/* Section 1: Profile */}
+        <div>
+          <h2 className="ornament section-header">Profile</h2>
+          <fieldset className="form-section">
             <label className="label" htmlFor="display_name">
               Display Name
             </label>
@@ -56,7 +58,7 @@ export default function CreateProfileForm({ factions }: CreateProfileFormProps) 
               name="display_name"
               type="text"
               placeholder="Player display name"
-              className={`input input-bordered w-full ${displayNameError ? 'input-error' : ''}`}
+              className={`input input-lg input-bordered w-full ${displayNameError ? 'input-error' : ''}`}
               required
               minLength={2}
               maxLength={50}
@@ -71,47 +73,64 @@ export default function CreateProfileForm({ factions }: CreateProfileFormProps) 
               id="bio"
               name="bio"
               placeholder="Bio (optional)"
-              className="textarea textarea-bordered w-full"
+              className="textarea textarea-lg textarea-bordered w-full"
               maxLength={500}
-              rows={3}
+              rows={4}
             />
+          </fieldset>
+        </div>
 
-            <label className="label" htmlFor="link_id">
-              Link ID
-            </label>
-            <input
-              id="link_id"
-              name="link_id"
-              type="text"
-              placeholder="Discord user ID (optional)"
-              className="input input-bordered w-full"
-            />
-            <p className="text-xs text-base-content/50 mt-1">
-              If provided, this profile will auto-link when the user signs in via Discord.
-            </p>
+        {/* Section 2: Admin Settings */}
+        <div>
+          <h2 className="ornament section-header">Admin Settings</h2>
+          <fieldset className="form-section">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="label" htmlFor="link_id">
+                  Link ID
+                </label>
+                <input
+                  id="link_id"
+                  name="link_id"
+                  type="text"
+                  placeholder="Discord user ID"
+                  className="input input-lg input-bordered w-full"
+                />
+                <p className="text-xs text-base-content/50 mt-1">
+                  Used to auto-link this profile when the user signs in via Discord.
+                </p>
+              </div>
 
-            <label className="label" htmlFor="role">
-              League Role
-            </label>
-            <select
-              id="role"
-              name="role"
-              defaultValue="member"
-              className="select select-bordered w-full"
-            >
-              <option value="member">Member</option>
-              <option value="organizer">Organizer</option>
-            </select>
+              <div>
+                <label className="label" htmlFor="role">
+                  League Role
+                </label>
+                <select
+                  id="role"
+                  name="role"
+                  defaultValue="member"
+                  className="select select-lg select-bordered w-full"
+                >
+                  <option value="member">Member</option>
+                  <option value="organizer">Organizer</option>
+                </select>
+              </div>
+            </div>
+          </fieldset>
+        </div>
 
-            <label className="fieldset-label">Factions (optional)</label>
+        {/* Section 3: Factions */}
+        <div>
+          <h2 className="ornament section-header">Factions</h2>
+          <fieldset className="form-section">
             <FactionSelector factions={factions} error={factionFieldError} />
           </fieldset>
+        </div>
 
-          <button type="submit" className="btn btn-success w-full" disabled={pending}>
-            {pending ? <span className="loading loading-spinner loading-sm" /> : 'Create Profile'}
-          </button>
-        </form>
-      </div>
-    </div>
+        <button type="submit" className="btn btn-primary btn-lg w-full" disabled={pending}>
+          {pending ? <span className="loading loading-spinner loading-md" /> : 'Create Profile'}
+        </button>
+      </form>
+    </>
   )
 }
