@@ -26,7 +26,7 @@ export default function LeaderboardTable({ entries, profileMap }: LeaderboardTab
     <>
       {/* Desktop table */}
       <div className="hidden sm:block overflow-x-auto">
-        <table className="table table-zebra bg-base-200 rounded-box">
+        <table className="data-table">
           <thead>
             <tr>
               <th className="w-12">

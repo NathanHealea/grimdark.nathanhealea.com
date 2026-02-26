@@ -100,18 +100,18 @@ export default async function BattleReportDetailPage({ params }: { params: Promi
   const bp = report.battle_points_id ? battlePointsMap.get(report.battle_points_id) : null
 
   return (
-    <main className="flex flex-col items-center -mt-72 pt-72 min-h-screen w-full">
-      <div className="w-full px-4 py-12">
-        <div className="mx-auto max-w-4xl">
+    <main className="page-layout">
+      <div className="page-container">
+        <div className="page-content">
           {/* Header */}
           <div className="mb-8">
-            <Link href="/battle-reports" className="btn btn-ghost btn-sm mb-4 -ml-2">
+            <Link href="/battle-reports" className="btn-back">
               &larr; All Battle Reports
             </Link>
             <div className="flex items-start justify-between gap-2">
               <div>
                 <div className="flex items-center gap-2">
-                  <h1 className="text-3xl font-bold">Battle Report</h1>
+                  <h1 className="text-h1">Battle Report</h1>
                   {isDraft && <span className="badge badge-warning">Draft</span>}
                 </div>
                 {report.event_date && (
@@ -131,11 +131,11 @@ export default async function BattleReportDetailPage({ params }: { params: Promi
 
           {/* Players */}
           <div className="mb-8">
-            <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Players</h2>
+            <h2 className="ornament section-header">Players</h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {/* Attacker */}
               <div className="rounded-lg bg-base-200 p-4">
-                <p className="text-xs font-medium uppercase text-base-content/50 mb-2">Attacker</p>
+                <p className="label-meta mb-2">Attacker</p>
                 {attacker ? (
                   <div className="flex items-center justify-between gap-2">
                     <div className="min-w-0">
@@ -165,7 +165,7 @@ export default async function BattleReportDetailPage({ params }: { params: Promi
 
               {/* Defender */}
               <div className="rounded-lg bg-base-200 p-4">
-                <p className="text-xs font-medium uppercase text-base-content/50 mb-2">Defender</p>
+                <p className="label-meta mb-2">Defender</p>
                 {defender ? (
                   <div className="flex items-center justify-between gap-2">
                     <div className="min-w-0">
@@ -197,7 +197,7 @@ export default async function BattleReportDetailPage({ params }: { params: Promi
 
           {/* Game Details */}
           <div>
-            <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Game Details</h2>
+            <h2 className="ornament section-header">Game Details</h2>
             <div className="rounded-lg bg-base-200 p-4">
               <div className="grid grid-cols-2 gap-y-3 gap-x-4 text-sm">
                 <div>

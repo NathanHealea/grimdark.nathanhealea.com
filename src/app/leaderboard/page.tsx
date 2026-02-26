@@ -19,11 +19,11 @@ export default async function LeaderboardPage() {
   const profileMap = new Map(((profiles as Profile[]) ?? []).map((p) => [p.id, p]))
 
   return (
-    <main className="flex flex-col items-center -mt-72 pt-72 min-h-screen w-full">
-      <div className="w-full px-4 py-12">
-        <div className="mx-auto max-w-4xl">
+    <main className="page-layout">
+      <div className="page-container">
+        <div className="page-content">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold">Leaderboard</h1>
+            <h1 className="text-h1">Leaderboard</h1>
             <p className="mt-2 text-base-content/60">Rankings based on published battle reports.</p>
           </div>
 

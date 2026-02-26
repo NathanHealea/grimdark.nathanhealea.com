@@ -68,18 +68,18 @@ export default async function AdminBattleReportsPage() {
   const drafts = battleReports.filter((r) => r.status === 'draft')
 
   return (
-    <main className="flex flex-col items-center -mt-72 pt-72 min-h-screen w-full">
-      <div className="w-full px-4 py-12">
-        <div className="mx-auto max-w-4xl">
+    <main className="page-layout">
+      <div className="page-container">
+        <div className="page-content">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold">Battle Report Management</h1>
+            <h1 className="text-h1">Battle Report Management</h1>
             <p className="mt-2 text-base-content/60">
               View all battle reports including drafts. {battleReports.length} total ({published.length} published, {drafts.length} drafts).
             </p>
           </div>
 
           {battleReports.length === 0 ? (
-            <p className="text-base-content/50 italic">No battle reports yet.</p>
+            <p className="empty-text">No battle reports yet.</p>
           ) : (
             <div className="overflow-x-auto">
               <table className="table">

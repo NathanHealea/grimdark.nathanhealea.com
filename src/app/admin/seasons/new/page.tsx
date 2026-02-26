@@ -7,14 +7,14 @@ export default async function CreateSeasonPage() {
   const [battlePoints, nextNumber] = await Promise.all([getBattlePoints(), getNextSeasonNumber()])
 
   return (
-    <main className="flex flex-col items-center -mt-72 pt-72 min-h-screen w-full">
-      <div className="w-full px-4 py-12">
-        <div className="mx-auto max-w-4xl">
+    <main className="page-layout">
+      <div className="page-container">
+        <div className="page-content">
           <div className="mb-8">
-            <Link href="/admin/seasons" className="btn btn-ghost btn-sm mb-4 -ml-2">
+            <Link href="/admin/seasons" className="btn-back">
               &larr; Back to Seasons
             </Link>
-            <h1 className="text-3xl font-bold">Create Season</h1>
+            <h1 className="text-h1">Create Season</h1>
           </div>
 
           <SeasonForm battlePoints={battlePoints} nextNumber={nextNumber} />

@@ -129,7 +129,7 @@ export default function FactionSelector({
         <input key={id} type="hidden" name={name} value={id} />
       ))}
 
-      {error && <p className="mt-1 text-sm text-error">{error}</p>}
+      {error && <p className="form-error">{error}</p>}
     </div>
   )
 }

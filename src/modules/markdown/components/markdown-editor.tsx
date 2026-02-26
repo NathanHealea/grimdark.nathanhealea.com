@@ -112,7 +112,7 @@ export default function MarkdownEditor({ defaultValue = '', error, className, ..
       <p className="mt-1 text-xs text-base-content/50">
         Supports <strong>**bold**</strong>, <em>*italic*</em>, bullet lists, and numbered lists.
       </p>
-      {error && <p className="mt-1 text-sm text-error">{error}</p>}
+      {error && <p className="form-error">{error}</p>}
     </div>
   )
 }

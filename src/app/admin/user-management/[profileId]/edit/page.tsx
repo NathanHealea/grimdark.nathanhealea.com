@@ -50,14 +50,14 @@ export default async function AdminEditProfilePage({ params }: { params: Promise
   }
 
   return (
-    <main className="flex flex-col items-center -mt-72 pt-72 min-h-screen w-full">
-      <div className="w-full px-4 py-12">
-        <div className="mx-auto max-w-4xl">
+    <main className="page-layout">
+      <div className="page-container">
+        <div className="page-content">
           <div className="mb-8">
-            <Link href={`/profile/${typedProfile.profile_id}`} className="btn btn-ghost btn-sm mb-4 -ml-2">
+            <Link href={`/profile/${typedProfile.profile_id}`} className="btn-back">
               &larr; View Profile
             </Link>
-            <h1 className="text-3xl font-bold">Edit User</h1>
+            <h1 className="text-h1">Edit User</h1>
             <p className="mt-1 text-sm text-base-content/50">
               Managing profile for <span className="font-semibold">{typedProfile.display_name}</span>
             </p>

@@ -1,8 +1,8 @@
 export default function LeaderboardLoading() {
   return (
-    <main className="flex flex-col items-center -mt-72 pt-72 min-h-screen w-full">
-      <div className="w-full px-4 py-12">
-        <div className="mx-auto max-w-4xl">
+    <main className="page-layout">
+      <div className="page-container">
+        <div className="page-content">
           <div className="mb-8">
             <div className="skeleton h-9 w-48" />
             <div className="skeleton mt-2 h-5 w-80" />

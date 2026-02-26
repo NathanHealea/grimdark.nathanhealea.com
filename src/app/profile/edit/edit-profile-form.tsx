@@ -103,8 +103,8 @@ export default function EditProfileForm({ profile, factions, selectedFactionIds 
       <form action={handleSubmit} className="flex flex-col gap-6">
         {/* Avatar & Profile Info Section */}
         <div>
-          <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Profile</h2>
-          <fieldset className="fieldset bg-base-300 rounded-box p-5">
+          <h2 className="ornament section-header">Profile</h2>
+          <fieldset className="form-section">
             <div className="mb-4">
               <ImageUpload
                 currentImageUrl={profile.avatar_url}
@@ -130,7 +130,7 @@ export default function EditProfileForm({ profile, factions, selectedFactionIds 
               maxLength={50}
               onChange={() => displayNameRef.current?.setCustomValidity('')}
             />
-            {displayNameFieldError && <p className="mt-1 text-sm text-error">{displayNameFieldError}</p>}
+            {displayNameFieldError && <p className="form-error">{displayNameFieldError}</p>}
 
             <label className="label" htmlFor="bio">
               Bio
@@ -146,14 +146,14 @@ export default function EditProfileForm({ profile, factions, selectedFactionIds 
               rows={4}
               onChange={() => bioRef.current?.setCustomValidity('')}
             />
-            {bioFieldError && <p className="mt-1 text-sm text-error">{bioFieldError}</p>}
+            {bioFieldError && <p className="form-error">{bioFieldError}</p>}
           </fieldset>
         </div>
 
         {/* Factions Section */}
         <div>
-          <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Factions</h2>
-          <fieldset className="fieldset bg-base-300 rounded-box p-5">
+          <h2 className="ornament section-header">Factions</h2>
+          <fieldset className="form-section">
             <FactionSelector factions={factions} selectedIds={selectedFactionIds} error={factionFieldError} />
           </fieldset>
         </div>

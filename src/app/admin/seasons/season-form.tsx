@@ -44,8 +44,8 @@ export default function SeasonForm({ battlePoints, season, nextNumber }: SeasonF
 
         {/* Identity */}
         <div>
-          <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Identity</h2>
-          <fieldset className="fieldset bg-base-300 rounded-box p-5">
+          <h2 className="ornament section-header">Identity</h2>
+          <fieldset className="form-section">
             {seasonNumber && (
               <p className="mb-3 text-lg font-bold">Season {seasonNumber}</p>
             )}
@@ -60,7 +60,7 @@ export default function SeasonForm({ battlePoints, season, nextNumber }: SeasonF
               defaultValue={season?.name ?? ''}
               placeholder="e.g. The Crusade Begins (optional)"
             />
-            {state?.errors?.name && <p className="mt-1 text-sm text-error">{state.errors.name}</p>}
+            {state?.errors?.name && <p className="form-error">{state.errors.name}</p>}
             <p className="mt-1 text-sm text-base-content/50">
               Displayed as &ldquo;Season {seasonNumber}{' '}
               {season?.name ? `- ${season.name}` : '- Name'}&rdquo;. Leave blank for just &ldquo;Season{' '}
@@ -71,9 +71,9 @@ export default function SeasonForm({ battlePoints, season, nextNumber }: SeasonF
 
         {/* Schedule */}
         <div>
-          <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Schedule</h2>
-          <fieldset className="fieldset bg-base-300 rounded-box p-5">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1">
+          <h2 className="ornament section-header">Schedule</h2>
+          <fieldset className="form-section">
+            <div className="form-grid">
               <div>
                 <label className="label" htmlFor="start_date">
                   Start Date
@@ -86,7 +86,7 @@ export default function SeasonForm({ battlePoints, season, nextNumber }: SeasonF
                   required
                   defaultValue={season?.start_date ?? ''}
                 />
-                {state?.errors?.start_date && <p className="mt-1 text-sm text-error">{state.errors.start_date}</p>}
+                {state?.errors?.start_date && <p className="form-error">{state.errors.start_date}</p>}
               </div>
               <div>
                 <label className="label" htmlFor="end_date">
@@ -100,7 +100,7 @@ export default function SeasonForm({ battlePoints, season, nextNumber }: SeasonF
                   required
                   defaultValue={season?.end_date ?? ''}
                 />
-                {state?.errors?.end_date && <p className="mt-1 text-sm text-error">{state.errors.end_date}</p>}
+                {state?.errors?.end_date && <p className="form-error">{state.errors.end_date}</p>}
               </div>
             </div>
           </fieldset>
@@ -108,8 +108,8 @@ export default function SeasonForm({ battlePoints, season, nextNumber }: SeasonF
 
         {/* Format */}
         <div>
-          <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Format</h2>
-          <fieldset className="fieldset bg-base-300 rounded-box p-5">
+          <h2 className="ornament section-header">Format</h2>
+          <fieldset className="form-section">
             <label className="label" htmlFor="battle_points_id">
               Battle Size
             </label>
@@ -128,15 +128,15 @@ export default function SeasonForm({ battlePoints, season, nextNumber }: SeasonF
               ))}
             </select>
             {state?.errors?.battle_points_id && (
-              <p className="mt-1 text-sm text-error">{state.errors.battle_points_id}</p>
+              <p className="form-error">{state.errors.battle_points_id}</p>
             )}
           </fieldset>
         </div>
 
         {/* Content */}
         <div>
-          <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Content</h2>
-          <fieldset className="fieldset bg-base-300 rounded-box p-5">
+          <h2 className="ornament section-header">Content</h2>
+          <fieldset className="form-section">
             <label className="label" htmlFor="description">
               Description
             </label>
@@ -151,8 +151,8 @@ export default function SeasonForm({ battlePoints, season, nextNumber }: SeasonF
           </fieldset>
         </div>
         <div>
-          <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Rules &amp; Regulations</h2>
-          <fieldset className="fieldset bg-base-300 rounded-box p-5">
+          <h2 className="ornament section-header">Rules &amp; Regulations</h2>
+          <fieldset className="form-section">
             <label className="label mt-3" htmlFor="rules">
               Rules
             </label>
@@ -168,8 +168,8 @@ export default function SeasonForm({ battlePoints, season, nextNumber }: SeasonF
 
         {/* Settings */}
         <div>
-          <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Settings</h2>
-          <fieldset className="fieldset bg-base-300 rounded-box p-5">
+          <h2 className="ornament section-header">Settings</h2>
+          <fieldset className="form-section">
             <label className="label" htmlFor="status">
               Status
             </label>
@@ -183,7 +183,7 @@ export default function SeasonForm({ battlePoints, season, nextNumber }: SeasonF
               <option value="draft">Draft</option>
               <option value="published">Published</option>
             </select>
-            {state?.errors?.status && <p className="mt-1 text-sm text-error">{state.errors.status}</p>}
+            {state?.errors?.status && <p className="form-error">{state.errors.status}</p>}
             <p className="mt-2 text-sm text-base-content/50">
               {status === 'draft'
                 ? 'Draft seasons are only visible to admins.'

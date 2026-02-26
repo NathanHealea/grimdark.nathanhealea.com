@@ -65,23 +65,23 @@ export default async function MembersPage() {
   }))
 
   return (
-    <main className="flex flex-col items-center -mt-72 pt-72 min-h-screen w-full">
-      <div className="w-full px-4 py-12">
-        <div className="mx-auto max-w-4xl">
+    <main className="page-layout">
+      <div className="page-container">
+        <div className="page-content">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold">Members</h1>
+            <h1 className="text-h1">Members</h1>
             <p className="mt-2 text-base-content/60">Browse all league participants and discover their factions.</p>
           </div>
 
           {members.length === 0 ? (
-            <p className="text-base-content/50 italic">No members yet.</p>
+            <p className="empty-text">No members yet.</p>
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {members.map((member) => (
                 <Link
                   key={member.id}
                   href={`/profile/${member.profile_id}`}
-                  className="card bg-base-200 shadow-sm transition-shadow hover:shadow-md"
+                  className="card-interactive"
                 >
                   <div className="card-body flex-col items-center gap-4 p-4">
                     <div className="min-h-24 flex items-center justify-center">

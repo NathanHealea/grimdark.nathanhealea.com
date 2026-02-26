@@ -27,7 +27,7 @@ The existing `globals.css` already demonstrates this pattern successfully with `
 
 ## Approach
 
-### Phase 1 — Critical Patterns (highest repetition)
+### Page Layout
 
 #### `.page-layout`
 ```css
@@ -35,8 +35,7 @@ The existing `globals.css` already demonstrates this pattern successfully with `
   @apply flex flex-col items-center -mt-72 pt-72 min-h-screen w-full;
 }
 ```
-- **17 files** use this exact pattern as the `<main>` wrapper
-- Every page in the app
+- **17 files** — `<main>` wrapper on every page in the app
 
 #### `.page-container`
 ```css
@@ -44,7 +43,7 @@ The existing `globals.css` already demonstrates this pattern successfully with `
   @apply w-full px-4 py-12;
 }
 ```
-- **20+ instances** — the immediate child of `.page-layout`
+- **20+ instances** — immediate child of `.page-layout`
 
 #### `.page-content`
 ```css
@@ -54,91 +53,7 @@ The existing `globals.css` already demonstrates this pattern successfully with `
 ```
 - **20+ instances** — max-width content wrapper inside `.page-container`
 
-#### `.form-section`
-```css
-.form-section {
-  @apply fieldset bg-base-300 rounded-box p-5;
-}
-```
-- **17 instances** across all form pages (profile, battle report, season, admin)
-
-#### `.card-interactive`
-```css
-.card-interactive {
-  @apply card bg-base-200 shadow-sm transition-shadow hover:shadow-md;
-}
-```
-- **5+ instances** in members, battle reports, seasons, profile pages
-
-### Phase 2 — High-Value Patterns
-
-#### `.section-header`
-```css
-.section-header {
-  @apply ornament mb-4 text-sm font-semibold uppercase tracking-widest;
-}
-```
-- **20+ instances** — always the same combo with `.ornament`
-
-#### `.form-grid`
-```css
-.form-grid {
-  @apply grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1;
-}
-```
-- **13+ instances** in forms for two-column responsive layouts
-
-#### `.info-row`
-```css
-.info-row {
-  @apply flex items-center justify-between gap-2 rounded-lg bg-base-300 p-3;
-}
-```
-- **6+ instances** in battle report cards and profile pages
-
-#### `.btn-back`
-```css
-.btn-back {
-  @apply btn btn-ghost btn-sm mb-4 -ml-2;
-}
-```
-- **25 instances** across detail/edit pages
-
-#### `.label-meta`
-```css
-.label-meta {
-  @apply text-xs font-medium uppercase text-base-content/50;
-}
-```
-- **8 instances** in battle report and profile cards
-
-### Phase 3 — Medium-Value Patterns
-
-#### `.data-table`
-```css
-.data-table {
-  @apply table table-zebra bg-base-200 rounded-box;
-}
-```
-- **3 instances** in leaderboard components
-
-#### `.form-error`
-```css
-.form-error {
-  @apply mt-1 text-sm text-error;
-}
-```
-- **8+ instances** in form validation error messages
-
-#### `.empty-text`
-```css
-.empty-text {
-  @apply text-base-content/50 italic;
-}
-```
-- **5+ instances** for empty state messages
-
-### Phase 4 — Typography
+### Typography
 
 #### `.text-h1`
 ```css
@@ -196,6 +111,95 @@ The existing `globals.css` already demonstrates this pattern successfully with `
 ```
 - **10+ instances** — standard body/paragraph text styling
 
+#### `.section-header`
+```css
+.section-header {
+  @apply mb-4 text-sm font-semibold uppercase tracking-widest;
+}
+```
+- **29 instances** — used alongside `.ornament` (e.g., `className="ornament section-header"`)
+- Note: `.ornament` is custom CSS (not a Tailwind utility), so it cannot be included via `@apply` and must remain a separate class
+
+#### `.label-meta`
+```css
+.label-meta {
+  @apply text-xs font-medium uppercase text-base-content/50;
+}
+```
+- **8 instances** — battle report and profile cards
+
+#### `.empty-text`
+```css
+.empty-text {
+  @apply text-base-content/50 italic;
+}
+```
+- **5+ instances** — empty state messages
+
+### Forms
+
+#### `.form-section`
+```css
+.form-section {
+  @apply fieldset bg-base-300 rounded-box p-5;
+}
+```
+- **17 instances** — all form pages (profile, battle report, season, admin)
+
+#### `.form-grid`
+```css
+.form-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1;
+}
+```
+- **13+ instances** — two-column responsive layouts in forms
+
+#### `.form-error`
+```css
+.form-error {
+  @apply mt-1 text-sm text-error;
+}
+```
+- **8+ instances** — form validation error messages
+
+### Cards
+
+#### `.card-interactive`
+```css
+.card-interactive {
+  @apply card bg-base-200 shadow-sm transition-shadow hover:shadow-md;
+}
+```
+- **5+ instances** — members, battle reports, seasons, profile pages
+
+#### `.info-row`
+```css
+.info-row {
+  @apply flex items-center justify-between gap-2 rounded-lg bg-base-300 p-3;
+}
+```
+- **6+ instances** — battle report cards and profile pages
+
+### Tables
+
+#### `.data-table`
+```css
+.data-table {
+  @apply table table-zebra bg-base-200 rounded-box;
+}
+```
+- **3 instances** — leaderboard components
+
+### Buttons & Navigation
+
+#### `.btn-back`
+```css
+.btn-back {
+  @apply btn btn-ghost btn-sm mb-4 -ml-2;
+}
+```
+- **25 instances** — detail/edit pages
+
 ### Key Files
 
 | Action | File | Description |
@@ -211,13 +215,15 @@ The existing `globals.css` already demonstrates this pattern successfully with `
 
 ### Implementation Steps
 
-1. **Add all CSS classes to `globals.css`** — Define all classes in one batch at the end of the file
-2. **Phase 1 replacements** — Update page layouts, containers, form sections, and interactive cards
-3. **Phase 2 replacements** — Update section headers, form grids, info rows, back buttons, meta labels
-4. **Phase 3 replacements** — Update data tables, form errors, empty text
-5. **Phase 4 replacements** — Update heading elements with `.text-h1`–`.text-h6` and paragraphs with `.text-body`
-6. **Visual verification** — Check each page for regressions
-7. **Build and lint** — Ensure no errors
+1. **Add all CSS classes to `globals.css`** — Define all classes in one batch, grouped by UI component
+2. **Page Layout** — Update all pages with `.page-layout`, `.page-container`, `.page-content`
+3. **Typography** — Update headings with `.text-h1`–`.text-h6`, paragraphs with `.text-body`, section headers with `.section-header`
+4. **Forms** — Update with `.form-section`, `.form-grid`, `.form-error`
+5. **Cards** — Update with `.card-interactive`, `.info-row`
+6. **Tables** — Update with `.data-table`
+7. **Buttons & Navigation** — Update with `.btn-back`
+8. **Visual verification** — Check each page for regressions
+9. **Build and lint** — Ensure no errors
 
 ## Key Decisions
 
@@ -225,7 +231,7 @@ The existing `globals.css` already demonstrates this pattern successfully with `
 
 2. **Keep DaisyUI component classes inline** — Classes like `btn btn-primary`, `badge badge-success`, and `input input-bordered` are DaisyUI semantic components and should stay inline. Only extract **repeated combinations** of utility classes.
 
-3. **Phase-based rollout** — Start with the highest-impact patterns (page layout, form sections) to get immediate value. Lower-priority patterns can be done in the same PR or deferred.
+3. **Grouped by UI component** — Classes are organized by the component they style (page layout, typography, forms, cards, etc.) for clarity and maintainability in `globals.css`.
 
 4. **No functional changes** — This is purely a styling refactor. No behavior, data flow, or component structure changes.
 

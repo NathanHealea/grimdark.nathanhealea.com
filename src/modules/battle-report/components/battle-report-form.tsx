@@ -171,9 +171,9 @@ export default function BattleReportForm({
       >
         {/* Game Details Section */}
         <div>
-          <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Game Details</h2>
-          <fieldset className="fieldset bg-base-300 rounded-box p-5">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1">
+          <h2 className="ornament section-header">Game Details</h2>
+          <fieldset className="form-section">
+            <div className="form-grid">
               <div>
                 <label className="label" htmlFor="event_date">
                   Date of Battle
@@ -187,7 +187,7 @@ export default function BattleReportForm({
                   value={values.event_date}
                   onChange={(e) => updateField('event_date', e.target.value)}
                 />
-                {state?.errors?.event_date && <p className="mt-1 text-sm text-error">{state.errors.event_date}</p>}
+                {state?.errors?.event_date && <p className="form-error">{state.errors.event_date}</p>}
               </div>
               <div>
                 <label className="label" htmlFor="season_id">
@@ -208,11 +208,11 @@ export default function BattleReportForm({
                     </option>
                   ))}
                 </select>
-                {state?.errors?.season_id && <p className="mt-1 text-sm text-error">{state.errors.season_id}</p>}
+                {state?.errors?.season_id && <p className="form-error">{state.errors.season_id}</p>}
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 mt-1">
+            <div className="form-grid mt-1">
               <div>
                 <label className="label" htmlFor="mission_id">
                   Mission
@@ -231,7 +231,7 @@ export default function BattleReportForm({
                     </option>
                   ))}
                 </select>
-                {state?.errors?.mission_id && <p className="mt-1 text-sm text-error">{state.errors.mission_id}</p>}
+                {state?.errors?.mission_id && <p className="form-error">{state.errors.mission_id}</p>}
               </div>
               <div>
                 <label className="label" htmlFor="deployment_id">
@@ -252,12 +252,12 @@ export default function BattleReportForm({
                   ))}
                 </select>
                 {state?.errors?.deployment_id && (
-                  <p className="mt-1 text-sm text-error">{state.errors.deployment_id}</p>
+                  <p className="form-error">{state.errors.deployment_id}</p>
                 )}
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 mt-1">
+            <div className="form-grid mt-1">
               <div>
                 <label className="label" htmlFor="battle_points_id">
                   Battle Size
@@ -277,7 +277,7 @@ export default function BattleReportForm({
                   ))}
                 </select>
                 {state?.errors?.battle_points_id && (
-                  <p className="mt-1 text-sm text-error">{state.errors.battle_points_id}</p>
+                  <p className="form-error">{state.errors.battle_points_id}</p>
                 )}
               </div>
               <div>
@@ -298,7 +298,7 @@ export default function BattleReportForm({
                   <option value="4">4</option>
                   <option value="5">5</option>
                 </select>
-                {state?.errors?.rounds && <p className="mt-1 text-sm text-error">{state.errors.rounds}</p>}
+                {state?.errors?.rounds && <p className="form-error">{state.errors.rounds}</p>}
               </div>
             </div>
           </fieldset>
@@ -306,9 +306,9 @@ export default function BattleReportForm({
 
         {/* Attacker Section */}
         <div>
-          <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Attacker</h2>
-          <fieldset className="fieldset bg-base-300 rounded-box p-5">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1">
+          <h2 className="ornament section-header">Attacker</h2>
+          <fieldset className="form-section">
+            <div className="form-grid">
               <div>
                 <label className="label" htmlFor="attacker_id">
                   Player
@@ -331,7 +331,7 @@ export default function BattleReportForm({
                     </option>
                   ))}
                 </select>
-                {state?.errors?.attacker_id && <p className="mt-1 text-sm text-error">{state.errors.attacker_id}</p>}
+                {state?.errors?.attacker_id && <p className="form-error">{state.errors.attacker_id}</p>}
               </div>
               <div>
                 <label className="label" htmlFor="attacker_faction_id">
@@ -353,12 +353,12 @@ export default function BattleReportForm({
                   ))}
                 </select>
                 {state?.errors?.attacker_faction_id && (
-                  <p className="mt-1 text-sm text-error">{state.errors.attacker_faction_id}</p>
+                  <p className="form-error">{state.errors.attacker_faction_id}</p>
                 )}
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 mt-1">
+            <div className="form-grid mt-1">
               <div>
                 <label className="label" htmlFor="attacker_score">
                   Score
@@ -373,7 +373,7 @@ export default function BattleReportForm({
                   onChange={(e) => updateField('attacker_score', e.target.value)}
                 />
                 {state?.errors?.attacker_score && (
-                  <p className="mt-1 text-sm text-error">{state.errors.attacker_score}</p>
+                  <p className="form-error">{state.errors.attacker_score}</p>
                 )}
               </div>
               <div>
@@ -393,7 +393,7 @@ export default function BattleReportForm({
                   <option value="draw">Draw</option>
                 </select>
                 {state?.errors?.attacker_outcome && (
-                  <p className="mt-1 text-sm text-error">{state.errors.attacker_outcome}</p>
+                  <p className="form-error">{state.errors.attacker_outcome}</p>
                 )}
               </div>
             </div>
@@ -402,9 +402,9 @@ export default function BattleReportForm({
 
         {/* Defender Section */}
         <div>
-          <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Defender</h2>
-          <fieldset className="fieldset bg-base-300 rounded-box p-5">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1">
+          <h2 className="ornament section-header">Defender</h2>
+          <fieldset className="form-section">
+            <div className="form-grid">
               <div>
                 <label className="label" htmlFor="defender_id">
                   Player
@@ -428,7 +428,7 @@ export default function BattleReportForm({
                   ))}
                 </select>
                 {(state?.errors?.defender_id || samePlayerError) && (
-                  <p className="mt-1 text-sm text-error">{state?.errors?.defender_id || samePlayerError}</p>
+                  <p className="form-error">{state?.errors?.defender_id || samePlayerError}</p>
                 )}
               </div>
               <div>
@@ -451,12 +451,12 @@ export default function BattleReportForm({
                   ))}
                 </select>
                 {state?.errors?.defender_faction_id && (
-                  <p className="mt-1 text-sm text-error">{state.errors.defender_faction_id}</p>
+                  <p className="form-error">{state.errors.defender_faction_id}</p>
                 )}
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 mt-1">
+            <div className="form-grid mt-1">
               <div>
                 <label className="label" htmlFor="defender_score">
                   Score
@@ -471,7 +471,7 @@ export default function BattleReportForm({
                   onChange={(e) => updateField('defender_score', e.target.value)}
                 />
                 {state?.errors?.defender_score && (
-                  <p className="mt-1 text-sm text-error">{state.errors.defender_score}</p>
+                  <p className="form-error">{state.errors.defender_score}</p>
                 )}
               </div>
               <div>
@@ -491,7 +491,7 @@ export default function BattleReportForm({
                   <option value="draw">Draw</option>
                 </select>
                 {state?.errors?.defender_outcome && (
-                  <p className="mt-1 text-sm text-error">{state.errors.defender_outcome}</p>
+                  <p className="form-error">{state.errors.defender_outcome}</p>
                 )}
               </div>
             </div>
@@ -500,8 +500,8 @@ export default function BattleReportForm({
 
         {/* Status & Save */}
         <div>
-          <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Reporting</h2>
-          <fieldset className="fieldset bg-base-300 rounded-box p-5">
+          <h2 className="ornament section-header">Reporting</h2>
+          <fieldset className="form-section">
             <label className="label" htmlFor="status">
               Report Status
             </label>
@@ -516,7 +516,7 @@ export default function BattleReportForm({
               <option value="draft">Draft</option>
               <option value="published">Publish</option>
             </select>
-            {state?.errors?.status && <p className="mt-1 text-sm text-error">{state.errors.status}</p>}
+            {state?.errors?.status && <p className="form-error">{state.errors.status}</p>}
             <p className="mt-2 text-sm text-base-content/50">
               {statusLocked
                 ? 'Published reports cannot be reverted to draft. Contact an organizer or admin if needed.'

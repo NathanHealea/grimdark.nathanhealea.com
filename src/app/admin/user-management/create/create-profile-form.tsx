@@ -62,7 +62,7 @@ export default function CreateProfileForm({ factions }: CreateProfileFormProps) 
               maxLength={50}
               onChange={() => displayNameRef.current?.setCustomValidity('')}
             />
-            {displayNameError && <p className="mt-1 text-sm text-error">{displayNameError}</p>}
+            {displayNameError && <p className="form-error">{displayNameError}</p>}
 
             <label className="label" htmlFor="bio">
               Bio
