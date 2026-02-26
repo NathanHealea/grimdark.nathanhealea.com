@@ -201,8 +201,8 @@ export default function AdminEditProfileForm({
 
         {/* Section 1: Profile */}
         <div>
-          <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Profile</h2>
-          <fieldset className="fieldset bg-base-300 rounded-box p-5">
+          <h2 className="ornament section-header">Profile</h2>
+          <fieldset className="form-section">
             <div className="mb-4">
               <ImageUpload
                 currentImageUrl={profile.avatar_url}
@@ -228,7 +228,7 @@ export default function AdminEditProfileForm({
               maxLength={50}
               onChange={() => displayNameRef.current?.setCustomValidity('')}
             />
-            {displayNameFieldError && <p className="mt-1 text-sm text-error">{displayNameFieldError}</p>}
+            {displayNameFieldError && <p className="form-error">{displayNameFieldError}</p>}
 
             <label className="label" htmlFor="bio">
               Bio
@@ -244,14 +244,14 @@ export default function AdminEditProfileForm({
               rows={4}
               onChange={() => bioRef.current?.setCustomValidity('')}
             />
-            {bioFieldError && <p className="mt-1 text-sm text-error">{bioFieldError}</p>}
+            {bioFieldError && <p className="form-error">{bioFieldError}</p>}
           </fieldset>
         </div>
 
         {/* Section 2: Admin Settings */}
         <div>
-          <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Admin Settings</h2>
-          <fieldset className="fieldset bg-base-300 rounded-box p-5">
+          <h2 className="ornament section-header">Admin Settings</h2>
+          <fieldset className="form-section">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="label" htmlFor="link_id">
@@ -290,8 +290,8 @@ export default function AdminEditProfileForm({
 
         {/* Section 3: Factions */}
         <div>
-          <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Factions</h2>
-          <fieldset className="fieldset bg-base-300 rounded-box p-5">
+          <h2 className="ornament section-header">Factions</h2>
+          <fieldset className="form-section">
             <FactionSelector factions={factions} selectedIds={selectedFactionIds} error={factionFieldError} />
           </fieldset>
         </div>
@@ -304,8 +304,8 @@ export default function AdminEditProfileForm({
       {/* Section 4: Auth Roles */}
       {isLinked && (
         <div className='pt-6'>
-          <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Auth Roles</h2>
-          <fieldset className="fieldset bg-base-300 rounded-box p-5">
+          <h2 className="ornament section-header">Auth Roles</h2>
+          <fieldset className="form-section">
             {isSelf && (
               <div role="alert" className="alert alert-warning mb-4">
                 <span>You cannot modify your own roles.</span>
@@ -361,8 +361,8 @@ export default function AdminEditProfileForm({
 
       {/* Section 5: Link Status */}
       <div className='pt-6'>
-        <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Link Status</h2>
-        <fieldset className="fieldset bg-base-300 rounded-box p-5">
+        <h2 className="ornament section-header">Link Status</h2>
+        <fieldset className="form-section">
           {unlinkState?.success && (
             <div role="alert" className="alert alert-success mb-4">
               <span>{unlinkState.success}</span>

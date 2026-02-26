@@ -25,33 +25,33 @@ export default async function DraftBattleReportsPage() {
   const drafts = await getDraftBattleReports(profile.id)
 
   return (
-    <main className="flex flex-col items-center -mt-72 pt-72 min-h-screen w-full">
-      <div className="w-full px-4 py-12">
-        <div className="mx-auto max-w-4xl">
+    <main className="page-layout">
+      <div className="page-container">
+        <div className="page-content">
           <div className="mb-8">
-            <Link href="/battle-reports" className="btn btn-ghost btn-sm mb-4 -ml-2">
+            <Link href="/battle-reports" className="btn-back">
               &larr; All Battle Reports
             </Link>
-            <h1 className="text-3xl font-bold">My Drafts</h1>
+            <h1 className="text-h1">My Drafts</h1>
             <p className="mt-1 text-sm text-base-content/50">
               Battle reports you&apos;ve started but haven&apos;t published yet.
             </p>
           </div>
 
           <div>
-            <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">
+            <h2 className="ornament section-header">
               Drafts ({drafts.length})
             </h2>
 
             {drafts.length === 0 ? (
-              <p className="text-base-content/50 italic">No drafts yet.</p>
+              <p className="empty-text">No drafts yet.</p>
             ) : (
               <div className="grid gap-4">
                 {drafts.map((draft) => (
                   <Link
                     key={draft.id}
                     href={`/battle-reports/${draft.id}/edit`}
-                    className="card bg-base-200 shadow-sm transition-shadow hover:shadow-md"
+                    className="card-interactive"
                   >
                     <div className="card-body gap-2 p-4">
                       <div className="flex items-center justify-between">

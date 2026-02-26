@@ -89,16 +89,16 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ i
   const bp = battlePointsMap.get(season.battle_points_id)
 
   return (
-    <main className="flex flex-col items-center -mt-72 pt-72 min-h-screen w-full">
-      <div className="w-full px-4 py-12">
-        <div className="mx-auto max-w-4xl">
+    <main className="page-layout">
+      <div className="page-container">
+        <div className="page-content">
           {/* Season Header */}
           <div className="mb-8">
-            <Link href="/seasons" className="btn btn-ghost btn-sm mb-4 -ml-2">
+            <Link href="/seasons" className="btn-back">
               &larr; All Seasons
             </Link>
             <div className="flex items-start justify-between gap-2">
-              <h1 className="text-3xl font-bold">{formatSeasonName(season)}</h1>
+              <h1 className="text-h1">{formatSeasonName(season)}</h1>
               {isCurrentSeason(season) && <span className="badge badge-success shrink-0">Current</span>}
             </div>
             <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-base-content/60">
@@ -111,25 +111,25 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ i
           {/* Rules */}
           {season.rules && (
             <div className="mb-8">
-              <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Rules</h2>
+              <h2 className="ornament section-header">Rules</h2>
               <MarkdownRenderer content={season.rules} className="text-base-content/70" />
             </div>
           )}
 
           {/* Leaderboard */}
           <div className="mb-8">
-            <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Leaderboard</h2>
+            <h2 className="ornament section-header">Leaderboard</h2>
             <LeaderboardTable entries={computeLeaderboard(battleReports.filter((r) => r.status === 'published'))} profileMap={profileMap} />
           </div>
 
           {/* Battle Reports */}
           <div>
-            <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">
+            <h2 className="ornament section-header">
               Battle Reports ({battleReports.length})
             </h2>
 
             {battleReports.length === 0 ? (
-              <p className="text-base-content/50 italic">No battle reports for this season yet.</p>
+              <p className="empty-text">No battle reports for this season yet.</p>
             ) : (
               <div className="grid gap-4">
                 {battleReports.map((report) => {
@@ -143,14 +143,14 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ i
                     <Link
                       key={report.id}
                       href={`/battle-reports/${report.id}`}
-                      className="card bg-base-200 shadow-sm transition-shadow hover:shadow-md"
+                      className="card-interactive"
                     >
                       <div className="card-body gap-4 p-4">
                         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                           {/* Attacker */}
-                          <div className="flex items-center justify-between gap-2 rounded-lg bg-base-300 p-3">
+                          <div className="info-row">
                             <div className="min-w-0">
-                              <p className="text-xs font-medium uppercase text-base-content/50">Attacker</p>
+                              <p className="label-meta">Attacker</p>
                               <p className="truncate font-semibold">{attacker?.display_name ?? 'Unknown'}</p>
                               <p className="truncate text-sm text-base-content/60">
                                 {report.attacker_faction_id ? getFactionLabel(report.attacker_faction_id, factionMap) : 'Unknown Faction'}
@@ -163,9 +163,9 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ i
                           </div>
 
                           {/* Defender */}
-                          <div className="flex items-center justify-between gap-2 rounded-lg bg-base-300 p-3">
+                          <div className="info-row">
                             <div className="min-w-0">
-                              <p className="text-xs font-medium uppercase text-base-content/50">Defender</p>
+                              <p className="label-meta">Defender</p>
                               <p className="truncate font-semibold">{defender?.display_name ?? 'Unknown'}</p>
                               <p className="truncate text-sm text-base-content/60">
                                 {report.defender_faction_id ? getFactionLabel(report.defender_faction_id, factionMap) : 'Unknown Faction'}

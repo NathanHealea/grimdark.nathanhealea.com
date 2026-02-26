@@ -106,19 +106,19 @@ export default async function ProfilePage({ params }: { params: Promise<{ profil
   })
 
   return (
-    <main className="flex flex-col items-center -mt-72 pt-72 min-h-screen w-full">
-      <div className="w-full px-4 py-12">
-        <div className="mx-auto max-w-4xl">
+    <main className="page-layout">
+      <div className="page-container">
+        <div className="page-content">
           {/* Header */}
           <div className="mb-8">
-            <Link href="/members" className="btn btn-ghost btn-sm mb-4 -ml-2">
+            <Link href="/members" className="btn-back">
               &larr; All Members
             </Link>
             <div className="flex items-start gap-4">
               <Avatar src={typedProfile.avatar_url} displayName={typedProfile.display_name} size="lg" />
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between gap-2">
-                  <h1 className="text-3xl font-bold">{typedProfile.display_name}</h1>
+                  <h1 className="text-h1">{typedProfile.display_name}</h1>
                   {(isOwner || isAdmin) && (
                     <div className="flex gap-2 shrink-0">
                       {isOwner && (
@@ -143,7 +143,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ profil
 
           {/* Factions */}
           <div className="mb-8">
-            <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Factions</h2>
+            <h2 className="ornament section-header">Factions</h2>
             {factionLabels.length > 0 ? (
               <div className="flex flex-wrap gap-2">
                 {factionLabels.map(({ id, label }) => (
@@ -151,18 +151,18 @@ export default async function ProfilePage({ params }: { params: Promise<{ profil
                 ))}
               </div>
             ) : (
-              <p className="text-base-content/50 italic">No factions selected.</p>
+              <p className="empty-text">No factions selected.</p>
             )}
           </div>
 
           {/* Battle Reports */}
           <div>
-            <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">
+            <h2 className="ornament section-header">
               Battle Reports ({battleReports.length})
             </h2>
 
             {battleReports.length === 0 ? (
-              <p className="text-base-content/50 italic">No battle reports yet.</p>
+              <p className="empty-text">No battle reports yet.</p>
             ) : (
               <div className="grid gap-4">
                 {battleReports.map((report) => {
@@ -176,14 +176,14 @@ export default async function ProfilePage({ params }: { params: Promise<{ profil
                     <Link
                       key={report.id}
                       href={`/battle-reports/${report.id}`}
-                      className="card bg-base-200 shadow-sm transition-shadow hover:shadow-md"
+                      className="card-interactive"
                     >
                       <div className="card-body gap-4 p-4">
                         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                           {/* Attacker */}
-                          <div className="flex items-center justify-between gap-2 rounded-lg bg-base-300 p-3">
+                          <div className="info-row">
                             <div className="min-w-0">
-                              <p className="text-xs font-medium uppercase text-base-content/50">Attacker</p>
+                              <p className="label-meta">Attacker</p>
                               <p className="truncate font-semibold">{attacker?.display_name ?? 'Unknown'}</p>
                               <p className="truncate text-sm text-base-content/60">
                                 {report.attacker_faction_id ? getFactionLabel(report.attacker_faction_id, factionMap) : 'Unknown Faction'}
@@ -196,9 +196,9 @@ export default async function ProfilePage({ params }: { params: Promise<{ profil
                           </div>
 
                           {/* Defender */}
-                          <div className="flex items-center justify-between gap-2 rounded-lg bg-base-300 p-3">
+                          <div className="info-row">
                             <div className="min-w-0">
-                              <p className="text-xs font-medium uppercase text-base-content/50">Defender</p>
+                              <p className="label-meta">Defender</p>
                               <p className="truncate font-semibold">{defender?.display_name ?? 'Unknown'}</p>
                               <p className="truncate text-sm text-base-content/60">
                                 {report.defender_faction_id ? getFactionLabel(report.defender_faction_id, factionMap) : 'Unknown Faction'}

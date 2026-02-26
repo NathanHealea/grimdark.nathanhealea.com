@@ -19,12 +19,12 @@ export default async function AdminSeasonsPage() {
   const battlePointsMap = new Map<number, BattlePoints>(battlePoints.map((bp) => [bp.id, bp]))
 
   return (
-    <main className="flex flex-col items-center -mt-72 pt-72 min-h-screen w-full">
-      <div className="w-full px-4 py-12">
-        <div className="mx-auto max-w-4xl">
+    <main className="page-layout">
+      <div className="page-container">
+        <div className="page-content">
           <div className="mb-8 flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold">Season Management</h1>
+              <h1 className="text-h1">Season Management</h1>
               <p className="mt-2 text-base-content/60">Create and manage league seasons.</p>
             </div>
             <Link href="/admin/seasons/new" className="btn btn-primary">
@@ -34,7 +34,7 @@ export default async function AdminSeasonsPage() {
 
           {/* Seasons Table */}
           {seasons.length === 0 ? (
-            <p className="text-base-content/50 italic">No seasons yet.</p>
+            <p className="empty-text">No seasons yet.</p>
           ) : (
             <table className="table">
               <thead>

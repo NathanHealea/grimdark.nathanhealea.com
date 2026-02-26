@@ -44,12 +44,12 @@ export default async function UserManagementPage() {
     .filter((name) => !PROTECTED_ROLES.includes(name))
 
   return (
-    <main className="flex flex-col items-center -mt-72 pt-72 min-h-screen w-full">
-      <div className="w-full px-4 py-12">
-        <div className="mx-auto max-w-4xl">
+    <main className="page-layout">
+      <div className="page-container">
+        <div className="page-content">
           <div className="mb-8 flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold">User Management</h1>
+              <h1 className="text-h1">User Management</h1>
               <p className="mt-2 text-base-content/60">
                 Manage user roles across the league.
               </p>

@@ -60,11 +60,11 @@ export default async function SeasonsPage() {
   const pastSeasons = seasons.filter((s) => isPastSeason(s))
 
   return (
-    <main className="flex flex-col items-center -mt-72 pt-72 min-h-screen w-full">
-      <div className="w-full px-4 py-12">
-        <div className="mx-auto max-w-4xl">
+    <main className="page-layout">
+      <div className="page-container">
+        <div className="page-content">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold">Seasons</h1>
+            <h1 className="text-h1">Seasons</h1>
             <p className="mt-2 text-base-content/60">
               League play is organized into seasons with set battle sizes and date ranges.
             </p>
@@ -73,7 +73,7 @@ export default async function SeasonsPage() {
           {/* Current Season */}
           {currentSeason && (
             <div className="mb-8">
-              <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Current Season</h2>
+              <h2 className="ornament section-header">Current Season</h2>
               <SeasonCard season={currentSeason} battlePointsMap={battlePointsMap} reportCount={reportCounts.get(currentSeason.id) ?? 0} highlighted />
             </div>
           )}
@@ -81,7 +81,7 @@ export default async function SeasonsPage() {
           {/* Future Seasons */}
           {futureSeasons.length > 0 && (
             <div className="mb-8">
-              <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Future Seasons</h2>
+              <h2 className="ornament section-header">Future Seasons</h2>
               <div className="grid gap-4">
                 {futureSeasons.map((season) => (
                   <SeasonCard key={season.id} season={season} battlePointsMap={battlePointsMap} reportCount={reportCounts.get(season.id) ?? 0} />
@@ -93,7 +93,7 @@ export default async function SeasonsPage() {
           {/* Past Seasons */}
           {pastSeasons.length > 0 && (
             <div>
-              <h2 className="ornament mb-4 text-sm font-semibold uppercase tracking-widest">Past Seasons</h2>
+              <h2 className="ornament section-header">Past Seasons</h2>
               <div className="grid gap-4">
                 {pastSeasons.map((season) => (
                   <SeasonCard key={season.id} season={season} battlePointsMap={battlePointsMap} reportCount={reportCounts.get(season.id) ?? 0} />
@@ -103,7 +103,7 @@ export default async function SeasonsPage() {
           )}
 
           {seasons.length === 0 && (
-            <p className="text-base-content/50 italic">No seasons yet. Check back soon!</p>
+            <p className="empty-text">No seasons yet. Check back soon!</p>
           )}
         </div>
       </div>

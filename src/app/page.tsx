@@ -161,7 +161,7 @@ export default async function Home() {
     .map((f) => f.name.toUpperCase())
 
   return (
-    <main className="flex flex-col items-center -mt-72 pt-72 min-h-screen w-full">
+    <main className="page-layout">
       <section className="hero-glow relative overflow-hidden py-28 px-6  w-full">
         <div className="absolute top-8 left-8 text-primary opacity-5 text-[8rem] leading-none pointer-events-none select-none">
           ⚙
@@ -200,8 +200,8 @@ export default async function Home() {
         <ScrollBanner items={factionNames} />
       </section>
 
-      <section className="w-full px-4 py-12">
-        <div className="mx-auto max-w-4xl">
+      <section className="page-container">
+        <div className="page-content">
           <h2 className="ornament mb-6 text-center text-sm font-semibold uppercase tracking-widest">Leaderboard</h2>
           <Suspense fallback={<HomeLeaderboardLoading />}>
             <HomeLeaderboard />

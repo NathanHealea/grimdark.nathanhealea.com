@@ -44,6 +44,10 @@ next-env.d.ts
 CLAUDE.md
 .claude/
 .mcp.json
+.context.*
+
+# git worktrees
+.worktrees/
 
 # ide files
 .vscode/
