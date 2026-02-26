@@ -14,15 +14,15 @@ The create profile page was built before the reusable CSS classes were extracted
 
 ## Acceptance Criteria
 
-- [ ] Page uses `page-layout` / `page-container` / `page-content` wrapper (not centered card)
-- [ ] Back button links to `/admin/user-management` using `btn-back` class
-- [ ] Title uses `text-h1` class with subtitle text
-- [ ] Fields grouped into sections: Profile (display name, bio), Admin Settings (link ID, league role), Factions
-- [ ] Each section has `ornament section-header` heading and `form-section` fieldset
-- [ ] Inputs use `input-lg`, `textarea-lg`, `select-lg` sizing
-- [ ] Admin Settings section uses 2-column grid on sm+ (matching admin edit page)
-- [ ] Submit button uses `btn btn-primary btn-lg w-full`
-- [ ] Success and error alerts displayed above the form
+- [x] Page uses `page-layout` / `page-container` / `page-content` wrapper (not centered card)
+- [x] Back button links to `/admin/user-management` using `btn-back` class
+- [x] Title uses `text-h1` class with subtitle text
+- [x] Fields grouped into sections: Profile (display name, bio), Admin Settings (link ID, league role), Factions
+- [x] Each section has `ornament section-header` heading and `form-section` fieldset
+- [x] Inputs use `input-lg`, `textarea-lg`, `select-lg` sizing
+- [x] Admin Settings section uses 2-column grid on sm+ (matching admin edit page)
+- [x] Submit button uses `btn btn-primary btn-lg w-full`
+- [x] Success and error alerts displayed above the form
 
 ## Approach
 
