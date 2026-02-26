@@ -21,6 +21,7 @@ The existing `globals.css` already demonstrates this pattern successfully with `
 - [ ] All page files are updated to use the new classes
 - [ ] All form files are updated to use the new classes
 - [ ] All card/interactive components are updated to use the new classes
+- [ ] Typography classes are added and applied to headings and body text
 - [ ] Visual output is identical before and after (no visual regressions)
 - [ ] Build and lint pass
 
@@ -137,6 +138,64 @@ The existing `globals.css` already demonstrates this pattern successfully with `
 ```
 - **5+ instances** for empty state messages
 
+### Phase 4 — Typography
+
+#### `.text-h1`
+```css
+.text-h1 {
+  @apply text-3xl font-bold;
+}
+```
+- **17 files** — main page headings across all pages
+
+#### `.text-h2`
+```css
+.text-h2 {
+  @apply text-xl font-bold;
+}
+```
+- For secondary headings in non-ornament contexts (card titles, section titles)
+
+#### `.text-h3`
+```css
+.text-h3 {
+  @apply text-lg font-semibold;
+}
+```
+- Tertiary headings and sub-section labels
+
+#### `.text-h4`
+```css
+.text-h4 {
+  @apply text-base font-semibold;
+}
+```
+- Smaller section headings
+
+#### `.text-h5`
+```css
+.text-h5 {
+  @apply text-sm font-semibold;
+}
+```
+- Minor headings and label-like text
+
+#### `.text-h6`
+```css
+.text-h6 {
+  @apply text-xs font-semibold uppercase;
+}
+```
+- Smallest heading level, uppercase for emphasis
+
+#### `.text-body`
+```css
+.text-body {
+  @apply text-base text-base-content/70;
+}
+```
+- **10+ instances** — standard body/paragraph text styling
+
 ### Key Files
 
 | Action | File | Description |
@@ -147,6 +206,8 @@ The existing `globals.css` already demonstrates this pattern successfully with `
 | Modify | Card components (5+ files) | Replace with `.card-interactive` |
 | Modify | Section headers (20+ instances) | Replace with `.section-header` |
 | Modify | Back buttons (25 instances) | Replace with `.btn-back` |
+| Modify | Page headings (17+ files) | Replace `text-3xl font-bold` with `.text-h1` |
+| Modify | Body text (10+ instances) | Replace paragraph styling with `.text-body` |
 
 ### Implementation Steps
 
@@ -154,8 +215,9 @@ The existing `globals.css` already demonstrates this pattern successfully with `
 2. **Phase 1 replacements** — Update page layouts, containers, form sections, and interactive cards
 3. **Phase 2 replacements** — Update section headers, form grids, info rows, back buttons, meta labels
 4. **Phase 3 replacements** — Update data tables, form errors, empty text
-5. **Visual verification** — Check each page for regressions
-6. **Build and lint** — Ensure no errors
+5. **Phase 4 replacements** — Update heading elements with `.text-h1`–`.text-h6` and paragraphs with `.text-body`
+6. **Visual verification** — Check each page for regressions
+7. **Build and lint** — Ensure no errors
 
 ## Key Decisions
 
