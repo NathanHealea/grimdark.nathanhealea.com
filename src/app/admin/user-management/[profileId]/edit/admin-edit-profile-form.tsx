@@ -7,8 +7,21 @@ import { type ProfileFormState, validateBio, validateDisplayName } from '@/modul
 import type { Faction } from '@/types/faction'
 import type { Profile } from '@/types/profile'
 import { startTransition, useActionState, useEffect, useRef, useState } from 'react'
-import { adminUpdateProfile, unlinkProfileAction } from './actions'
+import { adminUpdateProfile, unlinkProfileAction, linkProfileAction, mergeProfileAction, getMergePreviewAction, type MergePreviewData } from './actions'
 import { toggleRole, type ToggleRoleState } from '../../actions'
+
+type LinkableUser = {
+  id: string
+  email: string
+  display_name: string | null
+}
+
+type MergeableProfile = {
+  id: string
+  display_name: string
+  profile_id: number
+  is_linked: boolean
+}
 
 type AdminEditProfileFormProps = {
   profile: Profile
@@ -17,6 +30,8 @@ type AdminEditProfileFormProps = {
   currentRoles: string[]
   assignableRoles: string[]
   isSelf: boolean
+  mergeableProfiles: MergeableProfile[]
+  linkableUsers: LinkableUser[]
 }
 
 const PROTECTED_ROLES = ['user']
@@ -94,6 +109,8 @@ export default function AdminEditProfileForm({
   currentRoles,
   assignableRoles,
   isSelf,
+  mergeableProfiles,
+  linkableUsers,
 }: AdminEditProfileFormProps) {
   const [profileState, profileAction, profilePending] = useActionState<ProfileFormState, FormData>(
     adminUpdateProfile,
@@ -103,12 +120,60 @@ export default function AdminEditProfileForm({
     unlinkProfileAction,
     null,
   )
+  const [linkState, linkAction, linkPending] = useActionState<ProfileFormState, FormData>(linkProfileAction, null)
+  const [mergeState, mergeAction, mergePending] = useActionState<ProfileFormState, FormData>(mergeProfileAction, null)
+  const [mergePreview, setMergePreview] = useState<MergePreviewData>(null)
+  const [mergePreviewLoading, setMergePreviewLoading] = useState(false)
+  const [mergePreviewError, setMergePreviewError] = useState<string | null>(null)
+  const [selectedMergeSource, setSelectedMergeSource] = useState('')
+  const [showMergeConfirm, setShowMergeConfirm] = useState(false)
+  const [linkSearch, setLinkSearch] = useState('')
+  const [selectedLinkUser, setSelectedLinkUser] = useState<LinkableUser | null>(null)
+  const [linkDropdownOpen, setLinkDropdownOpen] = useState(false)
+  const linkSearchRef = useRef<HTMLInputElement>(null)
+  const linkDropdownRef = useRef<HTMLDivElement>(null)
   const displayNameRef = useRef<HTMLInputElement>(null)
   const bioRef = useRef<HTMLTextAreaElement>(null)
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
   const [avatarError, setAvatarError] = useState<string | undefined>()
   const [uploading, setUploading] = useState(false)
   const [roleAlert, setRoleAlert] = useState<ToggleRoleState>(null)
+
+  function handleMergeAction(formData: FormData) {
+    startTransition(() => {
+      setSelectedMergeSource('')
+      setMergePreview(null)
+      setMergePreviewError(null)
+      setShowMergeConfirm(false)
+      mergeAction(formData)
+    })
+  }
+
+  function handleLinkAction(formData: FormData) {
+    startTransition(() => {
+      setLinkSearch('')
+      setSelectedLinkUser(null)
+      setLinkDropdownOpen(false)
+      linkAction(formData)
+    })
+  }
+
+  const filteredLinkUsers = linkSearch.trim()
+    ? linkableUsers.filter((u) => {
+        const q = linkSearch.toLowerCase()
+        return u.email.toLowerCase().includes(q) || (u.display_name?.toLowerCase().includes(q) ?? false)
+      })
+    : linkableUsers
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (linkDropdownRef.current && !linkDropdownRef.current.contains(e.target as Node)) {
+        setLinkDropdownOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   function handleRoleResult(state: ToggleRoleState) {
     setRoleAlert(state)
@@ -400,6 +465,230 @@ export default function AdminEditProfileForm({
           )}
         </fieldset>
       </div>
+
+      {/* Section 6: Link to User (unlinked profiles only) */}
+      {!isLinked && (
+        <div className="pt-6">
+          <h2 className="ornament section-header">Link to User</h2>
+          <fieldset className="form-section">
+            <p className="text-sm text-base-content/50 mb-4">
+              Manually link this profile to an existing auth user. Search by email or display name.
+            </p>
+
+            {linkState?.success && (
+              <div role="alert" className="alert alert-success mb-4">
+                <span>{linkState.success}</span>
+              </div>
+            )}
+
+            {linkState?.error && (
+              <div role="alert" className="alert alert-error mb-4">
+                <span>{linkState.error}</span>
+              </div>
+            )}
+
+            <form action={handleLinkAction} className="flex gap-2 items-end">
+              <input type="hidden" name="profile_id" value={profile.id} />
+              <input type="hidden" name="auth_user_id" value={selectedLinkUser?.id ?? ''} />
+              <div className="flex-1 relative" ref={linkDropdownRef}>
+                <label className="label" htmlFor="link_user_search">
+                  Auth User
+                </label>
+                <input
+                  ref={linkSearchRef}
+                  id="link_user_search"
+                  type="text"
+                  placeholder="Search by email or display name..."
+                  className="input input-bordered w-full"
+                  value={linkSearch}
+                  onChange={(e) => {
+                    setLinkSearch(e.target.value)
+                    setSelectedLinkUser(null)
+                    setLinkDropdownOpen(true)
+                  }}
+                  onFocus={() => setLinkDropdownOpen(true)}
+                  autoComplete="off"
+                />
+                {selectedLinkUser && (
+                  <p className="text-xs text-success mt-1">
+                    Selected: {selectedLinkUser.email}
+                    {selectedLinkUser.display_name && ` (${selectedLinkUser.display_name})`}
+                  </p>
+                )}
+                {linkDropdownOpen && !selectedLinkUser && (
+                  <ul className="absolute z-20 mt-1 w-full max-h-48 overflow-y-auto bg-base-200 rounded-box shadow-lg border border-base-300">
+                    {filteredLinkUsers.length === 0 ? (
+                      <li className="px-4 py-2 text-sm text-base-content/50">No matching users</li>
+                    ) : (
+                      filteredLinkUsers.slice(0, 20).map((u) => (
+                        <li key={u.id}>
+                          <button
+                            type="button"
+                            className="w-full px-4 py-2 text-left text-sm hover:bg-base-300 cursor-pointer"
+                            onClick={() => {
+                              setSelectedLinkUser(u)
+                              setLinkSearch(u.email)
+                              setLinkDropdownOpen(false)
+                            }}
+                          >
+                            <span className="font-medium">{u.email}</span>
+                            {u.display_name && (
+                              <span className="text-base-content/50 ml-2">({u.display_name})</span>
+                            )}
+                          </button>
+                        </li>
+                      ))
+                    )}
+                  </ul>
+                )}
+              </div>
+              <button type="submit" className="btn btn-primary" disabled={linkPending || !selectedLinkUser}>
+                {linkPending ? <span className="loading loading-spinner loading-sm" /> : 'Link'}
+              </button>
+            </form>
+          </fieldset>
+        </div>
+      )}
+
+      {/* Section 7: Merge Profiles */}
+      {mergeableProfiles.length > 0 && (
+        <div className="pt-6">
+          <h2 className="ornament section-header">Merge Profiles</h2>
+          <fieldset className="form-section">
+            <p className="text-sm text-base-content/50 mb-4">
+              Merge another profile into this one. All battle reports, factions, and optional data from the source
+              profile will be transferred here, and the source profile will be deleted.
+            </p>
+
+            {mergeState?.success && (
+              <div role="alert" className="alert alert-success mb-4">
+                <span>{mergeState.success}</span>
+              </div>
+            )}
+
+            {mergeState?.error && (
+              <div role="alert" className="alert alert-error mb-4">
+                <span>{mergeState.error}</span>
+              </div>
+            )}
+
+            <div className="flex gap-2 items-end mb-4">
+              <div className="flex-1">
+                <label className="label" htmlFor="merge_source">
+                  Source Profile (will be deleted)
+                </label>
+                <select
+                  id="merge_source"
+                  className="select select-bordered w-full"
+                  value={selectedMergeSource}
+                  onChange={(e) => {
+                    setSelectedMergeSource(e.target.value)
+                    setMergePreview(null)
+                    setMergePreviewError(null)
+                    setShowMergeConfirm(false)
+                  }}
+                >
+                  <option value="">Select a profile to merge...</option>
+                  {mergeableProfiles.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.display_name} (#{p.profile_id}) {p.is_linked ? '' : '- Unlinked'}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <button
+                type="button"
+                className="btn btn-outline"
+                disabled={!selectedMergeSource || mergePreviewLoading}
+                onClick={async () => {
+                  setMergePreviewLoading(true)
+                  setMergePreviewError(null)
+                  setMergePreview(null)
+                  setShowMergeConfirm(false)
+                  const result = await getMergePreviewAction(selectedMergeSource, profile.id)
+                  if (result.error) {
+                    setMergePreviewError(result.error)
+                  } else {
+                    setMergePreview(result.data ?? null)
+                  }
+                  setMergePreviewLoading(false)
+                }}
+              >
+                {mergePreviewLoading ? <span className="loading loading-spinner loading-sm" /> : 'Preview'}
+              </button>
+            </div>
+
+            {mergePreviewError && (
+              <div role="alert" className="alert alert-error mb-4">
+                <span>{mergePreviewError}</span>
+              </div>
+            )}
+
+            {mergePreview && (
+              <div className="bg-base-200 rounded-lg p-4 mb-4">
+                <h3 className="font-semibold mb-2">Merge Preview</h3>
+                <p className="text-sm mb-3">
+                  Merging <span className="font-semibold">{mergePreview.source_display_name}</span> into{' '}
+                  <span className="font-semibold">{mergePreview.target_display_name}</span>
+                </p>
+                <ul className="text-sm space-y-1">
+                  <li>Battle reports (attacker): {mergePreview.battle_reports_as_attacker}</li>
+                  <li>Battle reports (defender): {mergePreview.battle_reports_as_defender}</li>
+                  <li>Battle reports (reporter): {mergePreview.battle_reports_as_reporter}</li>
+                  <li>Factions: {mergePreview.factions}</li>
+                </ul>
+
+                {mergePreview.has_conflicts && (
+                  <div role="alert" className="alert alert-warning mt-3">
+                    <span>
+                      These profiles appear on opposite sides of the same battle report(s). They cannot be merged until
+                      the conflicting reports are resolved.
+                    </span>
+                  </div>
+                )}
+
+                {!mergePreview.has_conflicts && !showMergeConfirm && (
+                  <button
+                    type="button"
+                    className="btn btn-error btn-sm mt-3"
+                    onClick={() => setShowMergeConfirm(true)}
+                  >
+                    Merge Profiles
+                  </button>
+                )}
+
+                {!mergePreview.has_conflicts && showMergeConfirm && (
+                  <div className="mt-3 p-3 border border-error rounded-lg">
+                    <p className="text-sm font-semibold text-error mb-2">
+                      This action is irreversible. The source profile will be permanently deleted.
+                    </p>
+                    <div className="flex gap-2">
+                      <form action={handleMergeAction}>
+                        <input type="hidden" name="source_profile_id" value={selectedMergeSource} />
+                        <input type="hidden" name="target_profile_id" value={profile.id} />
+                        <button type="submit" className="btn btn-error btn-sm" disabled={mergePending}>
+                          {mergePending ? (
+                            <span className="loading loading-spinner loading-sm" />
+                          ) : (
+                            'Confirm Merge'
+                          )}
+                        </button>
+                      </form>
+                      <button
+                        type="button"
+                        className="btn btn-ghost btn-sm"
+                        onClick={() => setShowMergeConfirm(false)}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </fieldset>
+        </div>
+      )}
     </>
   )
 }
