@@ -105,8 +105,8 @@ Epic Template:
 - [x] [Admins can edit any member's profile](./member-profiles/admin-edit-profile.md)
 - [x] [Profile picture display (avatar from OAuth provider)](./member-profiles/profile-picture.md)
 - [x] [Profile picture upload](./member-profiles/change-profile-picture.md)
-- [ ] [Unlinked profiles (admin pre-registration)](./member-profiles/unlinked-profiles.md)
-- [ ] [Admin profile linking & merge](./member-profiles/admin-profile-linking.md)
+- [x] [Unlinked profiles (admin pre-registration)](./member-profiles/unlinked-profiles.md)
+- [x] [Admin profile linking & merge](./member-profiles/admin-profile-linking.md)
 
 ### Epic: Factions
 

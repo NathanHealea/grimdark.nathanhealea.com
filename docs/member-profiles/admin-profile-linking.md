@@ -2,7 +2,7 @@
 
 **Epic:** Member Profiles
 **Type:** Feature
-**Status:** Todo
+**Status:** Completed
 
 ## Summary
 
@@ -10,14 +10,14 @@ Allow administrators to manually link unlinked profiles to existing user account
 
 ## Acceptance Criteria
 
-- [ ] Admins can manually link an unlinked profile to an auth user by searching for the user's email
-- [ ] When linking, if the auth user already has a profile, the admin is warned and offered a merge option
-- [ ] Admins can merge two profiles: all battle reports, factions, and optional profile data transfer from source to target
-- [ ] After merge, the source profile is deleted and all its battle report references (attacker, defender, reported_by) point to the target
-- [ ] The merge operation is atomic — either everything transfers or nothing does
-- [ ] The merge preview shows what will be transferred (battle report count, faction count)
-- [ ] Non-admin users cannot access link or merge functionality
-- [ ] Build and lint pass
+- [x] Admins can manually link an unlinked profile to an auth user by searching for the user's email
+- [x] When linking, if the auth user already has a profile, the admin is warned and offered a merge option
+- [x] Admins can merge two profiles: all battle reports, factions, and optional profile data transfer from source to target
+- [x] After merge, the source profile is deleted and all its battle report references (attacker, defender, reported_by) point to the target
+- [x] The merge operation is atomic — either everything transfers or nothing does
+- [x] The merge preview shows what will be transferred (battle report count, faction count)
+- [x] Non-admin users cannot access link or merge functionality
+- [x] Build and lint pass
 
 ## Problem Scenarios
 
