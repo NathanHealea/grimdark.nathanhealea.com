@@ -1,22 +1,24 @@
-import type { Metadata } from 'next'
+import { getAuthUser } from '@/lib/supabase/auth'
+import { hasRole } from '@/lib/supabase/roles'
 import { createClient } from '@/lib/supabase/server'
-import { getSeasonById } from '@/modules/season/queries'
-import { getFactions } from '@/modules/faction/queries'
 import {
-  getBattleReportsBySeasonId,
-  getMissions,
-  getDeployments,
   getBattlePoints,
+  getBattleReportsBySeasonId,
+  getDeployments,
+  getMissions,
 } from '@/modules/battle-report/queries'
-import type { Outcome } from '@/types/battle-report'
-import type { Profile } from '@/types/profile'
-import type { Faction } from '@/types/faction'
-import { formatSeasonName, isCurrentSeason } from '@/types/season'
+import { getFactions } from '@/modules/faction/queries'
+import LeaderboardTable from '@/modules/leaderboard/components/leaderboard-table'
+import { computeLeaderboard } from '@/modules/leaderboard/utils'
 import MarkdownRenderer from '@/modules/markdown/components/markdown-renderer'
+import { getSeasonById } from '@/modules/season/queries'
+import type { Outcome } from '@/types/battle-report'
+import type { Faction } from '@/types/faction'
+import type { Profile } from '@/types/profile'
+import { formatSeasonName, isCurrentSeason } from '@/types/season'
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { computeLeaderboard } from '@/modules/leaderboard/utils'
-import LeaderboardTable from '@/modules/leaderboard/components/leaderboard-table'
 
 function outcomeBadge(outcome: Outcome) {
   const styles: Record<Outcome, string> = {
@@ -71,7 +73,8 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ i
 
   const supabase = await createClient()
 
-  const [battleReports, { data: profiles }, factions, missions, deployments, battlePoints] = await Promise.all([
+  const [auth, battleReports, { data: profiles }, factions, missions, deployments, battlePoints] = await Promise.all([
+    getAuthUser({ withProfile: true }),
     getBattleReportsBySeasonId(seasonId),
     supabase.from('profiles').select('*'),
     getFactions(),
@@ -80,13 +83,15 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ i
     getBattlePoints(),
   ])
 
-  const profileMap = new Map((profiles as Profile[] ?? []).map((p) => [p.id, p]))
+  const profileMap = new Map(((profiles as Profile[]) ?? []).map((p) => [p.id, p]))
   const factionMap = new Map(factions.map((f) => [f.id, f]))
   const missionMap = new Map(missions.map((m) => [m.id, m]))
   const deploymentMap = new Map(deployments.map((d) => [d.id, d]))
   const battlePointsMap = new Map(battlePoints.map((bp) => [bp.id, bp]))
 
   const bp = battlePointsMap.get(season.battle_points_id)
+
+  const isAdmin = auth ? await hasRole(auth.user.id, 'admin') : false
 
   return (
     <main className="page-layout">
@@ -98,13 +103,27 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ i
               &larr; All Seasons
             </Link>
             <div className="flex items-start justify-between gap-2">
-              <h1 className="text-h1">{formatSeasonName(season)}</h1>
-              {isCurrentSeason(season) && <span className="badge badge-success shrink-0">Current</span>}
+              <div>
+                <h1 className="text-h1">{formatSeasonName(season)}</h1>
+                {isCurrentSeason(season) && <span className="badge badge-success shrink-0">Current</span>}
+                <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-base-content/60">
+                  <span>
+                    {formatDate(season.start_date)} &ndash; {formatDate(season.end_date)}
+                  </span>
+                  {bp && (
+                    <span>
+                      {bp.name} ({bp.size} pts)
+                    </span>
+                  )}
+                </div>
+              </div>
+              {isAdmin && (
+                <Link href={`/admin/seasons/${id}/edit`} className="btn btn-outline btn-sm shrink-0">
+                  Edit Season
+                </Link>
+              )}
             </div>
-            <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-base-content/60">
-              <span>{formatDate(season.start_date)} &ndash; {formatDate(season.end_date)}</span>
-              {bp && <span>{bp.name} ({bp.size} pts)</span>}
-            </div>
+
             {season.description && <p className="mt-3 text-base-content/70">{season.description}</p>}
           </div>
 
@@ -119,14 +138,15 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ i
           {/* Leaderboard */}
           <div className="mb-8">
             <h2 className="ornament section-header">Leaderboard</h2>
-            <LeaderboardTable entries={computeLeaderboard(battleReports.filter((r) => r.status === 'published'))} profileMap={profileMap} />
+            <LeaderboardTable
+              entries={computeLeaderboard(battleReports.filter((r) => r.status === 'published'))}
+              profileMap={profileMap}
+            />
           </div>
 
           {/* Battle Reports */}
           <div>
-            <h2 className="ornament section-header">
-              Battle Reports ({battleReports.length})
-            </h2>
+            <h2 className="ornament section-header">Battle Reports ({battleReports.length})</h2>
 
             {battleReports.length === 0 ? (
               <p className="empty-text">No battle reports for this season yet.</p>
@@ -140,11 +160,7 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ i
                   const reportBp = report.battle_points_id ? battlePointsMap.get(report.battle_points_id) : null
 
                   return (
-                    <Link
-                      key={report.id}
-                      href={`/battle-reports/${report.id}`}
-                      className="card-interactive"
-                    >
+                    <Link key={report.id} href={`/battle-reports/${report.id}`} className="card-interactive">
                       <div className="card-body gap-4 p-4">
                         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                           {/* Attacker */}
@@ -153,7 +169,9 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ i
                               <p className="label-meta">Attacker</p>
                               <p className="truncate font-semibold">{attacker?.display_name ?? 'Unknown'}</p>
                               <p className="truncate text-sm text-base-content/60">
-                                {report.attacker_faction_id ? getFactionLabel(report.attacker_faction_id, factionMap) : 'Unknown Faction'}
+                                {report.attacker_faction_id
+                                  ? getFactionLabel(report.attacker_faction_id, factionMap)
+                                  : 'Unknown Faction'}
                               </p>
                             </div>
                             <div className="flex flex-col items-end gap-1">
@@ -168,7 +186,9 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ i
                               <p className="label-meta">Defender</p>
                               <p className="truncate font-semibold">{defender?.display_name ?? 'Unknown'}</p>
                               <p className="truncate text-sm text-base-content/60">
-                                {report.defender_faction_id ? getFactionLabel(report.defender_faction_id, factionMap) : 'Unknown Faction'}
+                                {report.defender_faction_id
+                                  ? getFactionLabel(report.defender_faction_id, factionMap)
+                                  : 'Unknown Faction'}
                               </p>
                             </div>
                             <div className="flex flex-col items-end gap-1">
@@ -182,7 +202,11 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ i
                           {mission && <span>{mission.name}</span>}
                           {deployment && <span>{deployment.name}</span>}
                           {reportBp && <span>{reportBp.name}</span>}
-                          {report.rounds != null && <span>{report.rounds} {report.rounds === 1 ? 'round' : 'rounds'}</span>}
+                          {report.rounds != null && (
+                            <span>
+                              {report.rounds} {report.rounds === 1 ? 'round' : 'rounds'}
+                            </span>
+                          )}
                           {report.event_date && <span className="ml-auto">{formatDate(report.event_date)}</span>}
                         </div>
                       </div>
