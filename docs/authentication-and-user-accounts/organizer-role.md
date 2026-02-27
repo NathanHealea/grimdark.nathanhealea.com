@@ -2,7 +2,7 @@
 
 **Epic:** Authentication & User Accounts
 **Type:** Enhancement
-**Status:** Todo
+**Status:** In Progress
 
 ## Summary
 
@@ -16,16 +16,16 @@ The `organizer` auth role provides a middle ground: full access to league operat
 
 ## Acceptance Criteria
 
-- [ ] `organizer` role exists in the `roles` database table
-- [ ] Users with the `organizer` auth role can access `/admin/seasons` and `/admin/battle-reports`
-- [ ] Users with the `organizer` auth role CANNOT access `/admin/user-management`
-- [ ] Users with the `organizer` auth role can create and edit seasons
-- [ ] Users with the `organizer` auth role can view admin battle reports
-- [ ] The admin menu shows only "Seasons" and "Battle Reports" for organizers (no "Users" link)
-- [ ] Admins can assign/revoke the `organizer` role via the user management page
-- [ ] The `Role` TypeScript type includes `'organizer'`
-- [ ] Middleware correctly gates `/admin/user-management` to `admin` only
-- [ ] All existing admin functionality continues to work unchanged for `admin` role users
+- [x] `organizer` role exists in the `roles` database table
+- [x] Users with the `organizer` auth role can access `/admin/seasons` and `/admin/battle-reports`
+- [x] Users with the `organizer` auth role CANNOT access `/admin/user-management`
+- [x] Users with the `organizer` auth role can create and edit seasons
+- [x] Users with the `organizer` auth role can view admin battle reports
+- [x] The admin menu shows only "Seasons" and "Battle Reports" for organizers (no "Users" link)
+- [x] Admins can assign/revoke the `organizer` role via the user management page
+- [x] The `Role` TypeScript type includes `'organizer'`
+- [x] Middleware correctly gates `/admin/user-management` to `admin` only
+- [x] All existing admin functionality continues to work unchanged for `admin` role users
 - [ ] Build and lint pass
 
 ## Approach
