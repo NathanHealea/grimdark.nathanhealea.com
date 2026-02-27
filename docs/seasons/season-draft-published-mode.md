@@ -2,7 +2,7 @@
 
 **Epic:** Seasons
 **Type:** Enhancement
-**Status:** In Progress
+**Status:** Completed
 
 ## Summary
 
@@ -14,18 +14,18 @@ Currently, seasons are immediately visible to all users as soon as they're creat
 
 ## Acceptance Criteria
 
-- [ ] Seasons have a `status` field: `draft` or `published`
-- [ ] Existing seasons default to `published` (no breaking change)
-- [ ] Draft seasons are only visible to admins (enforced by RLS)
-- [ ] Public `/seasons` page only shows published seasons
-- [ ] Public `/seasons/[id]` detail page returns 404 for draft seasons (non-admin visitors)
-- [ ] Admin `/admin/seasons` page shows all seasons with draft/published badges
-- [ ] Season form (create/edit) includes a status selector (draft or published)
-- [ ] Draft seasons cannot be selected when submitting a battle report (members see only published + active seasons)
-- [ ] Admins can change a season from draft to published and vice versa
-- [ ] Season leaderboard and battle report counts only include published seasons
-- [ ] The `getSeasons()` query supports an `includeAll` parameter (same pattern as battle reports)
-- [ ] Active season constraint still applies — only one **published** season can be active at a time
+- [x] Seasons have a `status` field: `draft` or `published`
+- [x] Existing seasons default to `published` (no breaking change)
+- [x] Draft seasons are only visible to admins (enforced by RLS)
+- [x] Public `/seasons` page only shows published seasons
+- [x] Public `/seasons/[id]` detail page returns 404 for draft seasons (non-admin visitors)
+- [x] Admin `/admin/seasons` page shows all seasons with draft/published badges
+- [x] Season form (create/edit) includes a status selector (draft or published)
+- [x] Draft seasons cannot be selected when submitting a battle report (members see only published + active seasons)
+- [x] Admins can change a season from draft to published and vice versa
+- [x] Season leaderboard and battle report counts only include published seasons
+- [x] The `getSeasons()` query supports an `includeAll` parameter (same pattern as battle reports)
+- [x] Active season constraint still applies — only one **published** season can be active at a time
 
 ## Approach
 

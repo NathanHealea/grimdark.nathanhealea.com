@@ -90,7 +90,7 @@ Epic Template:
 
 - [x] [Season information (start/end dates, format, point limits)](./seasons/season-information.md)
 - [ ] [Season participants (admin-managed player rosters per season)](./seasons/season-participants.md)
-- [ ] [Draft/published mode for seasons](./seasons/season-draft-published-mode.md)
+- [x] [Draft/published mode for seasons](./seasons/season-draft-published-mode.md)
 - [x] [Admin season delete](./seasons/admin-season-delete.md)
 
 ### Epic: Member Profiles
