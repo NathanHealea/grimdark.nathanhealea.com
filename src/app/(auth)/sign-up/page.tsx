@@ -1,6 +1,6 @@
 'use client'
 
-import { SiDiscord, SiGoogle } from '@icons-pack/react-simple-icons'
+import { SiDiscord } from '@icons-pack/react-simple-icons'
 import Link from 'next/link'
 import { useActionState } from 'react'
 import { signInWithDiscord, signInWithGoogle, signUp } from '../actions'
