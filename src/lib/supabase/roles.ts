@@ -18,3 +18,8 @@ export async function hasRole(userId: string, role: Role): Promise<boolean> {
   const roles = await getUserRoles(userId)
   return roles.includes(role)
 }
+
+export async function hasAnyRole(userId: string, roles: Role[]): Promise<boolean> {
+  const userRoles = await getUserRoles(userId)
+  return roles.some((role) => userRoles.includes(role))
+}
