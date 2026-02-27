@@ -174,3 +174,30 @@ export async function updateBattleReport(
 
   return { success: 'Battle report published successfully.' }
 }
+
+export async function deleteBattleReport(reportId: string): Promise<{ error?: string }> {
+  const supabase = await createClient()
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    return { error: 'You must be signed in.' }
+  }
+
+  const isAdmin = await hasRole(user.id, 'admin')
+  if (!isAdmin) {
+    return { error: 'Only admins can delete battle reports.' }
+  }
+
+  const { error } = await supabase.from('battle_reports').delete().eq('id', reportId)
+
+  if (error) {
+    console.error('Failed to delete battle report:', error)
+    return { error: 'Failed to delete battle report. Please try again.' }
+  }
+
+  revalidatePath('/', 'layout')
+  return {}
+}
