@@ -128,6 +128,44 @@ export async function createSeason(prevState: SeasonFormState, formData: FormDat
   return { success: 'Season created successfully.' }
 }
 
+export async function deleteSeason(seasonId: number): Promise<{ error?: string }> {
+  const supabase = await createClient()
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    return { error: 'You must be signed in.' }
+  }
+
+  const isAdmin = await hasRole(user.id, 'admin')
+  if (!isAdmin) {
+    return { error: 'Only admins can delete seasons.' }
+  }
+
+  // Nullify season_id on associated battle reports before deleting
+  const { error: nullifyError } = await supabase
+    .from('battle_reports')
+    .update({ season_id: null })
+    .eq('season_id', seasonId)
+
+  if (nullifyError) {
+    console.error('Failed to nullify battle report season references:', nullifyError)
+    return { error: 'Failed to update battle reports. Please try again.' }
+  }
+
+  const { error } = await supabase.from('seasons').delete().eq('id', seasonId)
+
+  if (error) {
+    console.error('Failed to delete season:', error)
+    return { error: 'Failed to delete season. Please try again.' }
+  }
+
+  revalidatePath('/', 'layout')
+  return {}
+}
+
 export async function updateSeason(prevState: SeasonFormState, formData: FormData): Promise<SeasonFormState> {
   const supabase = await createClient()
 
