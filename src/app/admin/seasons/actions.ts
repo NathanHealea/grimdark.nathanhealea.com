@@ -1,7 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
-import { hasRole } from '@/lib/supabase/roles'
+import { hasAnyRole } from '@/lib/supabase/roles'
 import { getNextSeasonNumber } from '@/modules/season/queries'
 import { revalidatePath } from 'next/cache'
 import type { FormState } from '@/types/forms'
@@ -55,9 +55,9 @@ export async function createSeason(prevState: SeasonFormState, formData: FormDat
     return { error: 'You must be signed in.' }
   }
 
-  const isAdmin = await hasRole(user.id, 'admin')
-  if (!isAdmin) {
-    return { error: 'Only admins can create seasons.' }
+  const canManage = await hasAnyRole(user.id, ['admin', 'organizer'])
+  if (!canManage) {
+    return { error: 'Only admins and organizers can create seasons.' }
   }
 
   const name = (formData.get('name') as string)?.trim() ?? ''
@@ -139,9 +139,9 @@ export async function deleteSeason(seasonId: number): Promise<{ error?: string }
     return { error: 'You must be signed in.' }
   }
 
-  const isAdmin = await hasRole(user.id, 'admin')
-  if (!isAdmin) {
-    return { error: 'Only admins can delete seasons.' }
+  const canManage = await hasAnyRole(user.id, ['admin', 'organizer'])
+  if (!canManage) {
+    return { error: 'Only admins and organizers can delete seasons.' }
   }
 
   // Nullify season_id on associated battle reports before deleting
@@ -177,9 +177,9 @@ export async function updateSeason(prevState: SeasonFormState, formData: FormDat
     return { error: 'You must be signed in.' }
   }
 
-  const isAdmin = await hasRole(user.id, 'admin')
-  if (!isAdmin) {
-    return { error: 'Only admins can update seasons.' }
+  const canManage = await hasAnyRole(user.id, ['admin', 'organizer'])
+  if (!canManage) {
+    return { error: 'Only admins and organizers can update seasons.' }
   }
 
   const seasonId = Number(formData.get('season_id'))
