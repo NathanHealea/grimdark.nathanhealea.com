@@ -4,6 +4,7 @@ import { type NextRequest, NextResponse } from 'next/server'
 const PUBLIC_ROUTES = ['/sign-in', '/sign-up', '/auth/callback', '/members', '/battle-reports', '/seasons']
 const PROFILE_SETUP_ROUTE = '/profile/setup'
 const ADMIN_ROUTE_PREFIX = '/admin'
+const USER_MANAGEMENT_PREFIX = '/admin/user-management'
 
 export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request })
@@ -61,16 +62,26 @@ export async function middleware(request: NextRequest) {
 
   // Role-based route protection for admin routes
   if (pathname.startsWith(ADMIN_ROUTE_PREFIX)) {
-    const { data: adminRole } = await supabase
+    const { data: userRoles } = await supabase
       .from('user_roles')
       .select('role_id, roles!inner(name)')
       .eq('user_id', user.id)
-      .eq('roles.name', 'admin')
-      .single()
+      .in('roles.name', ['admin', 'organizer'])
 
-    if (!adminRole) {
+    const roleNames = (userRoles ?? []).map((r) => (r.roles as unknown as { name: string }).name)
+    const isAdmin = roleNames.includes('admin')
+    const hasAdminAccess = isAdmin || roleNames.includes('organizer')
+
+    if (!hasAdminAccess) {
       const url = request.nextUrl.clone()
       url.pathname = '/'
+      return NextResponse.redirect(url)
+    }
+
+    // User management routes require admin role specifically
+    if (pathname.startsWith(USER_MANAGEMENT_PREFIX) && !isAdmin) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/admin/seasons'
       return NextResponse.redirect(url)
     }
   }

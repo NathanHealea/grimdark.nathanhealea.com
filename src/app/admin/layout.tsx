@@ -1,5 +1,5 @@
 import { getAuthUser } from '@/lib/supabase/auth'
-import { hasRole } from '@/lib/supabase/roles'
+import { hasAnyRole } from '@/lib/supabase/roles'
 import { redirect } from 'next/navigation'
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -9,9 +9,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     redirect('/sign-in')
   }
 
-  const isAdmin = await hasRole(auth.user.id, 'admin')
+  const canAccessAdmin = await hasAnyRole(auth.user.id, ['admin', 'organizer'])
 
-  if (!isAdmin) {
+  if (!canAccessAdmin) {
     redirect('/')
   }
 

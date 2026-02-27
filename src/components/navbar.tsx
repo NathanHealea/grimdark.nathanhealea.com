@@ -1,7 +1,7 @@
 import { signOut } from '@/app/(auth)/actions'
 import { getAuthUser } from '@/lib/supabase/auth'
-import { hasRole } from '@/lib/supabase/roles'
-import { publicLinks, memberLinks, adminLinks } from '@/routes'
+import { hasAnyRole, hasRole } from '@/lib/supabase/roles'
+import { publicLinks, memberLinks, adminLinks, adminOnlyLinks } from '@/routes'
 import Link from 'next/link'
 import AdminMenu from './admin-menu'
 import MobileNav from './mobile-nav'
@@ -13,18 +13,20 @@ export default async function Navbar() {
   const profile = auth ? auth.profile : null
 
   const isAdmin = user ? await hasRole(user.id, 'admin') : false
-  const isMember = profile ? isAdmin || profile.role === 'member' || profile.role === 'organizer' : false
+  const hasAdminAccess = isAdmin || (user ? await hasAnyRole(user.id, ['admin', 'organizer']) : false)
+  const isMember = profile ? isAdmin || hasAdminAccess || profile.role === 'member' || profile.role === 'organizer' : false
   const navLinks = [
     ...publicLinks,
     ...(isMember ? memberLinks : []),
   ]
+  const visibleAdminLinks = isAdmin ? [...adminLinks, ...adminOnlyLinks] : adminLinks
 
   return (
     <nav className="navbar bg-base-100/90 backdrop-blur-md border-b border-base-300 sticky top-0 z-50">
       <div className="navbar-start">
         <MobileNav
           links={navLinks}
-          adminLinks={isAdmin ? adminLinks : []}
+          adminLinks={hasAdminAccess ? visibleAdminLinks : []}
           isAuthenticated={!!user}
           profileId={profile?.profile_id}
           signOutAction={signOut}
@@ -44,7 +46,7 @@ export default async function Navbar() {
             </li>
           ))}
         </ul>
-        {isAdmin && <AdminMenu links={adminLinks} />}
+        {hasAdminAccess && <AdminMenu links={visibleAdminLinks} />}
       </div>
       <div className="navbar-end hidden lg:flex gap-4">
         {user ? (
