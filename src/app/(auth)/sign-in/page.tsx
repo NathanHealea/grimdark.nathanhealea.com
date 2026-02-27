@@ -1,7 +1,6 @@
 'use client'
 
-import DiscordIcon from '@/components/icons/discord-icon'
-import GoogleIcon from '@/components/icons/google-icon'
+import { SiDiscord, SiGoogle } from '@icons-pack/react-simple-icons'
 import Link from 'next/link'
 import { useActionState } from 'react'
 import { signIn, signInWithDiscord, signInWithGoogle } from '../actions'
@@ -57,14 +56,14 @@ export default function SignInPage() {
 
         {/* <form action={signInWithGoogle}>
           <button type="submit" className="btn btn-outline w-full">
-            <GoogleIcon className="h-5 w-5" />
+            <SiGoogle className="h-5 w-5" color="currentColor" />
             Continue with Google
           </button>
         </form> */}
 
         <form action={signInWithDiscord}>
           <button type="submit" className="btn btn-outline w-full">
-            <DiscordIcon className="h-5 w-5" />
+            <SiDiscord className="h-5 w-5" color="currentColor" />
             Continue with Discord
           </button>
         </form>
