@@ -10,13 +10,13 @@ Admins can delete a season from the season management page and the season edit p
 
 ## Acceptance Criteria
 
-- [ ] Admins can delete a season from the admin seasons list page via the actions menu
-- [ ] Admins can delete a season from the season edit page via a delete button
-- [ ] Deleting a season sets `season_id = NULL` on all associated battle reports (not deleted)
-- [ ] A confirmation dialog is shown before deletion proceeds
-- [ ] Non-admin users cannot delete seasons (enforced by RLS and app-level checks)
-- [ ] After deletion, the user is redirected to the admin seasons list with a success message
-- [ ] The page revalidates so the deleted season no longer appears in any list
+- [x] Admins can delete a season from the admin seasons list page via the actions menu
+- [x] Admins can delete a season from the season edit page via a delete button
+- [x] Deleting a season sets `season_id = NULL` on all associated battle reports (not deleted)
+- [x] A confirmation dialog is shown before deletion proceeds
+- [x] Non-admin users cannot delete seasons (enforced by RLS and app-level checks)
+- [x] After deletion, the user is redirected to the admin seasons list with a success message
+- [x] The page revalidates so the deleted season no longer appears in any list
 
 ## Routes
 
