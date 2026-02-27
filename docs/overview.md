@@ -91,7 +91,7 @@ Epic Template:
 - [x] [Season information (start/end dates, format, point limits)](./seasons/season-information.md)
 - [ ] [Season participants (admin-managed player rosters per season)](./seasons/season-participants.md)
 - [ ] [Draft/published mode for seasons](./seasons/season-draft-published-mode.md)
-- [ ] [Admin season delete](./seasons/admin-season-delete.md)
+- [x] [Admin season delete](./seasons/admin-season-delete.md)
 
 ### Epic: Member Profiles
 
@@ -132,6 +132,7 @@ Epic Template:
 - [x] Season selection on battle report submit and edit (members: active seasons; admins: all seasons)
 - [x] Non-admins cannot unpublish a published battle report
 - [x] Admin battle reports management page
+- [x] [Admin battle report delete](./battle-reports/battle-report-delete.md)
 
 ### Epic: Standings & Leaderboard
 

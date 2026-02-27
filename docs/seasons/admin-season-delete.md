@@ -2,7 +2,7 @@
 
 **Epic:** Seasons
 **Type:** Feature
-**Status:** In Progress
+**Status:** Completed
 
 ## Summary
 

@@ -54,6 +54,8 @@ Grimdark League is a web app for Warhammer 40k tabletop gaming communities. It p
 | Season selection on battle reports | Done |
 | Non-admins cannot unpublish reports | Done |
 | Admin battle reports management | Done |
+| Admin battle report delete | Done |
+| Admin season delete | Done |
 | Member directory with battle & season stats | Done |
 | Responsive navbar (mobile) | Done |
 | Season management (admin CRUD) | Done |

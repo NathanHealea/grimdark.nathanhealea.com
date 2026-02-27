@@ -2,7 +2,7 @@
 
 **Epic:** Battle Reports
 **Type:** Feature
-**Status:** In Progress
+**Status:** Completed
 
 ## Summary
 
