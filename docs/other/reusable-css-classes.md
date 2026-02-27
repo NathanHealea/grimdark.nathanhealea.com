@@ -1,6 +1,6 @@
 # Reusable CSS Classes
 
-**Epic:** UI & Styling
+**Epic:** Other
 **Type:** Enhancement
 **Status:** In Progress
 
@@ -16,13 +16,16 @@ The existing `globals.css` already demonstrates this pattern successfully with `
 
 ## Acceptance Criteria
 
-- [ ] Repeated class patterns are identified and documented
-- [ ] Reusable CSS classes are added to `src/app/globals.css` using Tailwind's `@apply` directive
-- [ ] All page files are updated to use the new classes
-- [ ] All form files are updated to use the new classes
-- [ ] All card/interactive components are updated to use the new classes
-- [ ] Typography classes are added and applied to headings and body text
-- [ ] Visual output is identical before and after (no visual regressions)
+- [x] Repeated class patterns are identified and documented
+- [x] Reusable CSS classes are added to `src/app/globals.css` using Tailwind's `@apply` directive
+- [x] All page files are updated to use the new layout classes (`.page-layout`, `.page-container`, `.page-content`)
+- [x] All form files are updated to use the new form classes (`.form-section`, `.form-grid`, `.form-error`)
+- [x] All card/interactive components are updated to use the new classes (`.card-interactive`, `.info-row`)
+- [x] Table components updated to use `.data-table`
+- [x] Label and empty-state classes applied (`.label-meta`, `.empty-text`)
+- [ ] Typography: Remove redundant inline `text-3xl font-bold` from `<h1>` elements (~19 files) — already styled by the `h1` element selector in `globals.css`
+- [ ] Typography: Replace inline section-header patterns with `.section-header` class (~6 files)
+- [ ] Navigation: Replace inline back-button patterns with `.btn-back` class (~12 files)
 - [ ] Build and lint pass
 
 ## Approach
@@ -241,3 +244,12 @@ The existing `globals.css` already demonstrates this pattern successfully with `
 - Tailwind v4 uses `@apply` the same way as v3, so no migration concerns
 - After this refactor, changing the page layout (e.g., adjusting the navbar offset) becomes a single-line change in `globals.css` instead of editing 17 files
 - Some patterns like `.section-header` build on existing custom classes (`.ornament`) — this is intentional layering
+- Typography classes were added as both element selectors (`h1`, `p`) and class selectors (`.text-h1`, `.text-body`), so `<h1>` and `<p>` elements are automatically styled — the inline classes on those elements are now redundant but not harmful
+
+### Remaining Work
+
+3 categories of inline patterns still need to be replaced with their reusable classes:
+
+1. **`text-3xl font-bold` on `<h1>` elements** (~19 files) — These are now redundant since the `h1` element selector in `globals.css` applies the same styles. Remove the inline classes.
+2. **`mb-4 text-sm font-semibold uppercase tracking-widest`** (~6 files) — Replace with `section-header` class. Affected files: `create-profile-form.tsx`, `admin-edit-profile-form.tsx`, `battle-report-form.tsx`, `edit-profile-form.tsx`, `season-form.tsx`, and 1 more.
+3. **`btn btn-ghost btn-sm mb-4 -ml-2`** (~12 files) — Replace with `btn-back` class. Affected files: all detail/edit page files across admin, profile, seasons, and battle-reports.

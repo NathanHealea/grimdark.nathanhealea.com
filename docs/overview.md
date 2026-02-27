@@ -19,14 +19,13 @@ The core loop: **members join, play games, record results, and track standings.*
 - **Battle Sizes** — Standard point levels: Combat Patrol (500), Incursion (1000), Strike Force (2000), Onslaught (3000).
 - **Missions & Deployments** — Predefined game scenarios and map configurations from the official rules.
 - **Seasons** — Time-bounded league periods with battle size and date ranges. Members can assign battle reports to active seasons; admins can assign to any season. Admins manage seasons through the admin panel.
-- **Standings** — Win/loss/draw records and rankings derived from battle reports, filtered by season. *(Planned)*
+- **Standings** — Win/loss/draw records and rankings derived from battle reports, filtered by season.
 
 ## Product Direction
 
 Current priority: finish the MVP epics listed below. After MVP:
 
 - **Stats & analytics** — Player win rates, faction matchup data, historical trends across seasons.
-- **Leaderboard** — Season-scoped standings and rankings derived from battle reports.
 
 ## Tech Stack
 
@@ -92,6 +91,7 @@ Epic Template:
 - [x] [Season information (start/end dates, format, point limits)](./seasons/season-information.md)
 - [ ] [Season participants (admin-managed player rosters per season)](./seasons/season-participants.md)
 - [ ] [Draft/published mode for seasons](./seasons/season-draft-published-mode.md)
+- [ ] [Admin season delete](./seasons/admin-season-delete.md)
 
 ### Epic: Member Profiles
 
@@ -104,6 +104,9 @@ Epic Template:
 - [x] [Members can edit their own profile](./member-profiles/edit-own-profile.md)
 - [x] [Admins can edit any member's profile](./member-profiles/admin-edit-profile.md)
 - [x] [Profile picture display (avatar from OAuth provider)](./member-profiles/profile-picture.md)
+- [x] [Profile picture upload](./member-profiles/change-profile-picture.md)
+- [ ] [Unlinked profiles (admin pre-registration)](./member-profiles/unlinked-profiles.md)
+- [ ] [Admin profile linking & merge](./member-profiles/admin-profile-linking.md)
 
 ### Epic: Factions
 
@@ -139,3 +142,5 @@ Epic Template:
 - [x] [Leaderboard page with win/loss/draw records](./standings-and-leaderboard/leaderboard-page.md)
 - [x] [Rankings calculated from submitted battle reports](./standings-and-leaderboard/rankings-from-battle-reports.md)
 - [x] [Filter by current season](./standings-and-leaderboard/filter-by-season.md)
+- [ ] [Leaderboard ranking improvement](./standings-and-leaderboard/leaderboard-ranking-improvement.md)
+- [ ] [Leaderboard position tracking](./standings-and-leaderboard/leaderboard-position-tracking.md)
