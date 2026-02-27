@@ -1,18 +1,13 @@
-import type { Metadata } from 'next'
+import BattleReportActions from '@/app/admin/battle-reports/battle-report-actions'
 import { createClient } from '@/lib/supabase/server'
+import { getBattlePoints, getBattleReports, getDeployments, getMissions } from '@/modules/battle-report/queries'
 import { getFactions } from '@/modules/faction/queries'
-import {
-  getBattleReports,
-  getMissions,
-  getDeployments,
-  getBattlePoints,
-} from '@/modules/battle-report/queries'
 import { getSeasons } from '@/modules/season/queries'
-import ActionsMenu from '@/components/actions-menu'
 import type { Outcome } from '@/types/battle-report'
-import type { Profile } from '@/types/profile'
 import type { Faction } from '@/types/faction'
+import type { Profile } from '@/types/profile'
 import { formatSeasonName } from '@/types/season'
+import type { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = { title: 'Battle Report Management' }
@@ -47,8 +42,8 @@ function formatDate(dateString: string): string {
 export default async function AdminBattleReportsPage() {
   const supabase = await createClient()
 
-  const [battleReports, { data: profiles }, factions, missions, deployments, battlePoints, seasons] =
-    await Promise.all([
+  const [battleReports, { data: profiles }, factions, missions, deployments, battlePoints, seasons] = await Promise.all(
+    [
       getBattleReports({ includeAll: true }),
       supabase.from('profiles').select('*'),
       getFactions(),
@@ -56,9 +51,10 @@ export default async function AdminBattleReportsPage() {
       getDeployments(),
       getBattlePoints(),
       getSeasons(),
-    ])
+    ]
+  )
 
-  const profileMap = new Map((profiles as Profile[] ?? []).map((p) => [p.id, p]))
+  const profileMap = new Map(((profiles as Profile[]) ?? []).map((p) => [p.id, p]))
   const factionMap = new Map(factions.map((f) => [f.id, f]))
   const missionMap = new Map(missions.map((m) => [m.id, m]))
   const battlePointsMap = new Map(battlePoints.map((bp) => [bp.id, bp]))
@@ -74,7 +70,8 @@ export default async function AdminBattleReportsPage() {
           <div className="mb-8">
             <h1 className="text-h1">Battle Report Management</h1>
             <p className="mt-2 text-base-content/60">
-              View all battle reports including drafts. {battleReports.length} total ({published.length} published, {drafts.length} drafts).
+              View all battle reports including drafts. {battleReports.length} total ({published.length} published,{' '}
+              {drafts.length} drafts).
             </p>
           </div>
 
@@ -114,19 +111,27 @@ export default async function AdminBattleReportsPage() {
                           )}
                         </td>
                         <td className="text-sm">
-                          {report.event_date ? formatDate(report.event_date) : <span className="text-base-content/40">&mdash;</span>}
+                          {report.event_date ? (
+                            formatDate(report.event_date)
+                          ) : (
+                            <span className="text-base-content/40">&mdash;</span>
+                          )}
                         </td>
                         <td>
                           {attacker ? (
                             <div>
                               <p className="text-sm font-semibold">{attacker.display_name}</p>
                               {report.attacker_faction_id && (
-                                <p className="text-xs text-base-content/60">{getFactionLabel(report.attacker_faction_id, factionMap)}</p>
+                                <p className="text-xs text-base-content/60">
+                                  {getFactionLabel(report.attacker_faction_id, factionMap)}
+                                </p>
                               )}
                               {report.attacker_outcome && (
                                 <div className="mt-1 flex items-center gap-1">
                                   {outcomeBadge(report.attacker_outcome)}
-                                  {report.attacker_score != null && <span className="text-xs font-bold">{report.attacker_score}</span>}
+                                  {report.attacker_score != null && (
+                                    <span className="text-xs font-bold">{report.attacker_score}</span>
+                                  )}
                                 </div>
                               )}
                             </div>
@@ -139,12 +144,16 @@ export default async function AdminBattleReportsPage() {
                             <div>
                               <p className="text-sm font-semibold">{defender.display_name}</p>
                               {report.defender_faction_id && (
-                                <p className="text-xs text-base-content/60">{getFactionLabel(report.defender_faction_id, factionMap)}</p>
+                                <p className="text-xs text-base-content/60">
+                                  {getFactionLabel(report.defender_faction_id, factionMap)}
+                                </p>
                               )}
                               {report.defender_outcome && (
                                 <div className="mt-1 flex items-center gap-1">
                                   {outcomeBadge(report.defender_outcome)}
-                                  {report.defender_score != null && <span className="text-xs font-bold">{report.defender_score}</span>}
+                                  {report.defender_score != null && (
+                                    <span className="text-xs font-bold">{report.defender_score}</span>
+                                  )}
                                 </div>
                               )}
                             </div>
@@ -173,11 +182,15 @@ export default async function AdminBattleReportsPage() {
                         </td>
                         <td className="text-sm">{reportedBy?.display_name ?? 'Unknown'}</td>
                         <td>
-                          <ActionsMenu
-                            items={[
-                              { label: 'View Report', href: `/battle-reports/${report.id}` },
-                              { label: 'Edit Report', href: `/battle-reports/${report.id}/edit` },
-                            ]}
+                          <BattleReportActions
+                            reportId={report.id}
+                            reportLabel={
+                              attacker && defender
+                                ? `${attacker.display_name} vs ${defender.display_name}`
+                                : report.event_date
+                                  ? formatDate(report.event_date)
+                                  : report.id
+                            }
                           />
                         </td>
                       </tr>
