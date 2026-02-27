@@ -1,9 +1,9 @@
-import ActionsMenu from '@/components/actions-menu'
 import { getBattlePoints } from '@/modules/battle-report/queries'
 import { getSeasons } from '@/modules/season/queries'
 import type { BattlePoints } from '@/types/battle-report'
 import { formatSeasonName, isCurrentSeason } from '@/types/season'
 import Link from 'next/link'
+import SeasonActions from './season-actions'
 
 function formatDate(dateString: string): string {
   return new Date(dateString + 'T00:00:00').toLocaleDateString('en-US', {
@@ -65,12 +65,7 @@ export default async function AdminSeasonsPage() {
                         {isCurrentSeason(season) && <span className="badge badge-info">Current</span>}
                       </td>
                       <td>
-                        <ActionsMenu
-                          items={[
-                            { label: 'View Season', href: `/seasons/${season.id}` },
-                            { label: 'Edit Season', href: `/admin/seasons/${season.id}/edit` },
-                          ]}
-                        />
+                        <SeasonActions seasonId={season.id} seasonName={formatSeasonName(season)} />
                       </td>
                     </tr>
                   )
