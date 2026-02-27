@@ -2,7 +2,7 @@
 
 **Epic:** Battle Reports
 **Type:** Feature
-**Status:** Todo
+**Status:** In Progress
 
 ## Summary
 
@@ -10,23 +10,23 @@ Add a "Delete" action menu item to the Battle Report Management admin page. Admi
 
 ## Acceptance Criteria
 
-- [ ] The action menu on each battle report row includes a "Delete Report" item styled as danger (red)
-- [ ] Clicking "Delete Report" shows a browser confirmation dialog before proceeding
-- [ ] Confirming the dialog deletes the battle report from the database
-- [ ] The page refreshes automatically after successful deletion
-- [ ] An error alert is shown if the deletion fails
-- [ ] Only admins can delete battle reports (server-side role check)
-- [ ] Non-admin users cannot invoke the delete server action
+- [x] The action menu on each battle report row includes a "Delete Report" item styled as danger (red)
+- [x] Clicking "Delete Report" shows a browser confirmation dialog before proceeding
+- [x] Confirming the dialog deletes the battle report from the database
+- [x] The page refreshes automatically after successful deletion
+- [x] An error alert is shown if the deletion fails
+- [x] Only admins can delete battle reports (server-side role check)
+- [x] Non-admin users cannot invoke the delete server action
 
 ## Implementation
 
 ### Key Files
 
-| Action | File | Description |
-|---|---|---|
-| Create | `src/app/admin/battle-reports/battle-report-actions.tsx` | Client component wrapping ActionsMenu with delete handler |
-| Modify | `src/app/admin/battle-reports/page.tsx` | Replace inline ActionsMenu with BattleReportActions component |
-| Modify | `src/app/battle-reports/[id]/edit/actions.ts` | Add `deleteBattleReport` server action |
+| Action | File                                                     | Description                                                   |
+| ------ | -------------------------------------------------------- | ------------------------------------------------------------- |
+| Create | `src/app/admin/battle-reports/battle-report-actions.tsx` | Client component wrapping ActionsMenu with delete handler     |
+| Modify | `src/app/admin/battle-reports/page.tsx`                  | Replace inline ActionsMenu with BattleReportActions component |
+| Modify | `src/app/battle-reports/[id]/edit/actions.ts`            | Add `deleteBattleReport` server action                        |
 
 ### Approach
 
@@ -35,6 +35,7 @@ Add a "Delete" action menu item to the Battle Report Management admin page. Admi
 Add a new exported async function to `src/app/battle-reports/[id]/edit/actions.ts`.
 
 Follow the `deleteSeason` pattern from `src/app/admin/seasons/actions.ts:131-167`:
+
 - Accept `reportId: string` parameter
 - Return `Promise<{ error?: string }>`
 - Authenticate with `supabase.auth.getUser()`
@@ -53,10 +54,12 @@ export async function deleteBattleReport(reportId: string): Promise<{ error?: st
 Create `src/app/admin/battle-reports/battle-report-actions.tsx` modeled on `src/app/admin/seasons/season-actions.tsx`.
 
 Props:
+
 - `reportId: string` — the battle report UUID
 - `reportLabel: string` — display text for the confirmation dialog (e.g. attacker vs defender or date)
 
 The component:
+
 - Is a `'use client'` component
 - Uses `useRouter` from `next/navigation`
 - Defines `handleDelete` that calls `confirm()`, then `deleteBattleReport()`, then `router.refresh()`
@@ -68,6 +71,7 @@ The component:
 #### 3. Update admin battle reports page
 
 In `src/app/admin/battle-reports/page.tsx`:
+
 - Import `BattleReportActions` instead of `ActionsMenu`
 - Replace the inline `<ActionsMenu items={[...]} />` (lines 176-181) with `<BattleReportActions>`
 - Pass `reportId={report.id}` and a `reportLabel` built from the row data (e.g. attacker name, date, or a fallback)
