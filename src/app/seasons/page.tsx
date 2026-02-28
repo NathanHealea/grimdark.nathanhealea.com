@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import { getSeasons } from '@/modules/season/queries'
-export const metadata: Metadata = { title: 'Seasons' }
+export const metadata: Metadata = {
+  title: 'Seasons',
+  description: 'League seasons for the Grimdark League. View current, upcoming, and past seasons with battle sizes and date ranges.',
+}
 
 import { getBattlePoints, getBattleReportCountsBySeasonId } from '@/modules/battle-report/queries'
 import type { BattlePoints } from '@/types/battle-report'

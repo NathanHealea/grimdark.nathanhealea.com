@@ -1,6 +1,9 @@
 import Avatar from '@/components/avatar'
 import type { Metadata } from 'next'
-export const metadata: Metadata = { title: 'Members' }
+export const metadata: Metadata = {
+  title: 'Members',
+  description: 'Browse members of the Grimdark League. See player profiles, factions, and battle history.',
+}
 
 import { createClient } from '@/lib/supabase/server'
 import { getFactions } from '@/modules/faction/queries'
