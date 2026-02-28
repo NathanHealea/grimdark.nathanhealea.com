@@ -1,4 +1,6 @@
-import type { Season } from '@/types/season'
+import type { Season, SeasonRosterEntry } from '@/types/season'
+import type { Profile } from '@/types/profile'
+import type { Faction } from '@/types/faction'
 import { createClient } from '@/lib/supabase/server'
 
 export async function getSeasons({ includeAll = false } = {}): Promise<Season[]> {
@@ -60,4 +62,43 @@ export async function getNextSeasonNumber(): Promise<number> {
   const { data } = await supabase.from('seasons').select('number').order('number', { ascending: false }).limit(1)
 
   return (data?.[0]?.number ?? 0) + 1
+}
+
+export type RosterEntryWithDetails = SeasonRosterEntry & {
+  profiles: Pick<Profile, 'id' | 'display_name' | 'avatar_url' | 'profile_id'>
+  factions: Pick<Faction, 'id' | 'name'>
+}
+
+export async function getSeasonRoster(seasonId: number): Promise<RosterEntryWithDetails[]> {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
+    .from('season_roster')
+    .select('season_id, profile_id, faction_id, joined_at, profiles(id, display_name, avatar_url, profile_id), factions(id, name)')
+    .eq('season_id', seasonId)
+    .order('joined_at')
+
+  if (error) {
+    console.error('Failed to fetch season roster:', error)
+    return []
+  }
+
+  return (data ?? []) as unknown as RosterEntryWithDetails[]
+}
+
+export async function getSeasonRosterCounts(): Promise<Map<number, number>> {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase.from('season_roster').select('season_id')
+
+  if (error) {
+    console.error('Failed to fetch roster counts:', error)
+    return new Map()
+  }
+
+  const counts = new Map<number, number>()
+  for (const row of data ?? []) {
+    counts.set(row.season_id, (counts.get(row.season_id) ?? 0) + 1)
+  }
+  return counts
 }
