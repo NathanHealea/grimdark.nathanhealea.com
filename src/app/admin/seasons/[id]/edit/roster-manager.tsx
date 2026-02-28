@@ -2,10 +2,9 @@
 
 import { useMemo, useState } from 'react'
 import Avatar from '@/components/avatar'
-import type { Faction, FactionNode } from '@/types/faction'
+import type { Faction } from '@/types/faction'
 import type { Profile } from '@/types/profile'
 import type { RosterEntryWithDetails } from '@/modules/season/queries'
-import { buildFactionTree } from '@/modules/faction/utils'
 import { addParticipant, removeParticipant, updateParticipantFaction } from './roster-actions'
 
 type RosterManagerProps = {
@@ -13,10 +12,10 @@ type RosterManagerProps = {
   roster: RosterEntryWithDetails[]
   profiles: Profile[]
   factions: Faction[]
+  profileFactionsMap: Record<string, string[]>
 }
 
-export default function RosterManager({ seasonId, roster, profiles, factions }: RosterManagerProps) {
-  const tree = useMemo(() => buildFactionTree(factions), [factions])
+export default function RosterManager({ seasonId, roster, profiles, factions, profileFactionsMap }: RosterManagerProps) {
   const factionMap = useMemo(() => new Map(factions.map((f) => [f.id, f])), [factions])
   const rosterProfileIds = useMemo(() => new Set(roster.map((r) => r.profile_id)), [roster])
   const availableProfiles = useMemo(() => profiles.filter((p) => !rosterProfileIds.has(p.id)), [profiles, rosterProfileIds])
@@ -28,22 +27,6 @@ export default function RosterManager({ seasonId, roster, profiles, factions }: 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-  function renderOptions(nodes: FactionNode[], depth: number): React.ReactNode[] {
-    const options: React.ReactNode[] = []
-    for (const node of nodes) {
-      const prefix = depth > 0 ? '\u00A0\u00A0'.repeat(depth) + '└ ' : ''
-      options.push(
-        <option key={node.id} value={node.id}>
-          {prefix}{node.name}
-        </option>,
-      )
-      if (node.children.length > 0) {
-        options.push(...renderOptions(node.children, depth + 1))
-      }
-    }
-    return options
-  }
-
   function getFactionLabel(id: string): string {
     const faction = factionMap.get(id)
     if (!faction) return 'Unknown'
@@ -54,28 +37,41 @@ export default function RosterManager({ seasonId, roster, profiles, factions }: 
     return faction.name
   }
 
-  const factionSelect = (value: string, onChange: (val: string) => void) => (
-    <select
-      className="select select-bordered select-sm flex-1"
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      disabled={loading}
-    >
-      <option value="" disabled>
-        Select faction...
-      </option>
-      {tree.map((root) => {
-        const children = root.children.length > 0
-          ? renderOptions(root.children, 0)
-          : [<option key={root.id} value={root.id}>{root.name}</option>]
-        return (
-          <optgroup key={root.id} label={root.name}>
-            {children}
-          </optgroup>
-        )
-      })}
-    </select>
-  )
+  function getProfileFactionOptions(profileId: string) {
+    const allowedIds = new Set(profileFactionsMap[profileId] ?? [])
+    return factions
+      .filter((f) => allowedIds.has(f.id))
+      .map((f) => ({ id: f.id, label: getFactionLabel(f.id) }))
+      .sort((a, b) => a.label.localeCompare(b.label))
+  }
+
+  const factionSelect = (value: string, onChange: (val: string) => void, forProfileId?: string) => {
+    const options = forProfileId ? getProfileFactionOptions(forProfileId) : []
+    const hasOptions = options.length > 0
+    const placeholder = !forProfileId
+      ? 'Select a player first...'
+      : hasOptions
+        ? 'Select faction...'
+        : 'No factions on profile'
+
+    return (
+      <select
+        className="select select-bordered select-sm flex-1"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        disabled={loading || !forProfileId || !hasOptions}
+      >
+        <option value="" disabled>
+          {placeholder}
+        </option>
+        {options.map((opt) => (
+          <option key={opt.id} value={opt.id}>
+            {opt.label}
+          </option>
+        ))}
+      </select>
+    )
+  }
 
   async function handleAdd() {
     if (!selectedProfile || !selectedFaction) return
@@ -125,7 +121,10 @@ export default function RosterManager({ seasonId, roster, profiles, factions }: 
           <select
             className="select select-bordered select-sm flex-1"
             value={selectedProfile}
-            onChange={(e) => setSelectedProfile(e.target.value)}
+            onChange={(e) => {
+              setSelectedProfile(e.target.value)
+              setSelectedFaction('')
+            }}
             disabled={loading || availableProfiles.length === 0}
           >
             <option value="" disabled>
@@ -137,7 +136,7 @@ export default function RosterManager({ seasonId, roster, profiles, factions }: 
               </option>
             ))}
           </select>
-          {factionSelect(selectedFaction, setSelectedFaction)}
+          {factionSelect(selectedFaction, setSelectedFaction, selectedProfile || undefined)}
           <button
             type="button"
             className="btn btn-success btn-sm"
@@ -178,7 +177,7 @@ export default function RosterManager({ seasonId, roster, profiles, factions }: 
                   <td>
                     {editingEntry === entry.profile_id ? (
                       <div className="flex gap-2">
-                        {factionSelect(editFaction, setEditFaction)}
+                        {factionSelect(editFaction, setEditFaction, entry.profile_id)}
                         <button
                           type="button"
                           className="btn btn-success btn-xs"

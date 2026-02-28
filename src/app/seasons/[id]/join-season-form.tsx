@@ -1,40 +1,24 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import type { Faction, FactionNode } from '@/types/faction'
-import { buildFactionTree } from '@/modules/faction/utils'
+import type { Faction } from '@/types/faction'
 import { joinSeason, leaveSeason, updateRosterFaction } from './roster-actions'
 
 type JoinSeasonFormProps = {
   seasonId: number
   factions: Faction[]
+  profileFactionIds: string[]
   currentFactionId?: string
   isOnRoster: boolean
 }
 
-export default function JoinSeasonForm({ seasonId, factions, currentFactionId, isOnRoster }: JoinSeasonFormProps) {
-  const tree = useMemo(() => buildFactionTree(factions), [factions])
+export default function JoinSeasonForm({ seasonId, factions, profileFactionIds, currentFactionId, isOnRoster }: JoinSeasonFormProps) {
+  const profileFactionSet = useMemo(() => new Set(profileFactionIds), [profileFactionIds])
   const factionMap = useMemo(() => new Map(factions.map((f) => [f.id, f])), [factions])
   const [selectedFaction, setSelectedFaction] = useState(currentFactionId ?? '')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [editing, setEditing] = useState(false)
-
-  function renderOptions(nodes: FactionNode[], depth: number): React.ReactNode[] {
-    const options: React.ReactNode[] = []
-    for (const node of nodes) {
-      const prefix = depth > 0 ? '\u00A0\u00A0'.repeat(depth) + '└ ' : ''
-      options.push(
-        <option key={node.id} value={node.id}>
-          {prefix}{node.name}
-        </option>,
-      )
-      if (node.children.length > 0) {
-        options.push(...renderOptions(node.children, depth + 1))
-      }
-    }
-    return options
-  }
 
   function getFactionLabel(id: string): string {
     const faction = factionMap.get(id)
@@ -83,26 +67,32 @@ export default function JoinSeasonForm({ seasonId, factions, currentFactionId, i
     }
   }
 
+  const profileFactionOptions = useMemo(
+    () =>
+      factions
+        .filter((f) => profileFactionSet.has(f.id))
+        .map((f) => ({ id: f.id, label: getFactionLabel(f.id) }))
+        .sort((a, b) => a.label.localeCompare(b.label)),
+    [factions, profileFactionSet],
+  )
+
+  const hasProfileFactions = profileFactionOptions.length > 0
+
   const factionSelect = (
     <select
       className="select select-bordered flex-1"
       value={selectedFaction}
       onChange={(e) => setSelectedFaction(e.target.value)}
-      disabled={loading}
+      disabled={loading || !hasProfileFactions}
     >
       <option value="" disabled>
-        Select your army...
+        {hasProfileFactions ? 'Select your army...' : 'No factions on your profile'}
       </option>
-      {tree.map((root) => {
-        const children = root.children.length > 0
-          ? renderOptions(root.children, 0)
-          : [<option key={root.id} value={root.id}>{root.name}</option>]
-        return (
-          <optgroup key={root.id} label={root.name}>
-            {children}
-          </optgroup>
-        )
-      })}
+      {profileFactionOptions.map((opt) => (
+        <option key={opt.id} value={opt.id}>
+          {opt.label}
+        </option>
+      ))}
     </select>
   )
 
@@ -159,17 +149,23 @@ export default function JoinSeasonForm({ seasonId, factions, currentFactionId, i
   return (
     <div className="rounded-lg bg-base-200 p-4">
       <label className="label-text mb-1 block text-sm font-medium">Join this season</label>
-      <div className="flex gap-2">
-        {factionSelect}
-        <button
-          type="button"
-          className="btn btn-success btn-sm"
-          onClick={handleJoin}
-          disabled={loading || !selectedFaction}
-        >
-          {loading ? 'Joining...' : 'Join Season'}
-        </button>
-      </div>
+      {!hasProfileFactions ? (
+        <p className="text-sm text-base-content/60">
+          Add factions to <a href="/profile" className="link">your profile</a> to join this season.
+        </p>
+      ) : (
+        <div className="flex gap-2">
+          {factionSelect}
+          <button
+            type="button"
+            className="btn btn-success btn-sm"
+            onClick={handleJoin}
+            disabled={loading || !selectedFaction}
+          >
+            {loading ? 'Joining...' : 'Join Season'}
+          </button>
+        </div>
+      )}
       {error && <p className="form-error mt-2">{error}</p>}
     </div>
   )

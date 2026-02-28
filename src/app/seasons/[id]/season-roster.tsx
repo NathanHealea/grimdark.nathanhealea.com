@@ -16,7 +16,7 @@ export default function SeasonRoster({ roster }: SeasonRosterProps) {
       {roster.map((entry) => (
         <Link
           key={entry.profile_id}
-          href={`/members/${entry.profiles.profile_id}`}
+          href={`/profile/${entry.profiles.profile_id}`}
           className="card-interactive"
         >
           <div className="card-body flex-row items-center gap-3 p-3">

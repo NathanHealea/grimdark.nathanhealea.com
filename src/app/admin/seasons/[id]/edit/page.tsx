@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { getBattlePoints } from '@/modules/battle-report/queries'
-import { getFactions } from '@/modules/faction/queries'
+import { getAllProfileFactionEntries, getFactions } from '@/modules/faction/queries'
 import { getSeasonById, getSeasonRoster } from '@/modules/season/queries'
 import type { Profile } from '@/types/profile'
 import { formatSeasonName } from '@/types/season'
@@ -20,12 +20,13 @@ export default async function EditSeasonPage({ params }: { params: Promise<{ id:
 
   const supabase = await createClient()
 
-  const [battlePoints, season, factions, roster, { data: allProfiles }] = await Promise.all([
+  const [battlePoints, season, factions, roster, { data: allProfiles }, profileFactionEntries] = await Promise.all([
     getBattlePoints(),
     getSeasonById(seasonId),
     getFactions(),
     getSeasonRoster(seasonId),
     supabase.from('profiles').select('*').order('display_name'),
+    getAllProfileFactionEntries(),
   ])
 
   if (!season) {
@@ -33,6 +34,14 @@ export default async function EditSeasonPage({ params }: { params: Promise<{ id:
   }
 
   const profiles = (allProfiles ?? []) as Profile[]
+
+  const profileFactionsMap: Record<string, string[]> = {}
+  for (const entry of profileFactionEntries) {
+    if (!profileFactionsMap[entry.profile_id]) {
+      profileFactionsMap[entry.profile_id] = []
+    }
+    profileFactionsMap[entry.profile_id].push(entry.faction_id)
+  }
 
   return (
     <main className="page-layout">
@@ -52,7 +61,7 @@ export default async function EditSeasonPage({ params }: { params: Promise<{ id:
 
           <div className="mt-8">
             <h2 className="ornament section-header">Roster ({roster.length})</h2>
-            <RosterManager seasonId={season.id} roster={roster} profiles={profiles} factions={factions} />
+            <RosterManager seasonId={season.id} roster={roster} profiles={profiles} factions={factions} profileFactionsMap={profileFactionsMap} />
           </div>
 
           <div className="mt-8">

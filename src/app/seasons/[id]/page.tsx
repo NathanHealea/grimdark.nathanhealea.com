@@ -7,7 +7,7 @@ import {
   getDeployments,
   getMissions,
 } from '@/modules/battle-report/queries'
-import { getFactions } from '@/modules/faction/queries'
+import { getFactions, getProfileFactionIds } from '@/modules/faction/queries'
 import LeaderboardTable from '@/modules/leaderboard/components/leaderboard-table'
 import { computeLeaderboard } from '@/modules/leaderboard/utils'
 import MarkdownRenderer from '@/modules/markdown/components/markdown-renderer'
@@ -142,13 +142,15 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ i
           {/* Roster */}
           <div className="mb-8">
             <h2 className="ornament section-header">Roster ({roster.length})</h2>
-            {auth && season.status === 'published' && (() => {
+            {auth && season.status === 'published' && await (async () => {
               const myEntry = roster.find((r) => r.profile_id === auth.profile.id)
+              const profileFactionIds = await getProfileFactionIds(auth.profile.id)
               return (
                 <div className="mb-4">
                   <JoinSeasonForm
                     seasonId={seasonId}
                     factions={factions}
+                    profileFactionIds={profileFactionIds}
                     currentFactionId={myEntry?.faction_id}
                     isOnRoster={!!myEntry}
                   />
