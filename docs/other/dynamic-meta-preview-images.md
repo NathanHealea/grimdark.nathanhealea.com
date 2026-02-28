@@ -2,7 +2,7 @@
 
 **Epic:** Other
 **Type:** Enhancement
-**Status:** Todo
+**Status:** In Progress
 
 ## Summary
 
@@ -16,15 +16,15 @@ Additionally, the sitemap is hardcoded and misses all dynamic routes (profiles, 
 
 ## Acceptance Criteria
 
-- [ ] Each static page (`/members`, `/leaderboard`, `/battle-reports`, `/seasons`) has a unique `description` in its metadata
-- [ ] Profile pages (`/profile/[profileId]`) generate metadata with description including display name, bio excerpt, and faction names
-- [ ] Profile pages generate a dynamic OG image showing the player's display name and their factions
-- [ ] Battle report pages (`/battle-reports/[id]`) generate metadata with description including attacker vs defender, scores, and outcome
-- [ ] Battle report pages generate a dynamic OG image showing attacker vs defender names, factions, scores, and outcome
-- [ ] Season pages (`/seasons/[id]`) generate metadata with description including season name, date range, and battle size
-- [ ] Season pages generate a dynamic OG image showing season name, date range, and status (current/past)
-- [ ] The sitemap dynamically includes all published profiles, published battle reports, and seasons
-- [ ] All dynamic OG images maintain the existing Grimdark aesthetic (dark background, gold accents, Georgia serif)
+- [x] Each static page (`/members`, `/leaderboard`, `/battle-reports`, `/seasons`) has a unique `description` in its metadata
+- [x] Profile pages (`/profile/[profileId]`) generate metadata with description including display name, bio excerpt, and faction names
+- [x] Profile pages generate a dynamic OG image showing the player's display name and their factions
+- [x] Battle report pages (`/battle-reports/[id]`) generate metadata with description including attacker vs defender, scores, and outcome
+- [x] Battle report pages generate a dynamic OG image showing attacker vs defender names, factions, scores, and outcome
+- [x] Season pages (`/seasons/[id]`) generate metadata with description including season name, date range, and battle size
+- [x] Season pages generate a dynamic OG image showing season name, date range, and status (current/past)
+- [x] The sitemap dynamically includes all published profiles, published battle reports, and seasons
+- [x] All dynamic OG images maintain the existing Grimdark aesthetic (dark background, gold accents, Georgia serif)
 
 ## Approach
 
