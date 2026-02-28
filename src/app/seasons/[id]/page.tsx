@@ -7,11 +7,11 @@ import {
   getDeployments,
   getMissions,
 } from '@/modules/battle-report/queries'
-import { getFactions } from '@/modules/faction/queries'
+import { getFactions, getProfileFactionIds } from '@/modules/faction/queries'
 import LeaderboardTable from '@/modules/leaderboard/components/leaderboard-table'
 import { computeLeaderboard } from '@/modules/leaderboard/utils'
 import MarkdownRenderer from '@/modules/markdown/components/markdown-renderer'
-import { getSeasonById } from '@/modules/season/queries'
+import { getSeasonById, getSeasonRoster } from '@/modules/season/queries'
 import type { Outcome } from '@/types/battle-report'
 import type { Faction } from '@/types/faction'
 import type { Profile } from '@/types/profile'
@@ -19,6 +19,8 @@ import { formatSeasonName, isCurrentSeason, isPastSeason } from '@/types/season'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import JoinSeasonForm from './join-season-form'
+import SeasonRoster from './season-roster'
 
 function outcomeBadge(outcome: Outcome) {
   const styles: Record<Outcome, string> = {
@@ -101,15 +103,17 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ i
 
   const supabase = await createClient()
 
-  const [auth, battleReports, { data: profiles }, factions, missions, deployments, battlePoints] = await Promise.all([
-    getAuthUser({ withProfile: true }),
-    getBattleReportsBySeasonId(seasonId),
-    supabase.from('profiles').select('*'),
-    getFactions(),
-    getMissions(),
-    getDeployments(),
-    getBattlePoints(),
-  ])
+  const [auth, battleReports, { data: profiles }, factions, missions, deployments, battlePoints, roster] =
+    await Promise.all([
+      getAuthUser({ withProfile: true }),
+      getBattleReportsBySeasonId(seasonId),
+      supabase.from('profiles').select('*'),
+      getFactions(),
+      getMissions(),
+      getDeployments(),
+      getBattlePoints(),
+      getSeasonRoster(seasonId),
+    ])
 
   const profileMap = new Map(((profiles as Profile[]) ?? []).map((p) => [p.id, p]))
   const factionMap = new Map(factions.map((f) => [f.id, f]))
@@ -162,6 +166,27 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ i
               <MarkdownRenderer content={season.rules} className="text-base-content/70" />
             </div>
           )}
+
+          {/* Roster */}
+          <div className="mb-8">
+            <h2 className="ornament section-header">Roster ({roster.length})</h2>
+            {auth && season.status === 'published' && await (async () => {
+              const myEntry = roster.find((r) => r.profile_id === auth.profile.id)
+              const profileFactionIds = await getProfileFactionIds(auth.profile.id)
+              return (
+                <div className="mb-4">
+                  <JoinSeasonForm
+                    seasonId={seasonId}
+                    factions={factions}
+                    profileFactionIds={profileFactionIds}
+                    currentFactionId={myEntry?.faction_id}
+                    isOnRoster={!!myEntry}
+                  />
+                </div>
+              )
+            })()}
+            <SeasonRoster roster={roster} />
+          </div>
 
           {/* Leaderboard */}
           <div className="mb-8">

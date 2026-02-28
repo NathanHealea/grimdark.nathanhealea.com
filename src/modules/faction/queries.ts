@@ -29,3 +29,16 @@ export async function getProfileFactionIds(profileId: string): Promise<string[]>
 
   return data.map((row) => row.faction_id)
 }
+
+export async function getAllProfileFactionEntries(): Promise<{ profile_id: string; faction_id: string }[]> {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase.from('profile_factions').select('profile_id, faction_id')
+
+  if (error) {
+    console.error('Failed to fetch all profile factions:', error)
+    return []
+  }
+
+  return data
+}

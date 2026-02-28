@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { getSeasons } from '@/modules/season/queries'
+import { getSeasons, getSeasonRosterCounts } from '@/modules/season/queries'
 export const metadata: Metadata = {
   title: 'Seasons',
   description: 'League seasons for the Grimdark League. View current, upcoming, and past seasons with battle sizes and date ranges.',
@@ -18,10 +18,11 @@ function formatDate(dateString: string): string {
   })
 }
 
-function SeasonCard({ season, battlePointsMap, reportCount, highlighted }: {
+function SeasonCard({ season, battlePointsMap, reportCount, rosterCount, highlighted }: {
   season: Season
   battlePointsMap: Map<number, BattlePoints>
   reportCount: number
+  rosterCount: number
   highlighted?: boolean
 }) {
   const bp = battlePointsMap.get(season.battle_points_id)
@@ -40,6 +41,7 @@ function SeasonCard({ season, battlePointsMap, reportCount, highlighted }: {
         <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-base-content/60">
           <span>{formatDate(season.start_date)} &ndash; {formatDate(season.end_date)}</span>
           {bp && <span>{bp.name} ({bp.size} pts)</span>}
+          <span>{rosterCount} {rosterCount === 1 ? 'player' : 'players'}</span>
           <span>{reportCount} {reportCount === 1 ? 'battle report' : 'battle reports'}</span>
         </div>
 
@@ -50,10 +52,11 @@ function SeasonCard({ season, battlePointsMap, reportCount, highlighted }: {
 }
 
 export default async function SeasonsPage() {
-  const [seasons, battlePoints, reportCounts] = await Promise.all([
+  const [seasons, battlePoints, reportCounts, rosterCounts] = await Promise.all([
     getSeasons(),
     getBattlePoints(),
     getBattleReportCountsBySeasonId(),
+    getSeasonRosterCounts(),
   ])
 
   const battlePointsMap = new Map<number, BattlePoints>(battlePoints.map((bp) => [bp.id, bp]))
@@ -77,7 +80,7 @@ export default async function SeasonsPage() {
           {currentSeason && (
             <div className="mb-8">
               <h2 className="ornament section-header">Current Season</h2>
-              <SeasonCard season={currentSeason} battlePointsMap={battlePointsMap} reportCount={reportCounts.get(currentSeason.id) ?? 0} highlighted />
+              <SeasonCard season={currentSeason} battlePointsMap={battlePointsMap} reportCount={reportCounts.get(currentSeason.id) ?? 0} rosterCount={rosterCounts.get(currentSeason.id) ?? 0} highlighted />
             </div>
           )}
 
@@ -87,7 +90,7 @@ export default async function SeasonsPage() {
               <h2 className="ornament section-header">Future Seasons</h2>
               <div className="grid gap-4">
                 {futureSeasons.map((season) => (
-                  <SeasonCard key={season.id} season={season} battlePointsMap={battlePointsMap} reportCount={reportCounts.get(season.id) ?? 0} />
+                  <SeasonCard key={season.id} season={season} battlePointsMap={battlePointsMap} reportCount={reportCounts.get(season.id) ?? 0} rosterCount={rosterCounts.get(season.id) ?? 0} />
                 ))}
               </div>
             </div>
@@ -99,7 +102,7 @@ export default async function SeasonsPage() {
               <h2 className="ornament section-header">Past Seasons</h2>
               <div className="grid gap-4">
                 {pastSeasons.map((season) => (
-                  <SeasonCard key={season.id} season={season} battlePointsMap={battlePointsMap} reportCount={reportCounts.get(season.id) ?? 0} />
+                  <SeasonCard key={season.id} season={season} battlePointsMap={battlePointsMap} reportCount={reportCounts.get(season.id) ?? 0} rosterCount={rosterCounts.get(season.id) ?? 0} />
                 ))}
               </div>
             </div>

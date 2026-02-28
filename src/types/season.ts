@@ -32,3 +32,10 @@ export function isPastSeason(season: Pick<Season, 'end_date'>): boolean {
   const today = new Date().toISOString().split('T')[0]
   return season.end_date < today
 }
+
+export type SeasonRosterEntry = {
+  season_id: number
+  profile_id: string
+  faction_id: string
+  joined_at: string
+}
