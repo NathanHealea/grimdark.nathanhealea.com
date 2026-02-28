@@ -58,7 +58,26 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const attacker = report.attacker_id ? profileMap.get(report.attacker_id) ?? 'Unknown' : 'TBD'
   const defender = report.defender_id ? profileMap.get(report.defender_id) ?? 'Unknown' : 'TBD'
   const prefix = report.status === 'draft' ? 'Draft — ' : ''
-  return { title: `${prefix}Battle Report — ${attacker} vs ${defender}` }
+  const title = `${prefix}Battle Report — ${attacker} vs ${defender}`
+
+  const scorePart =
+    report.attacker_score != null && report.defender_score != null
+      ? ` (${report.attacker_score}–${report.defender_score})`
+      : ''
+  const outcomePart = report.attacker_outcome
+    ? `. ${attacker} ${report.attacker_outcome === 'win' ? 'wins' : report.attacker_outcome === 'loss' ? 'loses' : 'draws'}`
+    : ''
+  const description = `${attacker} vs ${defender}${scorePart}${outcomePart}. Grimdark League battle report.`
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title: `${title} | Grimdark League`,
+      description,
+      url: `/battle-reports/${id}`,
+    },
+  }
 }
 
 export default async function BattleReportDetailPage({ params }: { params: Promise<{ id: string }> }) {

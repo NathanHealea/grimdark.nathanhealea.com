@@ -15,7 +15,7 @@ import { getSeasonById, getSeasonRoster } from '@/modules/season/queries'
 import type { Outcome } from '@/types/battle-report'
 import type { Faction } from '@/types/faction'
 import type { Profile } from '@/types/profile'
-import { formatSeasonName, isCurrentSeason } from '@/types/season'
+import { formatSeasonName, isCurrentSeason, isPastSeason } from '@/types/season'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -55,12 +55,40 @@ function formatDate(dateString: string): string {
   })
 }
 
+function formatDateShort(dateString: string): string {
+  return new Date(dateString + 'T00:00:00').toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  })
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
   const seasonId = Number(id)
   if (!seasonId) return { title: 'Season' }
   const season = await getSeasonById(seasonId)
-  return { title: season ? formatSeasonName(season) : 'Season' }
+  if (!season) return { title: 'Season' }
+
+  const title = formatSeasonName(season)
+  const dateRange = `${formatDateShort(season.start_date)} – ${formatDateShort(season.end_date)}`
+  const status = isCurrentSeason(season) ? 'Current season' : isPastSeason(season) ? 'Past season' : 'Upcoming season'
+
+  const battlePoints = await getBattlePoints()
+  const bp = battlePoints.find((b) => b.id === season.battle_points_id)
+  const sizePart = bp ? ` ${bp.name} (${bp.size} pts).` : '.'
+
+  const description = `${title}. ${status}, ${dateRange}.${sizePart} Grimdark League.`
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title: `${title} | Grimdark League`,
+      description,
+      url: `/seasons/${id}`,
+    },
+  }
 }
 
 export default async function SeasonDetailPage({ params }: { params: Promise<{ id: string }> }) {
