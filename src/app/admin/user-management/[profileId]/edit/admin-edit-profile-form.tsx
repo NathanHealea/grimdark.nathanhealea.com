@@ -6,6 +6,7 @@ import FactionSelector from '@/modules/faction/components/faction-selector'
 import { type ProfileFormState, validateBio, validateDisplayName } from '@/modules/profile/validation'
 import type { Faction } from '@/types/faction'
 import type { Profile } from '@/types/profile'
+import { XMarkIcon } from '@heroicons/react/20/solid'
 import { startTransition, useActionState, useEffect, useRef, useState } from 'react'
 import { adminUpdateProfile, unlinkProfileAction, linkProfileAction, mergeProfileAction, getMergePreviewAction, type MergePreviewData } from './actions'
 import { toggleRole, type ToggleRoleState } from '../../actions'
@@ -65,9 +66,7 @@ function RemoveRoleButton({
         {isPending ? (
           <span className="loading loading-spinner w-3 h-3" />
         ) : (
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3">
-            <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
-          </svg>
+          <XMarkIcon className="w-3 h-3" />
         )}
       </button>
     </form>
