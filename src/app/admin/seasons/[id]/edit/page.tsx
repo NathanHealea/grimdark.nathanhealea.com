@@ -1,10 +1,14 @@
+import { createClient } from '@/lib/supabase/server'
 import { getBattlePoints } from '@/modules/battle-report/queries'
-import { getSeasonById } from '@/modules/season/queries'
+import { getFactions } from '@/modules/faction/queries'
+import { getSeasonById, getSeasonRoster } from '@/modules/season/queries'
+import type { Profile } from '@/types/profile'
 import { formatSeasonName } from '@/types/season'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import SeasonForm from '../../season-form'
 import DeleteSeasonButton from './delete-season-button'
+import RosterManager from './roster-manager'
 
 export default async function EditSeasonPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -14,11 +18,21 @@ export default async function EditSeasonPage({ params }: { params: Promise<{ id:
     notFound()
   }
 
-  const [battlePoints, season] = await Promise.all([getBattlePoints(), getSeasonById(seasonId)])
+  const supabase = await createClient()
+
+  const [battlePoints, season, factions, roster, { data: allProfiles }] = await Promise.all([
+    getBattlePoints(),
+    getSeasonById(seasonId),
+    getFactions(),
+    getSeasonRoster(seasonId),
+    supabase.from('profiles').select('*').order('display_name'),
+  ])
 
   if (!season) {
     notFound()
   }
+
+  const profiles = (allProfiles ?? []) as Profile[]
 
   return (
     <main className="page-layout">
@@ -35,6 +49,11 @@ export default async function EditSeasonPage({ params }: { params: Promise<{ id:
           </div>
 
           <SeasonForm battlePoints={battlePoints} season={season} />
+
+          <div className="mt-8">
+            <h2 className="ornament section-header">Roster ({roster.length})</h2>
+            <RosterManager seasonId={season.id} roster={roster} profiles={profiles} factions={factions} />
+          </div>
 
           <div className="mt-8">
             <h2 className="ornament section-header">Danger Zone</h2>
