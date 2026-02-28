@@ -1,6 +1,7 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
+import Link from 'next/link'
 import type { Faction } from '@/types/faction'
 import { joinSeason, leaveSeason, updateRosterFaction } from './roster-actions'
 
@@ -20,7 +21,7 @@ export default function JoinSeasonForm({ seasonId, factions, profileFactionIds, 
   const [error, setError] = useState('')
   const [editing, setEditing] = useState(false)
 
-  function getFactionLabel(id: string): string {
+  const getFactionLabel = useCallback((id: string): string => {
     const faction = factionMap.get(id)
     if (!faction) return 'Unknown Faction'
     if (faction.parent_id) {
@@ -34,7 +35,7 @@ export default function JoinSeasonForm({ seasonId, factions, profileFactionIds, 
       }
     }
     return faction.name
-  }
+  }, [factionMap])
 
   async function handleJoin() {
     if (!selectedFaction) return
@@ -73,7 +74,7 @@ export default function JoinSeasonForm({ seasonId, factions, profileFactionIds, 
         .filter((f) => profileFactionSet.has(f.id))
         .map((f) => ({ id: f.id, label: getFactionLabel(f.id) }))
         .sort((a, b) => a.label.localeCompare(b.label)),
-    [factions, profileFactionSet],
+    [factions, profileFactionSet, getFactionLabel],
   )
 
   const hasProfileFactions = profileFactionOptions.length > 0
@@ -151,7 +152,7 @@ export default function JoinSeasonForm({ seasonId, factions, profileFactionIds, 
       <label className="label-text mb-1 block text-sm font-medium">Join this season</label>
       {!hasProfileFactions ? (
         <p className="text-sm text-base-content/60">
-          Add factions to <a href="/profile" className="link">your profile</a> to join this season.
+          Add factions to <Link href="/profile" className="link">your profile</Link> to join this season.
         </p>
       ) : (
         <div className="flex gap-2">
