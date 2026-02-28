@@ -5,7 +5,10 @@ import { computeLeaderboard } from '@/modules/leaderboard/utils'
 import LeaderboardTable from '@/modules/leaderboard/components/leaderboard-table'
 import type { Profile } from '@/types/profile'
 
-export const metadata: Metadata = { title: 'Leaderboard' }
+export const metadata: Metadata = {
+  title: 'Leaderboard',
+  description: 'Current standings and rankings for the Grimdark League based on published battle reports.',
+}
 
 export default async function LeaderboardPage() {
   const supabase = await createClient()

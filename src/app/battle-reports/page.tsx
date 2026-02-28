@@ -8,7 +8,10 @@ import {
   getBattlePoints,
 } from '@/modules/battle-report/queries'
 import { getSeasons } from '@/modules/season/queries'
-export const metadata: Metadata = { title: 'Battle Reports' }
+export const metadata: Metadata = {
+  title: 'Battle Reports',
+  description: 'Battle reports from the Grimdark League. Browse game results, scores, and outcomes from Warhammer 40k matches.',
+}
 
 import type { Outcome } from '@/types/battle-report'
 import type { Profile } from '@/types/profile'
