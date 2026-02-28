@@ -2,7 +2,7 @@
 
 **Epic:** Seasons
 **Type:** Feature
-**Status:** Todo
+**Status:** Superseded by [season-roster.md](season-roster.md)
 
 ## Summary
 
