@@ -54,8 +54,37 @@ export async function generateMetadata({ params }: { params: Promise<{ profileId
   const id = Number(profileId)
   if (Number.isNaN(id)) return { title: 'Profile' }
   const supabase = await createClient()
-  const { data: profile } = await supabase.from('profiles').select('display_name').eq('profile_id', id).single()
-  return { title: profile?.display_name ?? 'Profile' }
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('display_name, bio')
+    .eq('profile_id', id)
+    .single()
+  if (!profile) return { title: 'Profile' }
+
+  const displayName = profile.display_name ?? 'Unknown'
+  const bioExcerpt = profile.bio ? profile.bio.slice(0, 150).trim() + (profile.bio.length > 150 ? '...' : '') : ''
+
+  const [factions, { data: profileFactions }] = await Promise.all([
+    getFactions(),
+    supabase.from('profile_factions').select('faction_id').eq('profile_id', (await supabase.from('profiles').select('id').eq('profile_id', id).single()).data?.id ?? ''),
+  ])
+  const factionMap = new Map(factions.map((f) => [f.id, f]))
+  const factionNames = (profileFactions ?? []).map((pf) => factionMap.get(pf.faction_id)?.name).filter(Boolean)
+
+  const parts = [displayName]
+  if (factionNames.length > 0) parts.push(`plays ${factionNames.join(', ')}`)
+  if (bioExcerpt) parts.push(bioExcerpt)
+  const description = parts.join(' — ')
+
+  return {
+    title: displayName,
+    description,
+    openGraph: {
+      title: `${displayName} | Grimdark League`,
+      description,
+      url: `/profile/${profileId}`,
+    },
+  }
 }
 
 export default async function ProfilePage({ params }: { params: Promise<{ profileId: string }> }) {
