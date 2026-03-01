@@ -18,7 +18,8 @@ export default async function LeaderboardPage() {
     supabase.from('profiles').select('*').in('role', ['member', 'organizer']),
   ])
 
-  const standings = computeLeaderboard(battleReports)
+  const allProfileIds = ((profiles as Profile[]) ?? []).map((p) => p.id)
+  const standings = computeLeaderboard(battleReports, allProfileIds)
   const profileMap = new Map(((profiles as Profile[]) ?? []).map((p) => [p.id, p]))
 
   return (
