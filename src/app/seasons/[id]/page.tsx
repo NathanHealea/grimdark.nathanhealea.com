@@ -192,7 +192,10 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ i
           <div className="mb-8">
             <h2 className="ornament section-header">Leaderboard</h2>
             <LeaderboardTable
-              entries={computeLeaderboard(battleReports.filter((r) => r.status === 'published'))}
+              entries={computeLeaderboard(
+                battleReports.filter((r) => r.status === 'published'),
+                roster.map((r) => r.profile_id)
+              )}
               profileMap={profileMap}
             />
           </div>

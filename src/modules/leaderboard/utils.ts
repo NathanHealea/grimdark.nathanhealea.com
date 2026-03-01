@@ -9,7 +9,7 @@ export type LeaderboardEntry = {
   rank: number
 }
 
-export function computeLeaderboard(reports: BattleReport[]): LeaderboardEntry[] {
+export function computeLeaderboard(reports: BattleReport[], profileIds?: string[]): LeaderboardEntry[] {
   const stats = new Map<string, { wins: number; losses: number; draws: number }>()
 
   function tally(profileId: string | null, outcome: Outcome | null) {
@@ -24,6 +24,14 @@ export function computeLeaderboard(reports: BattleReport[]): LeaderboardEntry[] 
   for (const report of reports) {
     tally(report.attacker_id, report.attacker_outcome)
     tally(report.defender_id, report.defender_outcome)
+  }
+
+  if (profileIds) {
+    for (const id of profileIds) {
+      if (!stats.has(id)) {
+        stats.set(id, { wins: 0, losses: 0, draws: 0 })
+      }
+    }
   }
 
   const entries: Omit<LeaderboardEntry, 'rank'>[] = Array.from(stats.entries()).map(([profileId, s]) => ({

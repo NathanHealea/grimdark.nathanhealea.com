@@ -5,7 +5,7 @@ import { getFactions } from '@/modules/faction/queries'
 import LeaderboardSection from '@/modules/leaderboard/components/leaderboard-section'
 import LeaderboardTable from '@/modules/leaderboard/components/leaderboard-table'
 import { computeLeaderboard } from '@/modules/leaderboard/utils'
-import { getCurrentSeason } from '@/modules/season/queries'
+import { getCurrentSeason, getSeasonRoster } from '@/modules/season/queries'
 import type { Profile } from '@/types/profile'
 import Link from 'next/link'
 import { Suspense } from 'react'
@@ -137,11 +137,16 @@ async function HomeLeaderboard() {
     supabase.from('profiles').select('*').in('role', ['member', 'organizer']),
   ])
 
-  const seasonReports = currentSeason ? await getBattleReportsBySeasonId(currentSeason.id) : []
+  const [seasonReports, seasonRoster] = currentSeason
+    ? await Promise.all([getBattleReportsBySeasonId(currentSeason.id), getSeasonRoster(currentSeason.id)])
+    : [[], []]
 
+  const allProfileIds = ((profiles as Profile[]) ?? []).map((p) => p.id)
   const profileMap = new Map(((profiles as Profile[]) ?? []).map((p) => [p.id, p]))
-  const overallStandings = computeLeaderboard(allReports)
-  const seasonStandings = currentSeason ? computeLeaderboard(seasonReports) : []
+  const overallStandings = computeLeaderboard(allReports, allProfileIds)
+  const seasonStandings = currentSeason
+    ? computeLeaderboard(seasonReports, seasonRoster.map((r) => r.profile_id))
+    : []
 
   return (
     <LeaderboardSection
