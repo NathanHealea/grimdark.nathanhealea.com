@@ -2,7 +2,7 @@
 
 **Epic:** Standings & Leaderboard
 **Type:** Enhancement
-**Status:** Todo
+**Status:** In Progress
 
 ## Summary
 
@@ -19,13 +19,13 @@ Both cases should show these profiles with a 0W/0L/0D record so everyone is acco
 
 ## Acceptance Criteria
 
-- [ ] `computeLeaderboard()` accepts an optional `profileIds` parameter — an array of profile IDs to always include
-- [ ] Profiles in the `profileIds` list that have no battle reports appear with 0 games played, 0 wins, 0 losses, 0 draws
-- [ ] Profiles with battle reports are unaffected — their stats are computed as before
-- [ ] The season detail page passes roster profile IDs to `computeLeaderboard()`
-- [ ] The overall leaderboard page passes all member/organizer profile IDs to `computeLeaderboard()`
-- [ ] Zero-game profiles are ranked below profiles with games (sorted to the bottom)
-- [ ] Zero-game profiles share the same rank as each other (tie handling)
+- [x] `computeLeaderboard()` accepts an optional `profileIds` parameter — an array of profile IDs to always include
+- [x] Profiles in the `profileIds` list that have no battle reports appear with 0 games played, 0 wins, 0 losses, 0 draws
+- [x] Profiles with battle reports are unaffected — their stats are computed as before
+- [x] The season detail page passes roster profile IDs to `computeLeaderboard()`
+- [x] The overall leaderboard page passes all member/organizer profile IDs to `computeLeaderboard()`
+- [x] Zero-game profiles are ranked below profiles with games (sorted to the bottom)
+- [x] Zero-game profiles share the same rank as each other (tie handling)
 
 ## Approach
 
