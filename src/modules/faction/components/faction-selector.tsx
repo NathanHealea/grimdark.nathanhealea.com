@@ -115,7 +115,7 @@ export default function FactionSelector({
               <span className="text-sm">{getFactionLabel(id)}</span>
               <button
                 type="button"
-                className="btn btn-error btn-xs "
+                className="btn btn-error btn-outline btn-xs"
                 onClick={() => handleRemove(id)}
               >
                 Remove

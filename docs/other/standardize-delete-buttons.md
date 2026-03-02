@@ -2,7 +2,7 @@
 
 **Epic:** Other
 **Type:** Enhancement
-**Status:** Todo
+**Status:** In Progress
 
 ## Summary
 
@@ -14,15 +14,15 @@ Delete and remove buttons currently use inconsistent styles — some are solid r
 
 ## Acceptance Criteria
 
-- [ ] All delete/remove buttons use `btn btn-error btn-outline` with their current size class
-- [ ] Delete season button (edit page) uses `btn btn-error btn-outline btn-lg w-full`
-- [ ] Remove faction button uses `btn btn-error btn-outline btn-xs`
-- [ ] Remove photo button uses `btn btn-error btn-outline btn-xs`
-- [ ] Unlink auth button uses `btn btn-error btn-outline btn-sm`
-- [ ] Merge profiles buttons use `btn btn-error btn-outline btn-sm`
-- [ ] Role removal badges use `badge badge-sm gap-1 cursor-pointer hover:badge-error` (unchanged — these are badges, not buttons)
-- [ ] ActionsMenu danger variant items use outlined style
-- [ ] No functional changes — only CSS class updates
+- [x] All delete/remove buttons use `btn btn-error btn-outline` with their current size class
+- [x] Delete season button (edit page) uses `btn btn-error btn-outline btn-lg w-full`
+- [x] Remove faction button uses `btn btn-error btn-outline btn-xs`
+- [x] Remove photo button uses `btn btn-error btn-outline btn-xs`
+- [x] Unlink auth button uses `btn btn-error btn-outline btn-sm`
+- [x] Merge profiles buttons use `btn btn-error btn-outline btn-sm`
+- [x] Role removal badges use `badge badge-sm gap-1 cursor-pointer hover:badge-error` (unchanged — these are badges, not buttons)
+- [x] ActionsMenu danger variant items use outlined style
+- [x] No functional changes — only CSS class updates
 
 ## Approach
 
