@@ -204,9 +204,9 @@ Can be added as an additional tiebreaker to any of the above options.
 
 ## Key Decisions
 
-1. **Decided: Hybrid points-based system with log normalization** — Combines Option B (points: W=3, D=1, L=0) with natural log normalization (`points / ln(gamesPlayed + 2)`) instead of simple per-game division. This gives diminishing returns for more games rather than pure normalization, avoiding the need for a minimum games threshold. Score differential (Option D) serves as tiebreaker.
+1. **Decided: Hybrid points-based system with log normalization** — Points: W=4, D=2, L=1 (every outcome awards at least 1 point, so any player who has played ranks above inactive players). Uses natural log normalization (`points / ln(gamesPlayed + 2)`) instead of simple per-game division. This gives diminishing returns for more games rather than pure normalization, avoiding the need for a minimum games threshold. Score differential (Option D) serves as tiebreaker.
 
-2. **No minimum games threshold needed** — The `ln(gamesPlayed + 2)` divisor naturally handles low game counts. A player with 1 win (3 pts / ln(3) = 2.73) ranks similarly to a player with 2 wins in 3 games (6 pts / ln(4) = 4.33), which is appropriate. Players with 0 games get a rating of 0.00 and appear at the bottom.
+2. **No minimum games threshold needed** — The `ln(gamesPlayed + 2)` divisor naturally handles low game counts. A player with 1 win (4 pts / ln(3) = 3.64) ranks below a player with 2 wins in 3 games (9 pts / ln(5) = 5.59), which is appropriate. Every outcome awards at least 1 point, so any player who has played always ranks above inactive players. Players with 0 games get a rating of 0.00 and appear at the bottom.
 
 ## Implementation
 
@@ -231,11 +231,13 @@ Each game outcome awards a fixed number of points:
 
 | Outcome | Points |
 |---|---|
-| Win | 3 |
-| Draw | 1 |
-| Loss | 0 |
+| Win | 4 |
+| Draw | 2 |
+| Loss | 1 |
 
-**Formula:** `points = (wins × 3) + (draws × 1)`
+Every outcome awards at least 1 point, so any player who has played a game always ranks above inactive players (0 points).
+
+**Formula:** `points = (wins × 4) + (draws × 2) + (losses × 1)`
 
 ### Rating (Normalized Score)
 
@@ -251,11 +253,11 @@ The result is rounded to 2 decimal places for display.
 
 | Player | GP | W | L | D | Pts | ln(GP+2) | Rating |
 |---|---|---|---|---|---|---|---|
-| Bob | 8 | 7 | 1 | 0 | 21 | ln(10) = 2.30 | 21 / 2.30 = **9.12** |
-| Dave | 6 | 5 | 1 | 0 | 15 | ln(8) = 2.08 | 15 / 2.08 = **7.21** |
-| Carol | 8 | 6 | 2 | 0 | 18 | ln(10) = 2.30 | 18 / 2.30 = **7.82** |
-| Alice | 10 | 5 | 4 | 1 | 16 | ln(12) = 2.48 | 16 / 2.48 = **6.45** |
-| Eve | 1 | 1 | 0 | 0 | 3 | ln(3) = 1.10 | 3 / 1.10 = **2.73** |
+| Bob | 8 | 7 | 1 | 0 | 29 | ln(10) = 2.30 | 29 / 2.30 = **12.61** |
+| Dave | 6 | 5 | 1 | 0 | 21 | ln(8) = 2.08 | 21 / 2.08 = **10.10** |
+| Carol | 8 | 6 | 2 | 0 | 26 | ln(10) = 2.30 | 26 / 2.30 = **11.30** |
+| Alice | 10 | 5 | 4 | 1 | 26 | ln(12) = 2.48 | 26 / 2.48 = **10.48** |
+| Eve | 1 | 1 | 0 | 0 | 4 | ln(3) = 1.10 | 4 / 1.10 = **3.64** |
 | Frank | 0 | 0 | 0 | 0 | 0 | ln(2) = 0.69 | 0 / 0.69 = **0.00** |
 
 ### Score Differential
@@ -311,7 +313,7 @@ The leaderboard table displays the following columns (desktop view):
 | Rank | # | Position in standings |
 | Player | Player | Avatar and display name |
 | Rating | Rating | Normalized score (2 decimal places) |
-| Points | Pts | Raw outcome points (W×3 + D×1) |
+| Points | Pts | Raw outcome points (W×4 + D×2 + L×1) |
 | Score Diff | +/− | VP scored minus VP conceded (color-coded: green positive, red negative) |
 | Games Played | GP | Total games |
 | Wins | W | Total wins (green) |

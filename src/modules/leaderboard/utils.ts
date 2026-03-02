@@ -43,7 +43,7 @@ export function computeLeaderboard(reports: BattleReport[], profileIds?: string[
 
   const entries: Omit<LeaderboardEntry, 'rank'>[] = Array.from(stats.entries()).map(([profileId, s]) => {
     const gamesPlayed = s.wins + s.losses + s.draws
-    const points = s.wins * 3 + s.draws * 1
+    const points = s.wins * 4 + s.draws * 2 + s.losses * 1
     const normalizedScore = gamesPlayed > 0 ? points / Math.log(gamesPlayed + 2) : 0
     return {
       profileId,
