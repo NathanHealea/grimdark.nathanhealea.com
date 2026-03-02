@@ -1,11 +1,12 @@
 'use client'
 
-import { useMemo, useState } from 'react'
 import Avatar from '@/components/avatar'
+import type { RosterEntryWithDetails } from '@/modules/season/queries'
 import type { Faction } from '@/types/faction'
 import type { Profile } from '@/types/profile'
-import type { RosterEntryWithDetails } from '@/modules/season/queries'
+import { useMemo, useState } from 'react'
 import { addParticipant, removeParticipant, updateParticipantFaction } from './roster-actions'
+import Link from 'next/link';
 
 type RosterManagerProps = {
   seasonId: number
@@ -15,10 +16,19 @@ type RosterManagerProps = {
   profileFactionsMap: Record<string, string[]>
 }
 
-export default function RosterManager({ seasonId, roster, profiles, factions, profileFactionsMap }: RosterManagerProps) {
+export default function RosterManager({
+  seasonId,
+  roster,
+  profiles,
+  factions,
+  profileFactionsMap,
+}: RosterManagerProps) {
   const factionMap = useMemo(() => new Map(factions.map((f) => [f.id, f])), [factions])
   const rosterProfileIds = useMemo(() => new Set(roster.map((r) => r.profile_id)), [roster])
-  const availableProfiles = useMemo(() => profiles.filter((p) => !rosterProfileIds.has(p.id)), [profiles, rosterProfileIds])
+  const availableProfiles = useMemo(
+    () => profiles.filter((p) => !rosterProfileIds.has(p.id)),
+    [profiles, rosterProfileIds]
+  )
 
   const [selectedProfile, setSelectedProfile] = useState('')
   const [selectedFaction, setSelectedFaction] = useState('')
@@ -163,16 +173,16 @@ export default function RosterManager({ seasonId, roster, profiles, factions, pr
             </thead>
             <tbody>
               {roster.map((entry) => (
-                <tr key={entry.profile_id}>
+                <tr key={entry.profile_id} className="h-16">
                   <td>
-                    <div className="flex items-center gap-3">
-                      <Avatar
-                        src={entry.profiles.avatar_url}
-                        displayName={entry.profiles.display_name}
-                        size="sm"
-                      />
+                    <Link href={`/profile/${entry.profiles.profile_id}`} className='link link-hover'>
+                    <div className="flex gap-4">
+                      <div className="">
+                        <Avatar src={entry.profiles.avatar_url} displayName={entry.profiles.display_name} size="sm" />
+                      </div>
                       <span className="font-semibold">{entry.profiles.display_name}</span>
                     </div>
+                    </Link>
                   </td>
                   <td>
                     {editingEntry === entry.profile_id ? (
