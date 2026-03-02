@@ -58,7 +58,7 @@ export default function UserMenu({ profileId, avatarUrl, displayName, signOutAct
           </MenuItem>
           <MenuItem>
             <form action={signOutAction}>
-              <button type="submit" className="btn btn-error block w-full rounded-btn px-3 py-2 text-left text-sm ">
+              <button type="submit" className="btn btn-error btn-outline block w-full rounded-btn px-3 py-2 text-left text-sm ">
                 Sign Out
               </button>
             </form>
