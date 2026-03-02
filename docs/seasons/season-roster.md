@@ -2,7 +2,7 @@
 
 **Epic:** Seasons
 **Type:** Feature
-**Status:** Todo
+**Status:** Completed
 
 ## Summary
 
@@ -14,40 +14,40 @@ This supersedes the earlier `season-participants.md` plan by adding member self-
 
 ### Member Self-Signup
 
-- [ ] Authenticated members can join a published season from the season detail page
-- [ ] When joining, the member must select a faction (army) they plan to play
-- [ ] Members can leave a season they've joined
-- [ ] Members can update their faction selection for a season they're in
-- [ ] Members cannot join the same season twice (no duplicates)
-- [ ] Only published seasons can be joined (not drafts)
+- [x] Authenticated members can join a published season from the season detail page
+- [x] When joining, the member must select a faction (army) they plan to play
+- [x] Members can leave a season they've joined
+- [x] Members can update their faction selection for a season they're in
+- [x] Members cannot join the same season twice (no duplicates)
+- [x] Only published seasons can be joined (not drafts)
 
 ### Admin/Organizer Management
 
-- [ ] Admins and organizers can view the full roster for any season
-- [ ] Admins and organizers can add any profile (linked or unlinked) to a season with a faction
-- [ ] Admins and organizers can remove any participant from a season
-- [ ] Admins and organizers can change a participant's faction
-- [ ] Adding an already-enrolled participant is a no-op (no error)
+- [x] Admins and organizers can view the full roster for any season
+- [x] Admins and organizers can add any profile (linked or unlinked) to a season with a faction
+- [x] Admins and organizers can remove any participant from a season
+- [x] Admins and organizers can change a participant's faction
+- [x] Adding an already-enrolled participant is a no-op (no error)
 
 ### Public Display
 
-- [ ] The season detail page (`/seasons/[id]`) shows the roster section
-- [ ] Each roster entry displays the player's avatar, display name, and faction
-- [ ] Participant count is shown on the season card on the seasons list page
-- [ ] The roster is visible to all visitors (public data)
+- [x] The season detail page (`/seasons/[id]`) shows the roster section
+- [x] Each roster entry displays the player's avatar, display name, and faction
+- [x] Participant count is shown on the season card on the seasons list page
+- [x] The roster is visible to all visitors (public data)
 
 ### Data Model
 
-- [ ] A `season_roster` join table links profiles to seasons with a faction
-- [ ] A profile can participate in multiple seasons
-- [ ] A season can have multiple participants
-- [ ] Each participant has exactly one faction per season
-- [ ] Deleting a profile cascades and removes their roster entries
-- [ ] Deleting a season cascades and removes all roster entries for that season
+- [x] A `season_roster` join table links profiles to seasons with a faction
+- [x] A profile can participate in multiple seasons
+- [x] A season can have multiple participants
+- [x] Each participant has exactly one faction per season
+- [x] Deleting a profile cascades and removes their roster entries
+- [x] Deleting a season cascades and removes all roster entries for that season
 
 ### Build
 
-- [ ] Build and lint pass
+- [x] Build and lint pass
 
 ## Routes
 

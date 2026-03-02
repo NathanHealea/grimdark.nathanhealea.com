@@ -2,7 +2,7 @@
 
 **Epic:** Standings & Leaderboard
 **Type:** Enhancement
-**Status:** In Progress
+**Status:** Completed
 
 ## Summary
 

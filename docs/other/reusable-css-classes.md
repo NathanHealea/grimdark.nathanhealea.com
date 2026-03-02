@@ -2,7 +2,7 @@
 
 **Epic:** Other
 **Type:** Enhancement
-**Status:** In Progress
+**Status:** Completed
 
 ## Summary
 
@@ -23,10 +23,10 @@ The existing `globals.css` already demonstrates this pattern successfully with `
 - [x] All card/interactive components are updated to use the new classes (`.card-interactive`, `.info-row`)
 - [x] Table components updated to use `.data-table`
 - [x] Label and empty-state classes applied (`.label-meta`, `.empty-text`)
-- [ ] Typography: Remove redundant inline `text-3xl font-bold` from `<h1>` elements (~19 files) — already styled by the `h1` element selector in `globals.css`
-- [ ] Typography: Replace inline section-header patterns with `.section-header` class (~6 files)
-- [ ] Navigation: Replace inline back-button patterns with `.btn-back` class (~12 files)
-- [ ] Build and lint pass
+- [x] Typography: Remove redundant inline `text-3xl font-bold` from `<h1>` elements (~19 files) — already styled by the `h1` element selector in `globals.css`
+- [x] Typography: Replace inline section-header patterns with `.section-header` class (~6 files)
+- [x] Navigation: Replace inline back-button patterns with `.btn-back` class (~12 files)
+- [x] Build and lint pass
 
 ## Approach
 

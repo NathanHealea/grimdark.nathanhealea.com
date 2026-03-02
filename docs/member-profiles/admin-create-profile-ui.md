@@ -2,7 +2,7 @@
 
 **Epic:** Member Profiles
 **Type:** Enhancement
-**Status:** In Progress
+**Status:** Completed
 
 ## Summary
 

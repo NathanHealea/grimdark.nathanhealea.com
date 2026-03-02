@@ -89,7 +89,7 @@ Epic Template:
 **High-Level Scope:**
 
 - [x] [Season information (start/end dates, format, point limits)](./seasons/season-information.md)
-- [ ] [Season participants (admin-managed player rosters per season)](./seasons/season-participants.md)
+- [x] [Season roster (member signup + admin management)](./seasons/season-roster.md)
 - [x] [Draft/published mode for seasons](./seasons/season-draft-published-mode.md)
 - [x] [Admin season delete](./seasons/admin-season-delete.md)
 
@@ -143,5 +143,5 @@ Epic Template:
 - [x] [Leaderboard page with win/loss/draw records](./standings-and-leaderboard/leaderboard-page.md)
 - [x] [Rankings calculated from submitted battle reports](./standings-and-leaderboard/rankings-from-battle-reports.md)
 - [x] [Filter by current season](./standings-and-leaderboard/filter-by-season.md)
-- [ ] [Leaderboard ranking improvement](./standings-and-leaderboard/leaderboard-ranking-improvement.md)
+- [x] [Leaderboard ranking improvement](./standings-and-leaderboard/leaderboard-ranking-improvement.md)
 - [ ] [Leaderboard position tracking](./standings-and-leaderboard/leaderboard-position-tracking.md)

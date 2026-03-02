@@ -2,7 +2,7 @@
 
 **Epic:** Authentication & User Accounts
 **Type:** Enhancement
-**Status:** In Progress
+**Status:** Completed
 
 ## Summary
 
@@ -26,7 +26,7 @@ The `organizer` auth role provides a middle ground: full access to league operat
 - [x] The `Role` TypeScript type includes `'organizer'`
 - [x] Middleware correctly gates `/admin/user-management` to `admin` only
 - [x] All existing admin functionality continues to work unchanged for `admin` role users
-- [ ] Build and lint pass
+- [x] Build and lint pass
 
 ## Approach
 
