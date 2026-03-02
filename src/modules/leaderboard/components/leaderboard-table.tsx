@@ -37,7 +37,7 @@ export default function LeaderboardTable({ entries, profileMap }: LeaderboardTab
                 <Tooltip content="Rating (points normalized by games played)">Rating</Tooltip>
               </th>
               <th className="text-center">
-                <Tooltip content="Points (Win=3, Draw=1, Loss=0)">Pts</Tooltip>
+                <Tooltip content="Points (Win=4, Draw=2, Loss=1)">Pts</Tooltip>
               </th>
               <th className="text-center">
                 <Tooltip content="Score Differential (VP scored minus VP conceded)">+/−</Tooltip>
