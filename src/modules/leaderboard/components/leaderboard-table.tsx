@@ -34,6 +34,15 @@ export default function LeaderboardTable({ entries, profileMap }: LeaderboardTab
               </th>
               <th>Player</th>
               <th className="text-center">
+                <Tooltip content="Rating (points normalized by games played)">Rating</Tooltip>
+              </th>
+              <th className="text-center">
+                <Tooltip content="Points (Win=3, Draw=1, Loss=0)">Pts</Tooltip>
+              </th>
+              <th className="text-center">
+                <Tooltip content="Score Differential (VP scored minus VP conceded)">+/−</Tooltip>
+              </th>
+              <th className="text-center">
                 <Tooltip content="Games Played">GP</Tooltip>
               </th>
               <th className="text-center">
@@ -65,6 +74,11 @@ export default function LeaderboardTable({ entries, profileMap }: LeaderboardTab
                       <span className="text-base-content/50">Unknown</span>
                     )}
                   </td>
+                  <td className="text-center font-semibold">{entry.normalizedScore.toFixed(2)}</td>
+                  <td className="text-center">{entry.points}</td>
+                  <td className={`text-center ${entry.scoreDifferential > 0 ? 'text-success' : entry.scoreDifferential < 0 ? 'text-error' : ''}`}>
+                    {entry.scoreDifferential > 0 ? '+' : ''}{entry.scoreDifferential}
+                  </td>
                   <td className="text-center">{entry.gamesPlayed}</td>
                   <td className="text-center text-success">{entry.wins}</td>
                   <td className="text-center text-error">{entry.losses}</td>
@@ -90,6 +104,11 @@ export default function LeaderboardTable({ entries, profileMap }: LeaderboardTab
                     <div className="min-w-0">
                       <p className="font-medium truncate">{profile.display_name}</p>
                       <div className="flex gap-3 text-xs mt-1">
+                        <span className="font-semibold">{entry.normalizedScore.toFixed(2)}</span>
+                        <span>{entry.points} Pts</span>
+                        <span className={entry.scoreDifferential > 0 ? 'text-success' : entry.scoreDifferential < 0 ? 'text-error' : ''}>
+                          {entry.scoreDifferential > 0 ? '+' : ''}{entry.scoreDifferential}
+                        </span>
                         <span>{entry.gamesPlayed} GP</span>
                         <span className="text-success">{entry.wins}W</span>
                         <span className="text-error">{entry.losses}L</span>

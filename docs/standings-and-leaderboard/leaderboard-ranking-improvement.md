@@ -173,14 +173,14 @@ Can be added as an additional tiebreaker to any of the above options.
 
 ## Acceptance Criteria
 
-- [ ] Current ranking algorithm is documented (this document)
-- [ ] Alternative ranking approaches are documented with trade-offs (this document)
-- [ ] A ranking approach is chosen and approved
-- [ ] `computeLeaderboard()` is updated to implement the chosen algorithm
-- [ ] `LeaderboardEntry` type is updated if new fields are needed (e.g., `winRate`, `points`, `scoreDiff`)
-- [ ] `LeaderboardTable` displays any new ranking-relevant columns
-- [ ] Leaderboard page, home page, and season detail page all reflect the new ranking
-- [ ] Existing behavior is preserved for edge cases (0 games, ties, null scores)
+- [x] Current ranking algorithm is documented (this document)
+- [x] Alternative ranking approaches are documented with trade-offs (this document)
+- [x] A ranking approach is chosen and approved
+- [x] `computeLeaderboard()` is updated to implement the chosen algorithm
+- [x] `LeaderboardEntry` type is updated if new fields are needed (e.g., `winRate`, `points`, `scoreDiff`)
+- [x] `LeaderboardTable` displays any new ranking-relevant columns
+- [x] Leaderboard page, home page, and season detail page all reflect the new ranking
+- [x] Existing behavior is preserved for edge cases (0 games, ties, null scores)
 
 ## Approach
 
@@ -204,9 +204,131 @@ Can be added as an additional tiebreaker to any of the above options.
 
 ## Key Decisions
 
-1. **Pending: Which ranking approach to use** — Options A-D documented above. The choice should balance competitive fairness with simplicity for a small local league. Option A (win rate with min threshold) is the simplest improvement; Option C (points per game) is more robust.
+1. **Decided: Hybrid points-based system with log normalization** — Combines Option B (points: W=3, D=1, L=0) with natural log normalization (`points / ln(gamesPlayed + 2)`) instead of simple per-game division. This gives diminishing returns for more games rather than pure normalization, avoiding the need for a minimum games threshold. Score differential (Option D) serves as tiebreaker.
 
-2. **Minimum games threshold** — If a rate-based approach is chosen, a threshold of **3 games** is recommended for a small league. Players below the threshold should still appear on the leaderboard but below ranked players (with an indicator like "—" for rank).
+2. **No minimum games threshold needed** — The `ln(gamesPlayed + 2)` divisor naturally handles low game counts. A player with 1 win (3 pts / ln(3) = 2.73) ranks similarly to a player with 2 wins in 3 games (6 pts / ln(4) = 4.33), which is appropriate. Players with 0 games get a rating of 0.00 and appear at the bottom.
+
+## Implementation
+
+### Chosen Algorithm: Points-Based with Log Normalization
+
+A hybrid of Options B and D with natural log normalization. Players earn points for outcomes, which are then normalized by a logarithmic function of games played. Score differential breaks ties.
+
+### Data Used
+
+| Field | Used | Purpose |
+|---|---|---|
+| `attacker_id` / `defender_id` | Yes | Identify players |
+| `attacker_outcome` / `defender_outcome` | Yes | Tally win/loss/draw and compute points |
+| `attacker_score` / `defender_score` | **Yes** | Compute VP scored and VP conceded per player |
+| `mission_id`, `deployment_id` | No | Not used in ranking |
+| `rounds` | No | Not used in ranking |
+| `event_date` | No | Not used in ranking |
+
+### Points
+
+Each game outcome awards a fixed number of points:
+
+| Outcome | Points |
+|---|---|
+| Win | 3 |
+| Draw | 1 |
+| Loss | 0 |
+
+**Formula:** `points = (wins × 3) + (draws × 1)`
+
+### Rating (Normalized Score)
+
+Raw points are divided by the natural log of `gamesPlayed + 2` to produce the **rating**. This compresses the advantage of playing more games — each additional game adds less to the divisor, so prolific players don't run away with the rankings, but playing more games still matters slightly.
+
+**Formula:** `rating = points / ln(gamesPlayed + 2)`
+
+The `+ 2` offset ensures the divisor is always at least `ln(2) ≈ 0.693`, avoiding division by zero and keeping 1-game ratings reasonable. Players with 0 games get a rating of `0.00`.
+
+The result is rounded to 2 decimal places for display.
+
+**Example calculations:**
+
+| Player | GP | W | L | D | Pts | ln(GP+2) | Rating |
+|---|---|---|---|---|---|---|---|
+| Bob | 8 | 7 | 1 | 0 | 21 | ln(10) = 2.30 | 21 / 2.30 = **9.12** |
+| Dave | 6 | 5 | 1 | 0 | 15 | ln(8) = 2.08 | 15 / 2.08 = **7.21** |
+| Carol | 8 | 6 | 2 | 0 | 18 | ln(10) = 2.30 | 18 / 2.30 = **7.82** |
+| Alice | 10 | 5 | 4 | 1 | 16 | ln(12) = 2.48 | 16 / 2.48 = **6.45** |
+| Eve | 1 | 1 | 0 | 0 | 3 | ln(3) = 1.10 | 3 / 1.10 = **2.73** |
+| Frank | 0 | 0 | 0 | 0 | 0 | ln(2) = 0.69 | 0 / 0.69 = **0.00** |
+
+### Score Differential
+
+**VP scored** is the victory points a player earned in a game. **VP conceded** is the victory points their opponent earned in the same game. These are accumulated across all games.
+
+For each battle report:
+- The **attacker's** VP scored = `attacker_score`, VP conceded = `defender_score`
+- The **defender's** VP scored = `defender_score`, VP conceded = `attacker_score`
+
+**Formula:** `scoreDifferential = vpScored − vpConceded`
+
+A positive differential means the player outscores their opponents overall. A negative differential means they are outscored. This serves as the primary tiebreaker when two players have the same rating.
+
+Null scores (from incomplete reports) are treated as `0`.
+
+### Sort Order
+
+| Priority | Criterion | Direction | Description |
+|---|---|---|---|
+| 1 (Primary) | Rating | Descending | Points normalized by log of games played |
+| 2 (Tiebreaker) | Score Differential | Descending | VP scored minus VP conceded |
+| 3 (Tiebreaker) | Points | Descending | Raw outcome points |
+
+### Tie Handling
+
+Standard competition ranking is preserved. Players with identical rating, score differential, AND points receive the same rank number. Example: ranks 1, 1, 3 (not 1, 2, 3).
+
+### Updated LeaderboardEntry Type
+
+```typescript
+type LeaderboardEntry = {
+  profileId: string
+  gamesPlayed: number
+  wins: number
+  losses: number
+  draws: number
+  points: number
+  normalizedScore: number
+  vpScored: number
+  vpConceded: number
+  scoreDifferential: number
+  rank: number
+}
+```
+
+### Table Columns
+
+The leaderboard table displays the following columns (desktop view):
+
+| Column | Header | Description |
+|---|---|---|
+| Rank | # | Position in standings |
+| Player | Player | Avatar and display name |
+| Rating | Rating | Normalized score (2 decimal places) |
+| Points | Pts | Raw outcome points (W×3 + D×1) |
+| Score Diff | +/− | VP scored minus VP conceded (color-coded: green positive, red negative) |
+| Games Played | GP | Total games |
+| Wins | W | Total wins (green) |
+| Losses | L | Total losses (red) |
+| Draws | D | Total draws (yellow) |
+
+Mobile cards show the same data in a compact inline format.
+
+### Edge Cases
+
+| Case | Behavior |
+|---|---|
+| 0 games played | Rating = 0.00, all stats = 0, appears at bottom |
+| All draws | Points = draws × 1, rating computed normally |
+| Null scores | Treated as 0 for VP calculations |
+| Single game played | Rating computed with ln(3) ≈ 1.10 as divisor |
+| Tied records | Same rank number assigned (standard competition ranking) |
 
 ## Notes
 

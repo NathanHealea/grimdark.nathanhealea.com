@@ -100,6 +100,9 @@ function HomeLeaderboardLoading() {
             <tr>
               <th className="w-12">#</th>
               <th>Player</th>
+              <th className="text-center">Rating</th>
+              <th className="text-center">Pts</th>
+              <th className="text-center">+/−</th>
               <th className="text-center">GP</th>
               <th className="text-center">W</th>
               <th className="text-center">L</th>
@@ -116,6 +119,9 @@ function HomeLeaderboardLoading() {
                     <div className="skeleton h-5 w-32" />
                   </div>
                 </td>
+                <td className="text-center"><div className="skeleton mx-auto h-5 w-10" /></td>
+                <td className="text-center"><div className="skeleton mx-auto h-5 w-8" /></td>
+                <td className="text-center"><div className="skeleton mx-auto h-5 w-8" /></td>
                 <td className="text-center"><div className="skeleton mx-auto h-5 w-8" /></td>
                 <td className="text-center"><div className="skeleton mx-auto h-5 w-8" /></td>
                 <td className="text-center"><div className="skeleton mx-auto h-5 w-8" /></td>
