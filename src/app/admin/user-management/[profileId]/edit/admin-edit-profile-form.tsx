@@ -649,7 +649,7 @@ export default function AdminEditProfileForm({
                 {!mergePreview.has_conflicts && !showMergeConfirm && (
                   <button
                     type="button"
-                    className="btn btn-error btn-sm mt-3"
+                    className="btn btn-error btn-outline btn-sm mt-3"
                     onClick={() => setShowMergeConfirm(true)}
                   >
                     Merge Profiles
@@ -665,7 +665,7 @@ export default function AdminEditProfileForm({
                       <form action={handleMergeAction}>
                         <input type="hidden" name="source_profile_id" value={selectedMergeSource} />
                         <input type="hidden" name="target_profile_id" value={profile.id} />
-                        <button type="submit" className="btn btn-error btn-sm" disabled={mergePending}>
+                        <button type="submit" className="btn btn-error btn-outline btn-sm" disabled={mergePending}>
                           {mergePending ? (
                             <span className="loading loading-spinner loading-sm" />
                           ) : (

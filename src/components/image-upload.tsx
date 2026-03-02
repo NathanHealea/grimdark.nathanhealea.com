@@ -102,7 +102,7 @@ export default function ImageUpload({ currentImageUrl, displayName, onFileSelect
       />
 
       {preview && (
-        <button type="button" className="btn btn-ghost btn-xs" onClick={handleRemove}>
+        <button type="button" className="btn btn-error btn-outline btn-xs" onClick={handleRemove}>
           Remove new photo
         </button>
       )}

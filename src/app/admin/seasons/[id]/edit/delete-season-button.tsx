@@ -27,7 +27,7 @@ export default function DeleteSeasonButton({ seasonId, seasonName }: DeleteSeaso
   }
 
   return (
-    <button type="button" onClick={handleDelete} className="btn btn-error btn-lg w-full">
+    <button type="button" onClick={handleDelete} className="btn btn-error  w-full">
       Delete Season
     </button>
   )

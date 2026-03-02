@@ -52,7 +52,7 @@ export default function ActionsMenu({ items }: ActionsMenuProps) {
                 <button
                   type="button"
                   onClick={item.onClick}
-                  className={`btn  block w-full rounded-btn px-3 py-2 text-left text-sm  ${item.variant === 'danger' ? 'btn-error' : 'btn-ghost data-[focus]:bg-base-300'}`}
+                  className={`btn block w-full rounded-btn px-3 py-2 text-left text-sm ${item.variant === 'danger' ? 'btn-error btn-outline' : 'btn-ghost data-[focus]:bg-base-300'}`}
                 >
                   {item.label}
                 </button>
