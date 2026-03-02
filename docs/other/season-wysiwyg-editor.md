@@ -2,14 +2,7 @@
 
 **Epic:** Other
 **Type:** Enhancement
-**Status:** In Progress
-
-<!--
-Status values:
-  Todo        — Not started, no acceptance criteria completed
-  In Progress — Partially implemented, some acceptance criteria completed
-  Completed   — Fully implemented, all acceptance criteria completed
--->
+**Status:** Completed
 
 ## Summary
 
@@ -17,63 +10,48 @@ Add a simple, reusable WYSIWYG editor component for editing season rules and des
 
 ## Motivation
 
-<!--
-Explain why this enhancement is needed.
-What problem does it solve? What user pain point does it address?
-What's wrong with the current approach?
--->
-
 Season descriptions and rules currently lack rich text formatting, limiting organizers' ability to clearly communicate league structure, rules, and details to members. A lightweight WYSIWYG editor lets admins write formatted content without needing to know markdown syntax, while storing markdown in the database keeps the data portable and simple.
 
 ## Acceptance Criteria
 
-- [ ] [Criterion describing a specific, verifiable outcome]
-- [ ] [Criterion describing a specific, verifiable outcome]
-- [ ] [Criterion describing a specific, verifiable outcome]
-
-<!--
-Guidelines:
-  - Each criterion should be independently verifiable (can be checked off on its own)
-  - Write from the user's perspective: "Users can...", "The page displays..."
-  - Include before/after comparisons where helpful
--->
+- [x] A reusable `MarkdownEditor` component exists with toolbar buttons for bold, italic, bullet list, and numbered list
+- [x] A reusable `MarkdownRenderer` component renders markdown content with styled typography (bold, italic, lists)
+- [x] The season form uses `MarkdownEditor` for the rules field
+- [x] The season detail page renders rules using `MarkdownRenderer`
+- [x] Markdown is stored as plain text in the database (no HTML conversion)
+- [x] Build and lint pass
 
 ## Approach
 
-<!--
-Describe the technical approach. Break into numbered steps or subsections.
-Reference existing patterns in the codebase where applicable.
--->
+### Step 1: Create MarkdownEditor component
 
-[Description of the approach]
+A reusable textarea with a formatting toolbar (bold, italic, bullet list, numbered list). Uses React refs to manage cursor position and text insertion. Supports wrapping selected text in markdown syntax and auto-prefixing list items.
+
+### Step 2: Create MarkdownRenderer component
+
+A wrapper around `react-markdown` that maps markdown elements to styled HTML with Tailwind classes (bold, italic, lists with proper indentation and spacing).
+
+### Step 3: Integrate into season form
+
+Replace the plain textarea for the rules field with the MarkdownEditor component. The description field remains a plain textarea.
+
+### Step 4: Render markdown on season detail page
+
+Use MarkdownRenderer to display the rules section on the public season detail page.
 
 ### Key Files
 
-<!--
-List all files created or modified by this enhancement.
--->
-
 | Action | File | Description |
 |---|---|---|
-| Modify | `src/...` | [What changes and why] |
+| Create | `src/modules/markdown/components/markdown-editor.tsx` | Reusable markdown editor with formatting toolbar |
+| Create | `src/modules/markdown/components/markdown-renderer.tsx` | Renders markdown to styled HTML via react-markdown |
+| Modify | `src/app/admin/seasons/season-form.tsx` | Uses MarkdownEditor for the rules field |
+| Modify | `src/app/seasons/[id]/page.tsx` | Uses MarkdownRenderer to display rules |
 
 ## Key Decisions
 
-<!--
-Document the "why" behind important choices. Each decision should explain
-what was chosen, what alternatives existed, and why this approach was picked.
-Number each decision for easy reference.
--->
-
 1. **Store markdown in the database** — Markdown is lightweight, human-readable, and easily rendered on the frontend. Alternatives like storing HTML or using a structured document format add complexity without clear benefit for this use case.
 
-## Notes
+2. **`react-markdown` for rendering** — Provides safe, dependency-light markdown rendering with customizable component mappings for Tailwind styling. No need for a heavier library like MDX or a full WYSIWYG framework.
 
-<!--
-Optional. Include anything that doesn't fit above:
-  - Prerequisites or dependencies on other features
-  - Known limitations or future improvements
-  - Performance considerations
-  - Links to related features or external documentation
-Remove this section if not needed.
--->
+3. **Toolbar-based editor over rich text** — A toolbar that inserts markdown syntax into a plain textarea is simpler and more reliable than a contentEditable-based rich text editor. It avoids complex state management and cursor handling that full WYSIWYG editors require.

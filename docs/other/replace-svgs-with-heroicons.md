@@ -2,7 +2,7 @@
 
 **Epic:** Other
 **Type:** Refactor
-**Status:** In Progress
+**Status:** Completed
 
 <!--
 Status values:
@@ -29,9 +29,9 @@ The codebase has 4 inline SVGs that duplicate icons already available in Heroico
 - [x] All inline `<svg>` elements in component files are replaced with Heroicon imports
 - [x] Google and Discord brand icons use `@icons-pack/react-simple-icons` instead of custom SVG components
 - [x] Custom icon component files (`google-icon.tsx`, `discord-icon.tsx`) are deleted
-- [ ] All icon sizes and styles match the originals visually
-- [ ] `npm run build` passes with no errors
-- [ ] `npm run lint` passes with no errors
+- [x] All icon sizes and styles match the originals visually
+- [x] `npm run build` passes with no errors
+- [x] `npm run lint` passes with no errors
 
 ## Approach
 
