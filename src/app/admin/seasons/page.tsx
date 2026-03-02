@@ -56,13 +56,15 @@ export default async function AdminSeasonsPage() {
                         {formatDate(season.start_date)} &ndash; {formatDate(season.end_date)}
                       </td>
                       <td className="text-sm">{bp ? `${bp.name} (${bp.size} pts)` : '—'}</td>
-                      <td className="flex flex-wrap gap-1">
-                        {season.status === 'draft' ? (
-                          <span className="badge badge-warning">Draft</span>
-                        ) : (
-                          <span className="badge badge-success">Published</span>
-                        )}
-                        {isCurrentSeason(season) && <span className="badge badge-info">Current</span>}
+                      <td>
+                        <div className="flex flex-wrap gap-1">
+                          {season.status === 'draft' ? (
+                            <span className="badge badge-warning">Draft</span>
+                          ) : (
+                            <span className="badge badge-success">Published</span>
+                          )}
+                          {isCurrentSeason(season) && <span className="badge badge-info">Current</span>}
+                        </div>
                       </td>
                       <td>
                         <SeasonActions seasonId={season.id} seasonName={formatSeasonName(season)} />
