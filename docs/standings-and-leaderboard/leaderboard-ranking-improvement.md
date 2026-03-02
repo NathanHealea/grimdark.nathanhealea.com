@@ -173,14 +173,14 @@ Can be added as an additional tiebreaker to any of the above options.
 
 ## Acceptance Criteria
 
-- [ ] Current ranking algorithm is documented (this document)
-- [ ] Alternative ranking approaches are documented with trade-offs (this document)
-- [ ] A ranking approach is chosen and approved
-- [ ] `computeLeaderboard()` is updated to implement the chosen algorithm
-- [ ] `LeaderboardEntry` type is updated if new fields are needed (e.g., `winRate`, `points`, `scoreDiff`)
-- [ ] `LeaderboardTable` displays any new ranking-relevant columns
-- [ ] Leaderboard page, home page, and season detail page all reflect the new ranking
-- [ ] Existing behavior is preserved for edge cases (0 games, ties, null scores)
+- [x] Current ranking algorithm is documented (this document)
+- [x] Alternative ranking approaches are documented with trade-offs (this document)
+- [x] A ranking approach is chosen and approved
+- [x] `computeLeaderboard()` is updated to implement the chosen algorithm
+- [x] `LeaderboardEntry` type is updated if new fields are needed (e.g., `winRate`, `points`, `scoreDiff`)
+- [x] `LeaderboardTable` displays any new ranking-relevant columns
+- [x] Leaderboard page, home page, and season detail page all reflect the new ranking
+- [x] Existing behavior is preserved for edge cases (0 games, ties, null scores)
 
 ## Approach
 
@@ -204,9 +204,9 @@ Can be added as an additional tiebreaker to any of the above options.
 
 ## Key Decisions
 
-1. **Pending: Which ranking approach to use** — Options A-D documented above. The choice should balance competitive fairness with simplicity for a small local league. Option A (win rate with min threshold) is the simplest improvement; Option C (points per game) is more robust.
+1. **Decided: Hybrid points-based system with log normalization** — Combines Option B (points: W=3, D=1, L=0) with natural log normalization (`points / ln(gamesPlayed + 2)`) instead of simple per-game division. This gives diminishing returns for more games rather than pure normalization, avoiding the need for a minimum games threshold. Score differential (Option D) serves as tiebreaker.
 
-2. **Minimum games threshold** — If a rate-based approach is chosen, a threshold of **3 games** is recommended for a small league. Players below the threshold should still appear on the leaderboard but below ranked players (with an indicator like "—" for rank).
+2. **No minimum games threshold needed** — The `ln(gamesPlayed + 2)` divisor naturally handles low game counts. A player with 1 win (3 pts / ln(3) = 2.73) ranks similarly to a player with 2 wins in 3 games (6 pts / ln(4) = 4.33), which is appropriate. Players with 0 games get a rating of 0.00 and appear at the bottom.
 
 ## Notes
 
