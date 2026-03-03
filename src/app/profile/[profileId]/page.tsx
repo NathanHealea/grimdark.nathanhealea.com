@@ -221,6 +221,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ profil
                             <div className="flex flex-col items-end gap-1">
                               <span className="text-xl font-bold">{report.attacker_score ?? 0}</span>
                               {report.attacker_outcome && outcomeBadge(report.attacker_outcome)}
+                              {report.attacker_tabled && <span className="badge badge-neutral badge-sm">Tabled</span>}
                             </div>
                           </div>
 
@@ -236,6 +237,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ profil
                             <div className="flex flex-col items-end gap-1">
                               <span className="text-xl font-bold">{report.defender_score ?? 0}</span>
                               {report.defender_outcome && outcomeBadge(report.defender_outcome)}
+                              {report.defender_tabled && <span className="badge badge-neutral badge-sm">Tabled</span>}
                             </div>
                           </div>
                         </div>
