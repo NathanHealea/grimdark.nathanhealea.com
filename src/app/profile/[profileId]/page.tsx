@@ -222,6 +222,11 @@ export default async function ProfilePage({ params }: { params: Promise<{ profil
                               <span className="text-xl font-bold">{report.attacker_score ?? 0}</span>
                               {report.attacker_outcome && outcomeBadge(report.attacker_outcome)}
                               {report.attacker_tabled && <span className="badge badge-neutral badge-sm">Tabled</span>}
+                              {(report.attacker_units_lost > 0 || report.attacker_models_lost > 0) && (
+                                <span className="text-xs text-base-content/50">
+                                  {report.attacker_units_lost}u / {report.attacker_models_lost}m lost
+                                </span>
+                              )}
                             </div>
                           </div>
 
@@ -238,6 +243,11 @@ export default async function ProfilePage({ params }: { params: Promise<{ profil
                               <span className="text-xl font-bold">{report.defender_score ?? 0}</span>
                               {report.defender_outcome && outcomeBadge(report.defender_outcome)}
                               {report.defender_tabled && <span className="badge badge-neutral badge-sm">Tabled</span>}
+                              {(report.defender_units_lost > 0 || report.defender_models_lost > 0) && (
+                                <span className="text-xs text-base-content/50">
+                                  {report.defender_units_lost}u / {report.defender_models_lost}m lost
+                                </span>
+                              )}
                             </div>
                           </div>
                         </div>

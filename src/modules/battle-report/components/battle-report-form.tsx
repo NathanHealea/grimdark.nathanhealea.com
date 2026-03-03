@@ -50,6 +50,10 @@ function toFormValues(defaults?: Partial<BattleReport>) {
     season_id: defaults?.season_id != null ? String(defaults.season_id) : '',
     attacker_tabled: defaults?.attacker_tabled ?? false,
     defender_tabled: defaults?.defender_tabled ?? false,
+    attacker_units_lost: defaults?.attacker_units_lost != null ? String(defaults.attacker_units_lost) : '0',
+    attacker_models_lost: defaults?.attacker_models_lost != null ? String(defaults.attacker_models_lost) : '0',
+    defender_units_lost: defaults?.defender_units_lost != null ? String(defaults.defender_units_lost) : '0',
+    defender_models_lost: defaults?.defender_models_lost != null ? String(defaults.defender_models_lost) : '0',
   }
 }
 
@@ -400,6 +404,37 @@ export default function BattleReportForm({
               </div>
             </div>
 
+            <div className="form-grid mt-1">
+              <div>
+                <label className="label" htmlFor="attacker_units_lost">
+                  Units Lost
+                </label>
+                <input
+                  id="attacker_units_lost"
+                  name="attacker_units_lost"
+                  type="number"
+                  min={0}
+                  className="input input-lg input-bordered w-full"
+                  value={values.attacker_units_lost}
+                  onChange={(e) => updateField('attacker_units_lost', e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="label" htmlFor="attacker_models_lost">
+                  Models Lost
+                </label>
+                <input
+                  id="attacker_models_lost"
+                  name="attacker_models_lost"
+                  type="number"
+                  min={0}
+                  className="input input-lg input-bordered w-full"
+                  value={values.attacker_models_lost}
+                  onChange={(e) => updateField('attacker_models_lost', e.target.value)}
+                />
+              </div>
+            </div>
+
             <div className="mt-1">
               <label className="label cursor-pointer justify-start gap-4">
                 <input
@@ -510,6 +545,37 @@ export default function BattleReportForm({
                 {state?.errors?.defender_outcome && (
                   <p className="form-error">{state.errors.defender_outcome}</p>
                 )}
+              </div>
+            </div>
+
+            <div className="form-grid mt-1">
+              <div>
+                <label className="label" htmlFor="defender_units_lost">
+                  Units Lost
+                </label>
+                <input
+                  id="defender_units_lost"
+                  name="defender_units_lost"
+                  type="number"
+                  min={0}
+                  className="input input-lg input-bordered w-full"
+                  value={values.defender_units_lost}
+                  onChange={(e) => updateField('defender_units_lost', e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="label" htmlFor="defender_models_lost">
+                  Models Lost
+                </label>
+                <input
+                  id="defender_models_lost"
+                  name="defender_models_lost"
+                  type="number"
+                  min={0}
+                  className="input input-lg input-bordered w-full"
+                  value={values.defender_models_lost}
+                  onChange={(e) => updateField('defender_models_lost', e.target.value)}
+                />
               </div>
             </div>
 

@@ -15,6 +15,10 @@ export type BattleReport = {
   defender_outcome: Outcome | null
   attacker_tabled: boolean
   defender_tabled: boolean
+  attacker_units_lost: number
+  attacker_models_lost: number
+  defender_units_lost: number
+  defender_models_lost: number
   mission_id: number | null
   deployment_id: number | null
   battle_points_id: number | null

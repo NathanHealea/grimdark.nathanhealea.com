@@ -56,16 +56,20 @@ export type Database = {
         Row: {
           attacker_faction_id: string | null
           attacker_id: string | null
+          attacker_models_lost: number
           attacker_outcome: string | null
           attacker_score: number | null
           attacker_tabled: boolean
+          attacker_units_lost: number
           battle_points_id: number | null
           created_at: string
           defender_faction_id: string | null
           defender_id: string | null
+          defender_models_lost: number
           defender_outcome: string | null
           defender_score: number | null
           defender_tabled: boolean
+          defender_units_lost: number
           deployment_id: number | null
           event_date: string | null
           id: string
@@ -79,16 +83,20 @@ export type Database = {
         Insert: {
           attacker_faction_id?: string | null
           attacker_id?: string | null
+          attacker_models_lost?: number
           attacker_outcome?: string | null
           attacker_score?: number | null
           attacker_tabled?: boolean
+          attacker_units_lost?: number
           battle_points_id?: number | null
           created_at?: string
           defender_faction_id?: string | null
           defender_id?: string | null
+          defender_models_lost?: number
           defender_outcome?: string | null
           defender_score?: number | null
           defender_tabled?: boolean
+          defender_units_lost?: number
           deployment_id?: number | null
           event_date?: string | null
           id?: string
@@ -102,16 +110,20 @@ export type Database = {
         Update: {
           attacker_faction_id?: string | null
           attacker_id?: string | null
+          attacker_models_lost?: number
           attacker_outcome?: string | null
           attacker_score?: number | null
           attacker_tabled?: boolean
+          attacker_units_lost?: number
           battle_points_id?: number | null
           created_at?: string
           defender_faction_id?: string | null
           defender_id?: string | null
+          defender_models_lost?: number
           defender_outcome?: string | null
           defender_score?: number | null
           defender_tabled?: boolean
+          defender_units_lost?: number
           deployment_id?: number | null
           event_date?: string | null
           id?: string

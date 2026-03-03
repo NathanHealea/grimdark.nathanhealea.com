@@ -156,28 +156,36 @@ export default async function BattleReportDetailPage({ params }: { params: Promi
               <div className="rounded-lg bg-base-200 p-4">
                 <p className="label-meta mb-2">Attacker</p>
                 {attacker ? (
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="min-w-0">
-                      <Link
-                        href={`/profile/${attacker.profile_id}`}
-                        className="link link-hover font-semibold truncate block"
-                      >
-                        {attacker.display_name ?? 'Unknown'}
-                      </Link>
-                      {report.attacker_faction_id && (
-                        <p className="text-sm text-base-content/60 truncate">
-                          {getFactionLabel(report.attacker_faction_id, factionMap)}
-                        </p>
-                      )}
+                  <>
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="min-w-0">
+                        <Link
+                          href={`/profile/${attacker.profile_id}`}
+                          className="link link-hover font-semibold truncate block"
+                        >
+                          {attacker.display_name ?? 'Unknown'}
+                        </Link>
+                        {report.attacker_faction_id && (
+                          <p className="text-sm text-base-content/60 truncate">
+                            {getFactionLabel(report.attacker_faction_id, factionMap)}
+                          </p>
+                        )}
+                      </div>
+                      <div className="flex flex-col items-end gap-1">
+                        {report.attacker_score != null && (
+                          <span className="text-2xl font-bold">{report.attacker_score}</span>
+                        )}
+                        {report.attacker_outcome && outcomeBadge(report.attacker_outcome)}
+                        {report.attacker_tabled && <span className="badge badge-neutral">Tabled</span>}
+                      </div>
                     </div>
-                    <div className="flex flex-col items-end gap-1">
-                      {report.attacker_score != null && (
-                        <span className="text-2xl font-bold">{report.attacker_score}</span>
-                      )}
-                      {report.attacker_outcome && outcomeBadge(report.attacker_outcome)}
-                      {report.attacker_tabled && <span className="badge badge-neutral">Tabled</span>}
-                    </div>
-                  </div>
+                    {(report.attacker_units_lost > 0 || report.attacker_models_lost > 0) && (
+                      <div className="mt-2 flex gap-4 text-sm text-base-content/60">
+                        <span>{report.attacker_units_lost} units lost</span>
+                        <span>{report.attacker_models_lost} models lost</span>
+                      </div>
+                    )}
+                  </>
                 ) : (
                   <p className="text-sm text-base-content/40 italic">Not yet assigned</p>
                 )}
@@ -187,28 +195,36 @@ export default async function BattleReportDetailPage({ params }: { params: Promi
               <div className="rounded-lg bg-base-200 p-4">
                 <p className="label-meta mb-2">Defender</p>
                 {defender ? (
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="min-w-0">
-                      <Link
-                        href={`/profile/${defender.profile_id}`}
-                        className="link link-hover font-semibold truncate block"
-                      >
-                        {defender.display_name ?? 'Unknown'}
-                      </Link>
-                      {report.defender_faction_id && (
-                        <p className="text-sm text-base-content/60 truncate">
-                          {getFactionLabel(report.defender_faction_id, factionMap)}
-                        </p>
-                      )}
+                  <>
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="min-w-0">
+                        <Link
+                          href={`/profile/${defender.profile_id}`}
+                          className="link link-hover font-semibold truncate block"
+                        >
+                          {defender.display_name ?? 'Unknown'}
+                        </Link>
+                        {report.defender_faction_id && (
+                          <p className="text-sm text-base-content/60 truncate">
+                            {getFactionLabel(report.defender_faction_id, factionMap)}
+                          </p>
+                        )}
+                      </div>
+                      <div className="flex flex-col items-end gap-1">
+                        {report.defender_score != null && (
+                          <span className="text-2xl font-bold">{report.defender_score}</span>
+                        )}
+                        {report.defender_outcome && outcomeBadge(report.defender_outcome)}
+                        {report.defender_tabled && <span className="badge badge-neutral">Tabled</span>}
+                      </div>
                     </div>
-                    <div className="flex flex-col items-end gap-1">
-                      {report.defender_score != null && (
-                        <span className="text-2xl font-bold">{report.defender_score}</span>
-                      )}
-                      {report.defender_outcome && outcomeBadge(report.defender_outcome)}
-                      {report.defender_tabled && <span className="badge badge-neutral">Tabled</span>}
-                    </div>
-                  </div>
+                    {(report.defender_units_lost > 0 || report.defender_models_lost > 0) && (
+                      <div className="mt-2 flex gap-4 text-sm text-base-content/60">
+                        <span>{report.defender_units_lost} units lost</span>
+                        <span>{report.defender_models_lost} models lost</span>
+                      </div>
+                    )}
+                  </>
                 ) : (
                   <p className="text-sm text-base-content/40 italic">Not yet assigned</p>
                 )}
