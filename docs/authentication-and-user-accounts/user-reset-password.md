@@ -2,7 +2,7 @@
 
 **Epic:** Authentication and User Accounts
 **Type:** Feature
-**Status:** Todo
+**Status:** In Progress
 
 <!--
 Status values:
@@ -17,16 +17,16 @@ Add two password flows: (1) a "forgot password" flow from the sign-in page that 
 
 ## Acceptance Criteria
 
-- [ ] Sign-in page displays a "Forgot your password?" link below the password field
-- [ ] Forgot password page (`/forgot-password`) accepts an email and sends a reset link
-- [ ] Users receive a branded password reset email matching the app's theme
-- [ ] Clicking the email link lands on a reset password page (`/reset-password`) where the user enters a new password
-- [ ] After resetting, the user is redirected to the sign-in page with a success message
-- [ ] Profile edit page (`/profile/edit`) displays a "Change Password" section for email-authenticated users
-- [ ] OAuth-only users (Discord) do not see the "Change Password" section
-- [ ] Password change requires a minimum of 6 characters (matching sign-up validation)
-- [ ] Error states are handled: invalid/expired token, mismatched passwords, rate limiting
-- [ ] `npm run build` and `npm run lint` pass with no errors
+- [x] Sign-in page displays a "Forgot your password?" link below the password field
+- [x] Forgot password page (`/forgot-password`) accepts an email and sends a reset link
+- [x] Users receive a branded password reset email matching the app's theme
+- [x] Clicking the email link lands on a reset password page (`/reset-password`) where the user enters a new password
+- [x] After resetting, the user is redirected to the sign-in page with a success message
+- [x] Profile edit page (`/profile/edit`) displays a "Change Password" section for email-authenticated users
+- [x] OAuth-only users (Discord) do not see the "Change Password" section
+- [x] Password change requires a minimum of 6 characters (matching sign-up validation)
+- [x] Error states are handled: invalid/expired token, mismatched passwords, rate limiting
+- [x] `npm run build` and `npm run lint` pass with no errors
 
 ## Routes
 
