@@ -2,7 +2,7 @@
 
 **Epic:** Battle Reports
 **Type:** Enhancement
-**Status:** In Progress
+**Status:** Completed
 
 ## Summary
 
