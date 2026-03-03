@@ -84,6 +84,18 @@ export async function signInWithDiscord() {
   redirect(data.url)
 }
 
+export async function requestPasswordReset(prevState: AuthState, formData: FormData) {
+  const supabase = await createClient()
+  const email = formData.get('email') as string
+
+  await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${getSiteUrl()}/auth/confirm`,
+  })
+
+  // Always show success message to prevent email enumeration
+  return { success: 'If an account exists with this email, you will receive a password reset link.' }
+}
+
 export async function signOut() {
   const supabase = await createClient()
   await supabase.auth.signOut()
