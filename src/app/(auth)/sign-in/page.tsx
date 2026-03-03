@@ -2,10 +2,14 @@
 
 import Link from 'next/link'
 import { useActionState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { signIn, signInWithDiscord, signInWithGoogle } from '../actions'
 
 export default function SignInPage() {
   const [state, formAction, pending] = useActionState(signIn, null)
+  const searchParams = useSearchParams()
+  const message = searchParams.get('message')
+  const errorParam = searchParams.get('error')
 
   return (
     <main className="flex flex-col items-center justify-center -mt-72 pt-72 min-h-screen w-full">
@@ -13,9 +17,15 @@ export default function SignInPage() {
       <div className="card-body gap-4">
         <h1 className="card-title text-2xl">Sign In</h1>
 
-        {state?.error && (
+        {message && (
+          <div role="alert" className="alert alert-success">
+            <span>{message}</span>
+          </div>
+        )}
+
+        {(state?.error || errorParam) && (
           <div role="alert" className="alert alert-error">
-            <span>{state.error}</span>
+            <span>{state?.error || errorParam}</span>
           </div>
         )}
 
@@ -45,6 +55,12 @@ export default function SignInPage() {
               required
             />
           </fieldset>
+
+          <div className="flex justify-end -mt-2">
+            <Link href="/forgot-password" className="link link-primary text-sm">
+              Forgot your password?
+            </Link>
+          </div>
 
           <button type="submit" className="btn btn-primary w-full" disabled={pending}>
             {pending ? <span className="loading loading-spinner loading-sm" /> : 'Sign In'}
