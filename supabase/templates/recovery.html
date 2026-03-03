@@ -67,7 +67,7 @@
                   <tr>
                     <td align="center">
                       <a
-                        href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/reset-password"
+                        href="{{ .RedirectTo }}?token_hash={{ .TokenHash }}&type=recovery&next=/reset-password"
                         target="_blank"
                         style="
                           display: inline-block;
@@ -96,9 +96,9 @@
                 </p>
                 <p style="margin: 0; font-size: 12px; word-break: break-all">
                   <a
-                    href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/reset-password"
+                    href="{{ .RedirectTo }}?token_hash={{ .TokenHash }}&type=recovery&next=/reset-password"
                     style="color: #c9a84c; text-decoration: underline"
-                    >{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/reset-password</a
+                    >{{ .RedirectTo }}?token_hash={{ .TokenHash }}&type=recovery&next=/reset-password</a
                   >
                 </p>
               </td>

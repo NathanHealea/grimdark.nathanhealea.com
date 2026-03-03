@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
+import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 function getSiteUrl() {
@@ -111,8 +112,11 @@ export async function requestPasswordReset(prevState: AuthState, formData: FormD
   const supabase = await createClient()
   const email = formData.get('email') as string
 
+  const headersList = await headers()
+  const origin = headersList.get('origin') || getSiteUrl()
+
   await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${getSiteUrl()}/auth/confirm`,
+    redirectTo: `${origin}/auth/confirm`,
   })
 
   // Always show success message to prevent email enumeration
