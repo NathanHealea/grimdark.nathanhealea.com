@@ -5,6 +5,36 @@ import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { type ProfileFormState, validateBio, validateDisplayName, validateFactionIds } from '@/modules/profile/validation'
 
+type PasswordState = { error?: string; success?: string } | null
+
+export async function changePassword(prevState: PasswordState, formData: FormData): Promise<PasswordState> {
+  const auth = await getAuthUser()
+
+  if (!auth) {
+    return { error: 'You must be signed in to change your password.' }
+  }
+
+  const password = formData.get('password') as string
+  const confirmPassword = formData.get('confirmPassword') as string
+
+  if (password !== confirmPassword) {
+    return { error: 'Passwords do not match.' }
+  }
+
+  if (password.length < 6) {
+    return { error: 'Password must be at least 6 characters.' }
+  }
+
+  const supabase = await createClient()
+  const { error } = await supabase.auth.updateUser({ password })
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  return { success: 'Password updated successfully.' }
+}
+
 export async function updateProfile(prevState: ProfileFormState, formData: FormData): Promise<ProfileFormState> {
   const auth = await getAuthUser({ withProfile: true })
 

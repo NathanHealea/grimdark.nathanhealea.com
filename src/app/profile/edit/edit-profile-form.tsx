@@ -7,15 +7,16 @@ import { type ProfileFormState, validateBio, validateDisplayName } from '@/modul
 import type { Faction } from '@/types/faction'
 import type { Profile } from '@/types/profile'
 import { startTransition, useActionState, useRef, useState } from 'react'
-import { updateProfile } from './actions'
+import { changePassword, updateProfile } from './actions'
 
 type EditProfileFormProps = {
   profile: Profile
   factions: Faction[]
   selectedFactionIds: string[]
+  hasEmailAuth: boolean
 }
 
-export default function EditProfileForm({ profile, factions, selectedFactionIds }: EditProfileFormProps) {
+export default function EditProfileForm({ profile, factions, selectedFactionIds, hasEmailAuth }: EditProfileFormProps) {
   const [state, formAction, pending] = useActionState<ProfileFormState, FormData>(updateProfile, null)
   const displayNameRef = useRef<HTMLInputElement>(null)
   const bioRef = useRef<HTMLTextAreaElement>(null)
@@ -162,6 +163,65 @@ export default function EditProfileForm({ profile, factions, selectedFactionIds 
           {isSubmitting ? <span className="loading loading-spinner loading-md" /> : 'Save Changes'}
         </button>
       </form>
+
+      {hasEmailAuth && <ChangePasswordSection />}
     </>
+  )
+}
+
+function ChangePasswordSection() {
+  const [state, formAction, pending] = useActionState(changePassword, null)
+
+  return (
+    <div className="mt-8">
+      <h2 className="ornament section-header">Change Password</h2>
+
+      {state?.success && (
+        <div role="alert" className="alert alert-success mb-4">
+          <span>{state.success}</span>
+        </div>
+      )}
+      {state?.error && (
+        <div role="alert" className="alert alert-error mb-4">
+          <span>{state.error}</span>
+        </div>
+      )}
+
+      <form action={formAction} className="form-section flex flex-col gap-4">
+        <div>
+          <label className="label" htmlFor="password">
+            New Password
+          </label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="••••••••"
+            className="input input-bordered w-full"
+            required
+            minLength={6}
+          />
+        </div>
+
+        <div>
+          <label className="label" htmlFor="confirmPassword">
+            Confirm Password
+          </label>
+          <input
+            id="confirmPassword"
+            name="confirmPassword"
+            type="password"
+            placeholder="••••••••"
+            className="input input-bordered w-full"
+            required
+            minLength={6}
+          />
+        </div>
+
+        <button type="submit" className="btn btn-primary btn-lg w-full" disabled={pending}>
+          {pending ? <span className="loading loading-spinner loading-md" /> : 'Update Password'}
+        </button>
+      </form>
+    </div>
   )
 }

@@ -13,6 +13,8 @@ export default async function EditProfilePage() {
 
   const [factions, selectedFactionIds] = await Promise.all([getFactions(), getProfileFactionIds(auth.profile.id)])
 
+  const hasEmailAuth = auth.user.identities?.some((i) => i.provider === 'email') ?? false
+
   return (
     <main className="page-layout">
       <div className="page-container">
@@ -25,7 +27,12 @@ export default async function EditProfilePage() {
             <p className="mt-1 text-sm text-base-content/50">Update your profile information and factions.</p>
           </div>
 
-          <EditProfileForm profile={auth.profile} factions={factions} selectedFactionIds={selectedFactionIds} />
+          <EditProfileForm
+            profile={auth.profile}
+            factions={factions}
+            selectedFactionIds={selectedFactionIds}
+            hasEmailAuth={hasEmailAuth}
+          />
         </div>
       </div>
     </main>
