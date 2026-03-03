@@ -2,7 +2,7 @@
 
 **Epic:** Battle Reports
 **Type:** Enhancement
-**Status:** Todo
+**Status:** In Progress
 
 ## Summary
 
@@ -14,12 +14,12 @@ Getting tabled (having your entire army wiped out) is a significant game event i
 
 ## Acceptance Criteria
 
-- [ ] The `battle_reports` table has `attacker_tabled` and `defender_tabled` boolean columns (default `false`)
-- [ ] The battle report form shows a "Tabled" checkbox for each player (attacker and defender)
-- [ ] The checkbox is optional for both draft and published reports
-- [ ] The battle report detail page shows a "Tabled" badge next to a player's outcome when they were tabled
-- [ ] The edit form pre-fills the tabled checkboxes from existing report data
-- [ ] The TypeScript `BattleReport` type includes `attacker_tabled` and `defender_tabled` fields
+- [x] The `battle_reports` table has `attacker_tabled` and `defender_tabled` boolean columns (default `false`)
+- [x] The battle report form shows a "Tabled" checkbox for each player (attacker and defender)
+- [x] The checkbox is optional for both draft and published reports
+- [x] The battle report detail page shows a "Tabled" badge next to a player's outcome when they were tabled
+- [x] The edit form pre-fills the tabled checkboxes from existing report data
+- [x] The TypeScript `BattleReport` type includes `attacker_tabled` and `defender_tabled` fields
 
 ## Approach
 
