@@ -116,7 +116,7 @@ export async function requestPasswordReset(prevState: AuthState, formData: FormD
   const origin = headersList.get('origin') || getSiteUrl()
 
   await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${origin}/auth/confirm`,
+    redirectTo: `${origin}/auth/confirm?next=/reset-password`,
   })
 
   // Always show success message to prevent email enumeration
