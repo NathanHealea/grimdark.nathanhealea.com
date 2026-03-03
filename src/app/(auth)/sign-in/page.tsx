@@ -1,15 +1,33 @@
 'use client'
 
 import Link from 'next/link'
-import { useActionState } from 'react'
+import { Suspense, useActionState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { signIn, signInWithDiscord, signInWithGoogle } from '../actions'
 
-export default function SignInPage() {
-  const [state, formAction, pending] = useActionState(signIn, null)
+function SearchParamAlerts() {
   const searchParams = useSearchParams()
   const message = searchParams.get('message')
   const errorParam = searchParams.get('error')
+
+  return (
+    <>
+      {message && (
+        <div role="alert" className="alert alert-success">
+          <span>{message}</span>
+        </div>
+      )}
+      {errorParam && (
+        <div role="alert" className="alert alert-error">
+          <span>{errorParam}</span>
+        </div>
+      )}
+    </>
+  )
+}
+
+export default function SignInPage() {
+  const [state, formAction, pending] = useActionState(signIn, null)
 
   return (
     <main className="flex flex-col items-center justify-center -mt-72 pt-72 min-h-screen w-full">
@@ -17,15 +35,13 @@ export default function SignInPage() {
       <div className="card-body gap-4">
         <h1 className="card-title text-2xl">Sign In</h1>
 
-        {message && (
-          <div role="alert" className="alert alert-success">
-            <span>{message}</span>
-          </div>
-        )}
+        <Suspense>
+          <SearchParamAlerts />
+        </Suspense>
 
-        {(state?.error || errorParam) && (
+        {state?.error && (
           <div role="alert" className="alert alert-error">
-            <span>{state?.error || errorParam}</span>
+            <span>{state.error}</span>
           </div>
         )}
 

@@ -107,7 +107,7 @@ export async function updatePassword(prevState: AuthState, formData: FormData) {
   redirect('/sign-in?message=Password updated successfully. Please sign in with your new password.')
 }
 
-export async function requestPasswordReset(prevState: AuthState, formData: FormData) {
+export async function requestPasswordReset(prevState: AuthState, formData: FormData): Promise<AuthState> {
   const supabase = await createClient()
   const email = formData.get('email') as string
 
