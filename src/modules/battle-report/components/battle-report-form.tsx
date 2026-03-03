@@ -401,7 +401,7 @@ export default function BattleReportForm({
             </div>
 
             <div className="mt-1">
-              <label className="label cursor-pointer justify-start gap-3">
+              <label className="label cursor-pointer justify-start gap-4">
                 <input
                   type="checkbox"
                   name="attacker_tabled"
@@ -514,7 +514,7 @@ export default function BattleReportForm({
             </div>
 
             <div className="mt-1">
-              <label className="label cursor-pointer justify-start gap-3">
+              <label className="label cursor-pointer justify-start gap-4">
                 <input
                   type="checkbox"
                   name="defender_tabled"
