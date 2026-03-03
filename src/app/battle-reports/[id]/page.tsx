@@ -175,6 +175,7 @@ export default async function BattleReportDetailPage({ params }: { params: Promi
                         <span className="text-2xl font-bold">{report.attacker_score}</span>
                       )}
                       {report.attacker_outcome && outcomeBadge(report.attacker_outcome)}
+                      {report.attacker_tabled && <span className="badge badge-neutral">Tabled</span>}
                     </div>
                   </div>
                 ) : (
@@ -205,6 +206,7 @@ export default async function BattleReportDetailPage({ params }: { params: Promi
                         <span className="text-2xl font-bold">{report.defender_score}</span>
                       )}
                       {report.defender_outcome && outcomeBadge(report.defender_outcome)}
+                      {report.defender_tabled && <span className="badge badge-neutral">Tabled</span>}
                     </div>
                   </div>
                 ) : (
