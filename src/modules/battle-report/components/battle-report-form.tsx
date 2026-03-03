@@ -48,6 +48,8 @@ function toFormValues(defaults?: Partial<BattleReport>) {
     battle_points_id: defaults?.battle_points_id != null ? String(defaults.battle_points_id) : '',
     rounds: defaults?.rounds != null ? String(defaults.rounds) : '',
     season_id: defaults?.season_id != null ? String(defaults.season_id) : '',
+    attacker_tabled: defaults?.attacker_tabled ?? false,
+    defender_tabled: defaults?.defender_tabled ?? false,
   }
 }
 
@@ -397,6 +399,21 @@ export default function BattleReportForm({
                 )}
               </div>
             </div>
+
+            <div className="mt-1">
+              <label className="label cursor-pointer justify-start gap-3">
+                <input
+                  type="checkbox"
+                  name="attacker_tabled"
+                  className="checkbox"
+                  checked={values.attacker_tabled}
+                  onChange={(e) => setValues((prev) => ({ ...prev, attacker_tabled: e.target.checked }))}
+                />
+                <span>
+                  Tabled <span className="text-sm text-base-content/50">— All units destroyed</span>
+                </span>
+              </label>
+            </div>
           </fieldset>
         </div>
 
@@ -494,6 +511,21 @@ export default function BattleReportForm({
                   <p className="form-error">{state.errors.defender_outcome}</p>
                 )}
               </div>
+            </div>
+
+            <div className="mt-1">
+              <label className="label cursor-pointer justify-start gap-3">
+                <input
+                  type="checkbox"
+                  name="defender_tabled"
+                  className="checkbox"
+                  checked={values.defender_tabled}
+                  onChange={(e) => setValues((prev) => ({ ...prev, defender_tabled: e.target.checked }))}
+                />
+                <span>
+                  Tabled <span className="text-sm text-base-content/50">— All units destroyed</span>
+                </span>
+              </label>
             </div>
           </fieldset>
         </div>
