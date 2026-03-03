@@ -1,8 +1,30 @@
 'use client'
 
 import Link from 'next/link'
-import { useActionState } from 'react'
+import { Suspense, useActionState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { signIn, signInWithDiscord, signInWithGoogle } from '../actions'
+
+function SearchParamAlerts() {
+  const searchParams = useSearchParams()
+  const message = searchParams.get('message')
+  const errorParam = searchParams.get('error')
+
+  return (
+    <>
+      {message && (
+        <div role="alert" className="alert alert-success">
+          <span>{message}</span>
+        </div>
+      )}
+      {errorParam && (
+        <div role="alert" className="alert alert-error">
+          <span>{errorParam}</span>
+        </div>
+      )}
+    </>
+  )
+}
 
 export default function SignInPage() {
   const [state, formAction, pending] = useActionState(signIn, null)
@@ -12,6 +34,10 @@ export default function SignInPage() {
     <div className="card w-full max-w-lg bg-base-200 shadow-xl">
       <div className="card-body gap-4">
         <h1 className="card-title text-2xl">Sign In</h1>
+
+        <Suspense>
+          <SearchParamAlerts />
+        </Suspense>
 
         {state?.error && (
           <div role="alert" className="alert alert-error">
@@ -45,6 +71,12 @@ export default function SignInPage() {
               required
             />
           </fieldset>
+
+          <div className="flex justify-end -mt-2">
+            <Link href="/forgot-password" className="link link-primary text-sm">
+              Forgot your password?
+            </Link>
+          </div>
 
           <button type="submit" className="btn btn-primary w-full" disabled={pending}>
             {pending ? <span className="loading loading-spinner loading-sm" /> : 'Sign In'}
