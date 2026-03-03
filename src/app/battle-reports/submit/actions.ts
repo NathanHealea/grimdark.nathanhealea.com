@@ -47,6 +47,8 @@ export async function submitBattleReport(prevState: BattleReportFormState, formD
   const battlePointsId = (formData.get('battle_points_id') as string) ?? ''
   const rounds = (formData.get('rounds') as string) ?? ''
   const seasonId = (formData.get('season_id') as string) ?? ''
+  const attackerTabled = formData.has('attacker_tabled')
+  const defenderTabled = formData.has('defender_tabled')
 
   const errors: Record<string, string> = {}
 
@@ -124,6 +126,8 @@ export async function submitBattleReport(prevState: BattleReportFormState, formD
   const insertData: Record<string, unknown> = {
     status,
     reported_by: profile.id,
+    attacker_tabled: attackerTabled,
+    defender_tabled: defenderTabled,
   }
 
   // For drafts, only include non-empty fields

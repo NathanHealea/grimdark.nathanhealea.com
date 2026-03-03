@@ -67,6 +67,8 @@ export async function updateBattleReport(
   const battlePointsId = (formData.get('battle_points_id') as string) ?? ''
   const rounds = (formData.get('rounds') as string) ?? ''
   const seasonId = (formData.get('season_id') as string) ?? ''
+  const attackerTabled = formData.has('attacker_tabled')
+  const defenderTabled = formData.has('defender_tabled')
 
   const errors: Record<string, string> = {}
 
@@ -140,6 +142,8 @@ export async function updateBattleReport(
 
   const updateData: Record<string, unknown> = {
     status,
+    attacker_tabled: attackerTabled,
+    defender_tabled: defenderTabled,
     event_date: eventDate || null,
     attacker_id: attackerId || null,
     attacker_faction_id: attackerFactionId || null,
