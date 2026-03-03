@@ -67,6 +67,12 @@ export async function updateBattleReport(
   const battlePointsId = (formData.get('battle_points_id') as string) ?? ''
   const rounds = (formData.get('rounds') as string) ?? ''
   const seasonId = (formData.get('season_id') as string) ?? ''
+  const attackerTabled = formData.has('attacker_tabled')
+  const defenderTabled = formData.has('defender_tabled')
+  const attackerUnitsLost = (formData.get('attacker_units_lost') as string) ?? '0'
+  const attackerModelsLost = (formData.get('attacker_models_lost') as string) ?? '0'
+  const defenderUnitsLost = (formData.get('defender_units_lost') as string) ?? '0'
+  const defenderModelsLost = (formData.get('defender_models_lost') as string) ?? '0'
 
   const errors: Record<string, string> = {}
 
@@ -140,6 +146,12 @@ export async function updateBattleReport(
 
   const updateData: Record<string, unknown> = {
     status,
+    attacker_tabled: attackerTabled,
+    defender_tabled: defenderTabled,
+    attacker_units_lost: parseInt(attackerUnitsLost, 10) || 0,
+    attacker_models_lost: parseInt(attackerModelsLost, 10) || 0,
+    defender_units_lost: parseInt(defenderUnitsLost, 10) || 0,
+    defender_models_lost: parseInt(defenderModelsLost, 10) || 0,
     event_date: eventDate || null,
     attacker_id: attackerId || null,
     attacker_faction_id: attackerFactionId || null,

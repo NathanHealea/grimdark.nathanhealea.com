@@ -56,14 +56,20 @@ export type Database = {
         Row: {
           attacker_faction_id: string | null
           attacker_id: string | null
+          attacker_models_lost: number
           attacker_outcome: string | null
           attacker_score: number | null
+          attacker_tabled: boolean
+          attacker_units_lost: number
           battle_points_id: number | null
           created_at: string
           defender_faction_id: string | null
           defender_id: string | null
+          defender_models_lost: number
           defender_outcome: string | null
           defender_score: number | null
+          defender_tabled: boolean
+          defender_units_lost: number
           deployment_id: number | null
           event_date: string | null
           id: string
@@ -77,14 +83,20 @@ export type Database = {
         Insert: {
           attacker_faction_id?: string | null
           attacker_id?: string | null
+          attacker_models_lost?: number
           attacker_outcome?: string | null
           attacker_score?: number | null
+          attacker_tabled?: boolean
+          attacker_units_lost?: number
           battle_points_id?: number | null
           created_at?: string
           defender_faction_id?: string | null
           defender_id?: string | null
+          defender_models_lost?: number
           defender_outcome?: string | null
           defender_score?: number | null
+          defender_tabled?: boolean
+          defender_units_lost?: number
           deployment_id?: number | null
           event_date?: string | null
           id?: string
@@ -98,14 +110,20 @@ export type Database = {
         Update: {
           attacker_faction_id?: string | null
           attacker_id?: string | null
+          attacker_models_lost?: number
           attacker_outcome?: string | null
           attacker_score?: number | null
+          attacker_tabled?: boolean
+          attacker_units_lost?: number
           battle_points_id?: number | null
           created_at?: string
           defender_faction_id?: string | null
           defender_id?: string | null
+          defender_models_lost?: number
           defender_outcome?: string | null
           defender_score?: number | null
+          defender_tabled?: boolean
+          defender_units_lost?: number
           deployment_id?: number | null
           event_date?: string | null
           id?: string
@@ -325,6 +343,49 @@ export type Database = {
         }
         Relationships: []
       }
+      season_roster: {
+        Row: {
+          faction_id: string
+          joined_at: string
+          profile_id: string
+          season_id: number
+        }
+        Insert: {
+          faction_id: string
+          joined_at?: string
+          profile_id: string
+          season_id: number
+        }
+        Update: {
+          faction_id?: string
+          joined_at?: string
+          profile_id?: string
+          season_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "season_roster_faction_id_fkey"
+            columns: ["faction_id"]
+            isOneToOne: false
+            referencedRelation: "factions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "season_roster_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "season_roster_season_id_fkey"
+            columns: ["season_id"]
+            isOneToOne: false
+            referencedRelation: "seasons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       seasons: {
         Row: {
           battle_points_id: number
@@ -332,10 +393,11 @@ export type Database = {
           description: string | null
           end_date: string
           id: number
-          is_active: boolean
-          name: string
+          name: string | null
+          number: number
           rules: string | null
           start_date: string
+          status: string
           updated_at: string
         }
         Insert: {
@@ -344,10 +406,11 @@ export type Database = {
           description?: string | null
           end_date: string
           id?: number
-          is_active?: boolean
-          name: string
+          name?: string | null
+          number: number
           rules?: string | null
           start_date: string
+          status?: string
           updated_at?: string
         }
         Update: {
@@ -356,10 +419,11 @@ export type Database = {
           description?: string | null
           end_date?: string
           id?: number
-          is_active?: boolean
-          name?: string
+          name?: string | null
+          number?: number
           rules?: string | null
           start_date?: string
+          status?: string
           updated_at?: string
         }
         Relationships: [
