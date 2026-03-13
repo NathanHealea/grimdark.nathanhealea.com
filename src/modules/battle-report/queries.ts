@@ -1,4 +1,4 @@
-import type { BattlePoints, BattleReport, Deployment, Mission } from '@/types/battle-report'
+import type { BattlePoints, BattleReport, BattleReportRoundStat, Deployment, Mission } from '@/types/battle-report'
 import type { ProfileFaction } from '@/types/faction'
 import type { Profile } from '@/types/profile'
 import { createClient } from '@/lib/supabase/server'
@@ -153,6 +153,23 @@ export async function getDraftBattleReports(profileId: string): Promise<BattleRe
   }
 
   return data as BattleReport[]
+}
+
+export async function getRoundStatsByReportId(reportId: string): Promise<BattleReportRoundStat[]> {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
+    .from('battle_report_round_stats')
+    .select('*')
+    .eq('battle_report_id', reportId)
+    .order('round_number')
+
+  if (error) {
+    console.error('Failed to fetch round stats:', error)
+    return []
+  }
+
+  return data as BattleReportRoundStat[]
 }
 
 export async function getMembers(): Promise<Profile[]> {
