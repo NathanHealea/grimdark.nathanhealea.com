@@ -178,6 +178,40 @@ export async function updateBattleReport(
     return { error: 'Failed to update battle report. Please try again.' }
   }
 
+  // Delete-and-reinsert round stats
+  await supabase.from('battle_report_round_stats').delete().eq('battle_report_id', reportId)
+
+  const roundStatsJson = formData.get('round_stats_json') as string
+  if (roundStatsJson) {
+    try {
+      const roundStats = JSON.parse(roundStatsJson) as Array<Record<string, string | number>>
+      if (roundStats.length > 0 && roundStats.length <= 5) {
+        const roundStatsRows = roundStats.map((rs) => ({
+          battle_report_id: reportId,
+          round_number: Number(rs.round_number),
+          attacker_points_earned: parseInt(String(rs.attacker_points_earned), 10) || 0,
+          attacker_units_lost: parseInt(String(rs.attacker_units_lost), 10) || 0,
+          attacker_models_lost: parseInt(String(rs.attacker_models_lost), 10) || 0,
+          defender_points_earned: parseInt(String(rs.defender_points_earned), 10) || 0,
+          defender_units_lost: parseInt(String(rs.defender_units_lost), 10) || 0,
+          defender_models_lost: parseInt(String(rs.defender_models_lost), 10) || 0,
+        }))
+
+        const { error: roundStatsError } = await supabase
+          .from('battle_report_round_stats')
+          .insert(roundStatsRows)
+
+        if (roundStatsError) {
+          console.error('Failed to update round stats:', roundStatsError)
+          return { errors: { round_stats: 'Report updated but round stats failed to save.' } }
+        }
+      }
+    } catch {
+      console.error('Failed to parse round stats JSON')
+      return { errors: { round_stats: 'Invalid round stats data.' } }
+    }
+  }
+
   revalidatePath('/', 'layout')
 
   if (status === 'draft') {
