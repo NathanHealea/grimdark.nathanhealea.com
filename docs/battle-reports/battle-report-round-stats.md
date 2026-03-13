@@ -21,7 +21,7 @@ Add optional per-round stat tracking to battle reports. When filling out a battl
 - [x] Round stats are displayed on the battle report detail view (only when present)
 - [x] Deleting a battle report cascades and removes its round stats
 - [x] Round stats follow the same access control as their parent battle report
-- [ ] Build and lint pass
+- [x] Build and lint pass
 
 ## Routes
 
