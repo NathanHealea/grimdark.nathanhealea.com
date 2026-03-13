@@ -30,6 +30,29 @@ export type BattleReport = {
   updated_at: string
 }
 
+export type BattleReportRoundStat = {
+  id: number
+  battle_report_id: string
+  round_number: number
+  attacker_points_earned: number
+  attacker_units_lost: number
+  attacker_models_lost: number
+  defender_points_earned: number
+  defender_units_lost: number
+  defender_models_lost: number
+  created_at: string
+}
+
+export type RoundStatFormValues = {
+  round_number: number
+  attacker_points_earned: string
+  attacker_units_lost: string
+  attacker_models_lost: string
+  defender_points_earned: string
+  defender_units_lost: string
+  defender_models_lost: string
+}
+
 export type Mission = { id: number; name: string }
 export type Deployment = { id: number; name: string }
 export type BattlePoints = { id: number; name: string; size: number }

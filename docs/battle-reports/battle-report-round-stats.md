@@ -2,7 +2,7 @@
 
 **Epic:** Battle Reports
 **Type:** Feature
-**Status:** Todo
+**Status:** In Progress
 
 ## Summary
 
@@ -10,18 +10,18 @@ Add optional per-round stat tracking to battle reports. When filling out a battl
 
 ## Acceptance Criteria
 
-- [ ] A new "Round Stats" section appears on the battle report form between the Defender and Reporting sections
-- [ ] Users can add rounds via an "Add Round" button (up to 5 rounds max)
-- [ ] Each round captures: attacker points earned, attacker units lost, attacker models lost, defender points earned, defender units lost, defender models lost
-- [ ] Users can remove a round they've added
-- [ ] All round stat fields are non-negative integers
-- [ ] Round stats are optional — reports can be published without any round stats
-- [ ] Round stats are saved when submitting a new battle report
-- [ ] Round stats are loaded and editable when editing an existing battle report
-- [ ] Round stats are displayed on the battle report detail view (only when present)
-- [ ] Deleting a battle report cascades and removes its round stats
-- [ ] Round stats follow the same access control as their parent battle report
-- [ ] Build and lint pass
+- [x] A new "Round Stats" section appears on the battle report form between the Defender and Reporting sections
+- [x] Users can add rounds via an "Add Round" button (up to 5 rounds max)
+- [x] Each round captures: attacker points earned, attacker units lost, attacker models lost, defender points earned, defender units lost, defender models lost
+- [x] Users can remove a round they've added
+- [x] All round stat fields are non-negative integers
+- [x] Round stats are optional — reports can be published without any round stats
+- [x] Round stats are saved when submitting a new battle report
+- [x] Round stats are loaded and editable when editing an existing battle report
+- [x] Round stats are displayed on the battle report detail view (only when present)
+- [x] Deleting a battle report cascades and removes its round stats
+- [x] Round stats follow the same access control as their parent battle report
+- [x] Build and lint pass
 
 ## Routes
 

@@ -7,6 +7,7 @@ import {
   getMemberFactions,
   getMembers,
   getMissions,
+  getRoundStatsByReportId,
 } from '@/modules/battle-report/queries'
 import { getFactions } from '@/modules/faction/queries'
 import { getSeasons } from '@/modules/season/queries'
@@ -51,7 +52,7 @@ export default async function EditBattleReportPage({ params }: { params: Promise
     )
   }
 
-  const [missions, deployments, battlePoints, members, factionsList, memberFactions, seasons] = await Promise.all([
+  const [missions, deployments, battlePoints, members, factionsList, memberFactions, seasons, roundStats] = await Promise.all([
     getMissions(),
     getDeployments(),
     getBattlePoints(),
@@ -59,7 +60,18 @@ export default async function EditBattleReportPage({ params }: { params: Promise
     getFactions(),
     getMemberFactions(),
     getSeasons({ includeAll: isAdmin }),
+    getRoundStatsByReportId(id),
   ])
+
+  const defaultRoundStats = roundStats.map((rs) => ({
+    round_number: rs.round_number,
+    attacker_points_earned: String(rs.attacker_points_earned),
+    attacker_units_lost: String(rs.attacker_units_lost),
+    attacker_models_lost: String(rs.attacker_models_lost),
+    defender_points_earned: String(rs.defender_points_earned),
+    defender_units_lost: String(rs.defender_units_lost),
+    defender_models_lost: String(rs.defender_models_lost),
+  }))
 
   return (
     <main className="page-layout">
@@ -83,6 +95,7 @@ export default async function EditBattleReportPage({ params }: { params: Promise
             seasons={seasons}
             isAdmin={isAdmin}
             defaultValues={report}
+            defaultRoundStats={defaultRoundStats}
             reportId={id}
           />
         </div>

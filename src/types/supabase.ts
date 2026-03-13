@@ -52,6 +52,53 @@ export type Database = {
         }
         Relationships: []
       }
+      battle_report_round_stats: {
+        Row: {
+          attacker_models_lost: number
+          attacker_points_earned: number
+          attacker_units_lost: number
+          battle_report_id: string
+          created_at: string
+          defender_models_lost: number
+          defender_points_earned: number
+          defender_units_lost: number
+          id: number
+          round_number: number
+        }
+        Insert: {
+          attacker_models_lost?: number
+          attacker_points_earned?: number
+          attacker_units_lost?: number
+          battle_report_id: string
+          created_at?: string
+          defender_models_lost?: number
+          defender_points_earned?: number
+          defender_units_lost?: number
+          id?: number
+          round_number: number
+        }
+        Update: {
+          attacker_models_lost?: number
+          attacker_points_earned?: number
+          attacker_units_lost?: number
+          battle_report_id?: string
+          created_at?: string
+          defender_models_lost?: number
+          defender_points_earned?: number
+          defender_units_lost?: number
+          id?: number
+          round_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "battle_report_round_stats_battle_report_id_fkey"
+            columns: ["battle_report_id"]
+            isOneToOne: false
+            referencedRelation: "battle_reports"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       battle_reports: {
         Row: {
           attacker_faction_id: string | null

@@ -8,6 +8,7 @@ import {
   getMissions,
   getDeployments,
   getBattlePoints,
+  getRoundStatsByReportId,
 } from '@/modules/battle-report/queries'
 import type { Outcome } from '@/types/battle-report'
 import type { Profile } from '@/types/profile'
@@ -85,7 +86,7 @@ export default async function BattleReportDetailPage({ params }: { params: Promi
 
   const supabase = await createClient()
 
-  const [report, auth, { data: profiles }, factions, missions, deployments, battlePoints] =
+  const [report, auth, { data: profiles }, factions, missions, deployments, battlePoints, roundStats] =
     await Promise.all([
       getBattleReportById(id),
       getAuthUser({ withProfile: true }),
@@ -94,6 +95,7 @@ export default async function BattleReportDetailPage({ params }: { params: Promi
       getMissions(),
       getDeployments(),
       getBattlePoints(),
+      getRoundStatsByReportId(id),
     ])
 
   if (!report) {
@@ -256,6 +258,56 @@ export default async function BattleReportDetailPage({ params }: { params: Promi
               </div>
             </div>
           </div>
+
+          {/* Round Stats */}
+          {roundStats.length > 0 && (
+            <div className="mt-8">
+              <h2 className="ornament section-header">Round Stats</h2>
+              <div className="flex flex-col gap-4">
+                {roundStats.map((rs) => (
+                  <div key={rs.id} className="rounded-lg bg-base-200 p-4">
+                    <h3 className="mb-3 font-semibold">Round {rs.round_number}</h3>
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                      <div>
+                        <p className="label-meta mb-1">Attacker</p>
+                        <div className="grid grid-cols-3 gap-2 text-sm">
+                          <div>
+                            <p className="text-base-content/50">Points</p>
+                            <p className="font-medium">{rs.attacker_points_earned}</p>
+                          </div>
+                          <div>
+                            <p className="text-base-content/50">Units Lost</p>
+                            <p className="font-medium">{rs.attacker_units_lost}</p>
+                          </div>
+                          <div>
+                            <p className="text-base-content/50">Models Lost</p>
+                            <p className="font-medium">{rs.attacker_models_lost}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="label-meta mb-1">Defender</p>
+                        <div className="grid grid-cols-3 gap-2 text-sm">
+                          <div>
+                            <p className="text-base-content/50">Points</p>
+                            <p className="font-medium">{rs.defender_points_earned}</p>
+                          </div>
+                          <div>
+                            <p className="text-base-content/50">Units Lost</p>
+                            <p className="font-medium">{rs.defender_units_lost}</p>
+                          </div>
+                          <div>
+                            <p className="text-base-content/50">Models Lost</p>
+                            <p className="font-medium">{rs.defender_models_lost}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </main>
