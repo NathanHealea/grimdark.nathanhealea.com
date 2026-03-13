@@ -1,35 +1,3 @@
-WARN: environment variable is unset: SUPABASE_AUTH_EXTERNAL_DISCORD_CLIENT_ID
-WARN: environment variable is unset: SUPABASE_AUTH_EXTERNAL_DISCORD_SECRET
-Connecting to db 5432
-v0.96.1: Pulling from supabase/postgres-meta
-eb04ef52de3a: Already exists
-3aa96371cb05: Already exists
-9b590c83e93c: Already exists
-1061a5258f4e: Already exists
-649294d53040: Already exists
-b1f4bffa7894: Pulling fs layer
-7f0469884eb9: Pulling fs layer
-4f6e2095427e: Pulling fs layer
-036bd28688ee: Pulling fs layer
-19351e083594: Pulling fs layer
-036bd28688ee: Waiting
-19351e083594: Waiting
-7f0469884eb9: Verifying Checksum
-7f0469884eb9: Download complete
-b1f4bffa7894: Download complete
-036bd28688ee: Verifying Checksum
-036bd28688ee: Download complete
-b1f4bffa7894: Pull complete
-7f0469884eb9: Pull complete
-19351e083594: Verifying Checksum
-19351e083594: Download complete
-4f6e2095427e: Verifying Checksum
-4f6e2095427e: Download complete
-4f6e2095427e: Pull complete
-036bd28688ee: Pull complete
-19351e083594: Pull complete
-Digest: sha256:2559d20aaa50f2eb86a6cb2e5af4e847e87139673bc214b4655c126d96c160b2
-Status: Downloaded newer image for public.ecr.aws/supabase/postgres-meta:v0.96.1
 export type Json =
   | string
   | number
