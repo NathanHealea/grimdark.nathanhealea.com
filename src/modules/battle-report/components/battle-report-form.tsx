@@ -11,7 +11,7 @@ import {
   validateSeasonId,
   validateSelectId,
 } from '@/modules/battle-report/validation'
-import type { BattlePoints, BattleReport, Deployment, Mission } from '@/types/battle-report'
+import type { BattlePoints, BattleReport, Deployment, Mission, RoundStatFormValues } from '@/types/battle-report'
 import type { Faction, ProfileFaction } from '@/types/faction'
 import type { Profile } from '@/types/profile'
 import { formatSeasonName, isCurrentSeason, isPastSeason, type Season } from '@/types/season'
@@ -29,6 +29,7 @@ type BattleReportFormProps = {
   seasons: Season[]
   isAdmin: boolean
   defaultValues?: Partial<BattleReport>
+  defaultRoundStats?: RoundStatFormValues[]
   reportId?: string
 }
 
@@ -67,6 +68,7 @@ export default function BattleReportForm({
   seasons,
   isAdmin,
   defaultValues,
+  defaultRoundStats,
   reportId,
 }: BattleReportFormProps) {
   const isEditMode = !!reportId
@@ -80,6 +82,32 @@ export default function BattleReportForm({
   const [values, setValues] = useState(() => toFormValues(defaultValues))
   const [status, setStatus] = useState<'draft' | 'published'>(defaultValues?.status ?? 'draft')
   const [samePlayerError, setSamePlayerError] = useState('')
+  const [roundStats, setRoundStats] = useState<RoundStatFormValues[]>(defaultRoundStats ?? [])
+
+  function createEmptyRound(roundNumber: number): RoundStatFormValues {
+    return {
+      round_number: roundNumber,
+      attacker_points_earned: '0',
+      attacker_units_lost: '0',
+      attacker_models_lost: '0',
+      defender_points_earned: '0',
+      defender_units_lost: '0',
+      defender_models_lost: '0',
+    }
+  }
+
+  function addRound() {
+    if (roundStats.length >= 5) return
+    setRoundStats((prev) => [...prev, createEmptyRound(prev.length + 1)])
+  }
+
+  function removeRound(index: number) {
+    setRoundStats((prev) => prev.filter((_, i) => i !== index).map((r, i) => ({ ...r, round_number: i + 1 })))
+  }
+
+  function updateRoundStat(index: number, field: keyof RoundStatFormValues, value: string) {
+    setRoundStats((prev) => prev.map((r, i) => (i === index ? { ...r, [field]: value } : r)))
+  }
 
   // Reset form on successful submit — useActionState requires useEffect for state observation
   useEffect(() => {
@@ -87,6 +115,7 @@ export default function BattleReportForm({
       setValues(toFormValues()) // eslint-disable-line react-hooks/set-state-in-effect
       setStatus('draft')
       setSamePlayerError('')
+      setRoundStats([])
     }
   }, [state, isEditMode])
 
@@ -149,6 +178,10 @@ export default function BattleReportForm({
     }
 
     setSamePlayerError('')
+
+    if (roundStats.length > 0) {
+      formData.set('round_stats_json', JSON.stringify(roundStats))
+    }
 
     startTransition(() => {
       formAction(formData)
@@ -593,6 +626,131 @@ export default function BattleReportForm({
                 </span>
               </label>
             </div>
+          </fieldset>
+        </div>
+
+        {/* Round Stats Section */}
+        <div>
+          <h2 className="ornament section-header">Round Stats</h2>
+          <fieldset className="form-section">
+            <p className="mb-4 text-sm text-base-content/50">
+              Optionally track stats for each round played. All fields default to 0.
+            </p>
+
+            {roundStats.map((round, index) => (
+              <div key={index} className="card card-bordered mb-4 bg-base-200 p-4">
+                <div className="mb-3 flex items-center justify-between">
+                  <h3 className="font-semibold">Round {round.round_number}</h3>
+                  <button
+                    type="button"
+                    className="btn btn-ghost btn-sm text-error"
+                    onClick={() => removeRound(index)}
+                  >
+                    Remove
+                  </button>
+                </div>
+
+                <div className="mb-2">
+                  <span className="label-meta">Attacker</span>
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                    <div>
+                      <label className="label text-xs" htmlFor={`round_${index}_attacker_points`}>
+                        Points Earned
+                      </label>
+                      <input
+                        id={`round_${index}_attacker_points`}
+                        type="number"
+                        min={0}
+                        className="input input-bordered w-full"
+                        value={round.attacker_points_earned}
+                        onChange={(e) => updateRoundStat(index, 'attacker_points_earned', e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <label className="label text-xs" htmlFor={`round_${index}_attacker_units`}>
+                        Units Lost
+                      </label>
+                      <input
+                        id={`round_${index}_attacker_units`}
+                        type="number"
+                        min={0}
+                        className="input input-bordered w-full"
+                        value={round.attacker_units_lost}
+                        onChange={(e) => updateRoundStat(index, 'attacker_units_lost', e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <label className="label text-xs" htmlFor={`round_${index}_attacker_models`}>
+                        Models Lost
+                      </label>
+                      <input
+                        id={`round_${index}_attacker_models`}
+                        type="number"
+                        min={0}
+                        className="input input-bordered w-full"
+                        value={round.attacker_models_lost}
+                        onChange={(e) => updateRoundStat(index, 'attacker_models_lost', e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <span className="label-meta">Defender</span>
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                    <div>
+                      <label className="label text-xs" htmlFor={`round_${index}_defender_points`}>
+                        Points Earned
+                      </label>
+                      <input
+                        id={`round_${index}_defender_points`}
+                        type="number"
+                        min={0}
+                        className="input input-bordered w-full"
+                        value={round.defender_points_earned}
+                        onChange={(e) => updateRoundStat(index, 'defender_points_earned', e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <label className="label text-xs" htmlFor={`round_${index}_defender_units`}>
+                        Units Lost
+                      </label>
+                      <input
+                        id={`round_${index}_defender_units`}
+                        type="number"
+                        min={0}
+                        className="input input-bordered w-full"
+                        value={round.defender_units_lost}
+                        onChange={(e) => updateRoundStat(index, 'defender_units_lost', e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <label className="label text-xs" htmlFor={`round_${index}_defender_models`}>
+                        Models Lost
+                      </label>
+                      <input
+                        id={`round_${index}_defender_models`}
+                        type="number"
+                        min={0}
+                        className="input input-bordered w-full"
+                        value={round.defender_models_lost}
+                        onChange={(e) => updateRoundStat(index, 'defender_models_lost', e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            <button
+              type="button"
+              className="btn btn-outline btn-sm"
+              onClick={addRound}
+              disabled={roundStats.length >= 5}
+            >
+              + Add Round {roundStats.length > 0 && `(${roundStats.length}/5)`}
+            </button>
+            {state?.errors?.round_stats && <p className="form-error mt-2">{state.errors.round_stats}</p>}
           </fieldset>
         </div>
 

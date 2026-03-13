@@ -17,6 +17,7 @@ export type BattleReportFormState = FormState<{
   rounds: string
   status: string
   season_id: string
+  round_stats: string
 }>
 
 const VALID_STATUSES: BattleReportStatus[] = ['draft', 'published']
@@ -119,6 +120,16 @@ export function validateSeasonId(value: string): string | null {
 
   if (!Number.isInteger(num) || num < 1) {
     return 'Invalid season selection.'
+  }
+
+  return null
+}
+
+export function validateRoundStatField(value: string): string | null {
+  const num = Number(value)
+
+  if (!Number.isInteger(num) || num < 0) {
+    return 'Must be a non-negative integer.'
   }
 
   return null
