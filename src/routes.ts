@@ -9,6 +9,7 @@ export const publicLinks: NavLink[] = [
   { href: '/seasons', label: 'Seasons' },
   { href: '/battle-reports', label: 'Battle Reports' },
   { href: '/members', label: 'Members' },
+  { href: '/guides', label: 'Guides' },
 ];
 
 export const memberLinks: NavLink[] = [
