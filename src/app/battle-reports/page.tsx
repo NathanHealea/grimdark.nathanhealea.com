@@ -1,3 +1,4 @@
+import { BookOpenIcon } from '@heroicons/react/24/outline'
 import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { getFactions } from '@/modules/faction/queries'
@@ -79,10 +80,18 @@ export default async function BattleReportsPage() {
         <div className="page-content">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-h1">Battle Reports</h1>
-            <p className="mt-1 text-sm text-base-content/50">
-              Browse all submitted battle reports from the league.
-            </p>
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h1 className="text-h1">Battle Reports</h1>
+                <p className="mt-1 text-sm text-base-content/50">
+                  Browse all submitted battle reports from the league.
+                </p>
+              </div>
+              <Link href="/guides/submitting-a-battle-report" className="flex items-center gap-1 text-xs text-base-content/40 hover:text-primary transition-colors shrink-0">
+                <BookOpenIcon className="size-3.5" />
+                How to submit
+              </Link>
+            </div>
           </div>
 
           {/* Battle Reports */}
