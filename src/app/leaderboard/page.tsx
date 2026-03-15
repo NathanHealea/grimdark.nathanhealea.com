@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { getBattleReports } from '@/modules/battle-report/queries'
+import GuideLink from '@/modules/guides/components/guide-link'
 import { computeLeaderboard } from '@/modules/leaderboard/utils'
 import LeaderboardTable from '@/modules/leaderboard/components/leaderboard-table'
 import type { Profile } from '@/types/profile'
@@ -26,9 +27,12 @@ export default async function LeaderboardPage() {
     <main className="page-layout">
       <div className="page-container">
         <div className="page-content">
-          <div className="mb-8">
-            <h1 className="text-h1">Leaderboard</h1>
-            <p className="mt-2 text-base-content/60">Rankings based on published battle reports.</p>
+          <div className="mb-8 flex items-start justify-between">
+            <div>
+              <h1 className="text-h1">Leaderboard</h1>
+              <p className="mt-2 text-base-content/60">Rankings based on published battle reports.</p>
+            </div>
+            <GuideLink href="/guides/how-leaderboard-ranking-works" label="How ranking works" />
           </div>
 
           <h2 className="text-xl ornament font-bold mb-4">Current Standings</h2>

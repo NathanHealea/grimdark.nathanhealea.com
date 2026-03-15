@@ -1,6 +1,7 @@
 import { getAuthUser } from '@/lib/supabase/auth'
 import { hasRole } from '@/lib/supabase/roles'
 import { createClient } from '@/lib/supabase/server'
+import GuideLink from '@/modules/guides/components/guide-link'
 import {
   getBattlePoints,
   getBattleReportsBySeasonId,
@@ -169,7 +170,10 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ i
 
           {/* Roster */}
           <div className="mb-8">
-            <h2 className="ornament section-header">Roster ({roster.length})</h2>
+            <div className="flex items-center justify-between">
+              <h2 className="ornament section-header">Roster ({roster.length})</h2>
+              <GuideLink href="/guides/joining-a-season" label="How to join" />
+            </div>
             {auth && season.status === 'published' && await (async () => {
               const myEntry = roster.find((r) => r.profile_id === auth.profile.id)
               const profileFactionIds = await getProfileFactionIds(auth.profile.id)

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { getFactions } from '@/modules/faction/queries'
+import GuideLink from '@/modules/guides/components/guide-link'
 import {
   getBattleReports,
   getMissions,
@@ -79,10 +80,15 @@ export default async function BattleReportsPage() {
         <div className="page-content">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-h1">Battle Reports</h1>
-            <p className="mt-1 text-sm text-base-content/50">
-              Browse all submitted battle reports from the league.
-            </p>
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h1 className="text-h1">Battle Reports</h1>
+                <p className="mt-1 text-sm text-base-content/50">
+                  Browse all submitted battle reports from the league.
+                </p>
+              </div>
+              <GuideLink href="/guides/submitting-a-battle-report" label="How to submit" />
+            </div>
           </div>
 
           {/* Battle Reports */}

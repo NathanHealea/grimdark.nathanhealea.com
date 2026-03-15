@@ -2,28 +2,38 @@
 
 **Epic:** Guides
 **Type:** Feature
-**Status:** Todo
+**Status:** In Progress
 
 ## Summary
 
-Add a markdown-based how-to guides system at `/guides`. Members and visitors can browse guides on core league actions: joining a season, setting up a profile, and submitting battle reports. Guides are authored as `.md` files in `src/content/guides/` with frontmatter metadata, rendered with custom `react-markdown` component overrides styled to match the existing grimdark theme, and linked from both the main navigation and contextual spots on feature pages. Guides can optionally be restricted to admin/organizer roles via a `role` frontmatter field.
+Add a markdown-based how-to guides system at `/guides`. Members and visitors can browse guides on core league actions: joining a season, setting up a profile, and submitting battle reports. Guides are authored as `.md` files in `src/content/guides/` with frontmatter metadata, rendered with custom `react-markdown` component overrides styled to match the existing grimdark theme, and linked from both the main navigation and contextual spots on feature pages.
+
+Guides support a hierarchical role-based visibility system via a `role` frontmatter field:
+- **Public** (`role: null`) — Visible to all visitors, no auth required
+- **Member** (`role: "member"`) — Visible to members, organizers, and admins
+- **Organizer** (`role: "organizer"`) — Visible to organizers and admins
+- **Admin** (`role: "admin"`) — Visible only to admins
+
+The hierarchy is cumulative: higher roles inherit access to all lower-role guides.
 
 ## Acceptance Criteria
 
-- [ ] `/guides` page lists all available guides with title, description, and category
-- [ ] `/guides/[slug]` renders a single guide with full markdown support (headings, lists, links, bold/italic, blockquotes, code)
-- [ ] "Guides" link appears in the main navigation (desktop and mobile)
-- [ ] Guide content is authored as `.md` files in `src/content/guides/` with frontmatter (title, description, category, order)
-- [ ] Three initial guides are created: joining a season, setting up your profile, submitting a battle report
-- [ ] Internal links between guides use Next.js Link for client-side navigation
-- [ ] External links open in a new tab
-- [ ] Contextual "How to" links appear on the seasons detail page and battle reports page
-- [ ] Pages have proper metadata (title, description) from frontmatter for SEO
+- [x] `/guides` page lists all available guides with title, description, and category
+- [x] `/guides/[slug]` renders a single guide with full markdown support (headings, lists, links, bold/italic, blockquotes, code)
+- [x] "Guides" link appears in the main navigation (desktop and mobile)
+- [x] Guide content is authored as `.md` files in `src/content/guides/` with frontmatter (title, description, category, order)
+- [x] Three initial guides are created: joining a season, setting up your profile, submitting a battle report
+- [x] Internal links between guides use Next.js Link for client-side navigation
+- [x] External links open in a new tab
+- [x] Contextual "How to" links appear on the seasons detail page and battle reports page
+- [x] Pages have proper metadata (title, description) from frontmatter for SEO
 - [ ] Build succeeds with static generation (`generateStaticParams`)
-- [ ] Public guides are accessible to all visitors (no auth required)
-- [ ] Guides with `role: "admin"` or `role: "organizer"` in frontmatter are only visible to users with the corresponding role
-- [ ] Role-restricted guides do not appear in the `/guides` index for unauthorized users
-- [ ] Accessing a role-restricted guide slug directly redirects unauthorized users to `/guides`
+- [x] Public guides (`role: null`) are accessible to all visitors (no auth required)
+- [x] Member guides (`role: "member"`) are visible to authenticated members, organizers, and admins
+- [x] Organizer guides (`role: "organizer"`) are visible to organizers and admins only
+- [x] Admin guides (`role: "admin"`) are visible only to admins
+- [x] Role-restricted guides do not appear in the `/guides` index for unauthorized users
+- [x] Accessing a role-restricted guide slug directly redirects unauthorized users to `/guides`
 
 ## Routes
 
@@ -71,7 +81,7 @@ title: "How to Join a Season"
 description: "Sign up for a league season and pick your faction"
 category: "Seasons"
 order: 1
-role: null  # or "admin" | "organizer" to restrict access
+role: null  # or "member" | "organizer" | "admin" to restrict access
 ---
 ```
 
@@ -80,8 +90,9 @@ The filename (minus `.md`) becomes the URL slug.
 #### 3. Create content utility
 
 `src/lib/content.ts` with:
-- `getGuides(userRoles?: string[])` — Read all `.md` files, parse frontmatter with `gray-matter`, filter out role-restricted guides the user can't access, return metadata sorted by `order`
-- `getGuide(slug, userRoles?: string[])` — Read single guide, return metadata + markdown content. Returns `null` if user lacks required role
+- `getGuides(userRoles?: string[])` — Read all `.md` files, parse frontmatter with `gray-matter`, filter by role hierarchy (public < member < organizer < admin), return metadata sorted by `order`
+- `getGuide(slug, userRoles?: string[])` — Read single guide, return metadata + markdown content. Returns `null` if user lacks required role per hierarchy
+- `canAccessGuide(guideRole, userRoles)` — Check if user's roles grant access per the hierarchy: admins see all, organizers see organizer/member/public, members see member/public, visitors see public only
 - `getGuideSlugs()` — Return all slugs for `generateStaticParams` (no filtering — all pages are generated, access checked at render time)
 
 Uses `fs.readFileSync` and `path.join(process.cwd(), 'src/content/guides')` — standard pattern for server components.
@@ -124,7 +135,7 @@ Subtle helper links (e.g., `BookOpenIcon` + text) on:
 2. **Separate guide renderer from existing MarkdownRenderer** — The existing renderer handles short-form content (bios, descriptions) with minimal styling. Guides need full markdown support (headings, tables, code blocks). Keeping them separate avoids bloating the simple renderer.
 3. **Custom `react-markdown` component overrides over `@tailwindcss/typography`** — Custom component overrides styled with Tailwind utilities give full control over the grimdark theme appearance. This avoids adding a dependency and keeps typography consistent with the existing hand-crafted styles in `globals.css`.
 4. **Frontmatter with `gray-matter` over a separate metadata file** — Co-locating metadata (title, description, order, role) with content is the standard pattern for markdown-based content systems. `gray-matter` is lightweight and widely used.
-5. **Frontmatter `role` field for access control** — Guides default to public. Setting `role: "admin"` or `role: "organizer"` in frontmatter restricts visibility. The content utility filters guides based on the current user's roles, and the `[slug]` page redirects unauthorized access. This uses the existing `hasRole`/`hasAnyRole` helpers from `src/lib/supabase/roles.ts`.
+5. **Hierarchical role-based access control** — Guides default to public. The `role` frontmatter field supports four levels: `null` (public), `"member"`, `"organizer"`, `"admin"`. Access is hierarchical — admins see everything, organizers see organizer/member/public, members see member/public, visitors see only public. The content utility implements this hierarchy, and the `[slug]` page redirects unauthorized access.
 
 ## Notes
 
