@@ -1,7 +1,7 @@
-import { BookOpenIcon } from '@heroicons/react/24/outline'
 import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { getFactions } from '@/modules/faction/queries'
+import GuideLink from '@/modules/guides/components/guide-link'
 import {
   getBattleReports,
   getMissions,
@@ -87,10 +87,7 @@ export default async function BattleReportsPage() {
                   Browse all submitted battle reports from the league.
                 </p>
               </div>
-              <Link href="/guides/submitting-a-battle-report" className="flex items-center gap-1 text-xs text-base-content/40 hover:text-primary transition-colors shrink-0">
-                <BookOpenIcon className="size-3.5" />
-                How to submit
-              </Link>
+              <GuideLink href="/guides/submitting-a-battle-report" label="How to submit" />
             </div>
           </div>
 

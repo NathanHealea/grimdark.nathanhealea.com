@@ -1,8 +1,7 @@
-import { BookOpenIcon } from '@heroicons/react/24/outline'
-
 import { getAuthUser } from '@/lib/supabase/auth'
 import { hasRole } from '@/lib/supabase/roles'
 import { createClient } from '@/lib/supabase/server'
+import GuideLink from '@/modules/guides/components/guide-link'
 import {
   getBattlePoints,
   getBattleReportsBySeasonId,
@@ -173,10 +172,7 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ i
           <div className="mb-8">
             <div className="flex items-center justify-between">
               <h2 className="ornament section-header">Roster ({roster.length})</h2>
-              <Link href="/guides/joining-a-season" className="flex items-center gap-1 text-xs text-base-content/40 hover:text-primary transition-colors">
-                <BookOpenIcon className="size-3.5" />
-                How to join
-              </Link>
+              <GuideLink href="/guides/joining-a-season" label="How to join" />
             </div>
             {auth && season.status === 'published' && await (async () => {
               const myEntry = roster.find((r) => r.profile_id === auth.profile.id)

@@ -1,12 +1,12 @@
 ---
-title: 'How to Edit a Profile (Admin)'
+title: 'How to Edit a Profile '
 description: 'Update a member profile, avatar, factions, and admin settings'
 category: 'Profile Management'
 order: 21
 role: 'admin'
 ---
 
-# How to Edit a Profile (Admin)
+# How to Edit a Profile 
 
 Admins can edit any member's profile, including fields that members cannot change themselves.
 
