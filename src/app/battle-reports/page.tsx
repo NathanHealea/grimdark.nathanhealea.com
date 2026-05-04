@@ -168,12 +168,9 @@ export default async function BattleReportsPage() {
                           {bp && <span>{bp.name}</span>}
                           {report.rounds != null && <span>{report.rounds} {report.rounds === 1 ? 'round' : 'rounds'}</span>}
                           {season && (
-                            <Link
-                              href={`/seasons/${season.id}`}
-                              className="link link-hover link-primary"
-                            >
+                            <span className="text-primary">
                               {formatSeasonName(season)}
-                            </Link>
+                            </span>
                           )}
                           {report.event_date && <span className="ml-auto">{formatDate(report.event_date)}</span>}
                         </div>

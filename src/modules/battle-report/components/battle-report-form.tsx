@@ -38,11 +38,11 @@ function toFormValues(defaults?: Partial<BattleReport>) {
     event_date: defaults?.event_date ?? '',
     attacker_id: defaults?.attacker_id ?? '',
     attacker_faction_id: defaults?.attacker_faction_id ?? '',
-    attacker_score: defaults?.attacker_score != null ? String(defaults.attacker_score) : '',
+    attacker_score: defaults?.attacker_score != null ? String(defaults.attacker_score) : '0',
     attacker_outcome: defaults?.attacker_outcome ?? '',
     defender_id: defaults?.defender_id ?? '',
     defender_faction_id: defaults?.defender_faction_id ?? '',
-    defender_score: defaults?.defender_score != null ? String(defaults.defender_score) : '',
+    defender_score: defaults?.defender_score != null ? String(defaults.defender_score) : '0',
     defender_outcome: defaults?.defender_outcome ?? '',
     mission_id: defaults?.mission_id != null ? String(defaults.mission_id) : '',
     deployment_id: defaults?.deployment_id != null ? String(defaults.deployment_id) : '',
@@ -55,6 +55,26 @@ function toFormValues(defaults?: Partial<BattleReport>) {
     attacker_models_lost: defaults?.attacker_models_lost != null ? String(defaults.attacker_models_lost) : '0',
     defender_units_lost: defaults?.defender_units_lost != null ? String(defaults.defender_units_lost) : '0',
     defender_models_lost: defaults?.defender_models_lost != null ? String(defaults.defender_models_lost) : '0',
+  }
+}
+
+function validateFieldByName(name: string, value: string): string | null {
+  switch (name) {
+    case 'event_date': return validateEventDate(value)
+    case 'attacker_id':
+    case 'defender_id': return validatePlayerId(value)
+    case 'attacker_faction_id':
+    case 'defender_faction_id': return validateFactionId(value)
+    case 'attacker_score':
+    case 'defender_score': return validateScore(value)
+    case 'attacker_outcome':
+    case 'defender_outcome': return validateOutcome(value)
+    case 'mission_id':
+    case 'deployment_id':
+    case 'battle_points_id': return validateSelectId(value)
+    case 'rounds': return validateRounds(value)
+    case 'season_id': return validateSeasonId(value)
+    default: return null
   }
 }
 
@@ -81,8 +101,17 @@ export default function BattleReportForm({
   const formRef = useRef<HTMLFormElement>(null)
   const [values, setValues] = useState(() => toFormValues(defaultValues))
   const [status, setStatus] = useState<'draft' | 'published'>(defaultValues?.status ?? 'draft')
-  const [samePlayerError, setSamePlayerError] = useState('')
+  const [clientErrors, setClientErrors] = useState<Record<string, string>>({})
+  const [resolvedFields, setResolvedFields] = useState<Set<string>>(new Set())
   const [roundStats, setRoundStats] = useState<RoundStatFormValues[]>(defaultRoundStats ?? [])
+
+  function fieldError(key: string): string | undefined {
+    return clientErrors[key] || (state?.errors as Record<string, string> | undefined)?.[key]
+  }
+
+  function fieldSuccess(key: string): boolean {
+    return resolvedFields.has(key) && !fieldError(key)
+  }
 
   function createEmptyRound(roundNumber: number): RoundStatFormValues {
     return {
@@ -114,13 +143,42 @@ export default function BattleReportForm({
     if (state?.success && !isEditMode) {
       setValues(toFormValues()) // eslint-disable-line react-hooks/set-state-in-effect
       setStatus('draft')
-      setSamePlayerError('')
+      setClientErrors({})
+      setResolvedFields(new Set())
       setRoundStats([])
     }
   }, [state, isEditMode])
 
   function updateField(name: keyof ReturnType<typeof toFormValues>, value: string) {
     setValues((prev) => ({ ...prev, [name]: value }))
+
+    const serverErrors = state?.errors as Record<string, string> | undefined
+    const hasError = !!clientErrors[name] || !!serverErrors?.[name]
+    const wasResolved = resolvedFields.has(name)
+
+    if (hasError || wasResolved) {
+      let error = validateFieldByName(name, value)
+
+      if (!error && name === 'defender_id' && value && value === values.attacker_id) {
+        error = 'Attacker and defender cannot be the same player.'
+      }
+
+      if (!error) {
+        setClientErrors((prev) => { const next = { ...prev }; delete next[name]; return next })
+        setResolvedFields((prev) => new Set([...prev, name]))
+      } else {
+        setClientErrors((prev) => ({ ...prev, [name]: error }))
+        setResolvedFields((prev) => { const next = new Set(prev); next.delete(name); return next })
+      }
+    }
+
+    // When attacker changes and defender has the same-player error, clear it
+    if (name === 'attacker_id' && clientErrors['defender_id'] === 'Attacker and defender cannot be the same player.') {
+      if (value !== values.defender_id) {
+        setClientErrors((prev) => { const next = { ...prev }; delete next['defender_id']; return next })
+        setResolvedFields((prev) => new Set([...prev, 'defender_id']))
+      }
+    }
   }
 
   const factionsByMember = useMemo(() => {
@@ -148,36 +206,62 @@ export default function BattleReportForm({
   function handleSubmit(formData: FormData) {
     formData.set('status', status)
 
-    // Only validate for published reports
     if (status === 'published') {
-      const hasError =
-        validateEventDate(values.event_date) ||
-        validatePlayerId(values.attacker_id) ||
-        validateFactionId(values.attacker_faction_id) ||
-        validateScore(values.attacker_score) ||
-        validateOutcome(values.attacker_outcome) ||
-        validatePlayerId(values.defender_id) ||
-        validateFactionId(values.defender_faction_id) ||
-        validateScore(values.defender_score) ||
-        validateOutcome(values.defender_outcome) ||
-        validateSelectId(values.mission_id) ||
-        validateSelectId(values.deployment_id) ||
-        validateSelectId(values.battle_points_id) ||
-        validateRounds(values.rounds) ||
-        validateSeasonId(values.season_id)
+      const newErrors: Record<string, string> = {}
 
-      if (hasError) {
-        formRef.current?.reportValidity()
-        return
+      const eventDateError = validateEventDate(values.event_date)
+      if (eventDateError) newErrors.event_date = eventDateError
+
+      const attackerIdError = validatePlayerId(values.attacker_id)
+      if (attackerIdError) newErrors.attacker_id = attackerIdError
+
+      const attackerFactionIdError = validateFactionId(values.attacker_faction_id)
+      if (attackerFactionIdError) newErrors.attacker_faction_id = attackerFactionIdError
+
+      const attackerScoreError = validateScore(values.attacker_score)
+      if (attackerScoreError) newErrors.attacker_score = attackerScoreError
+
+      const attackerOutcomeError = validateOutcome(values.attacker_outcome)
+      if (attackerOutcomeError) newErrors.attacker_outcome = attackerOutcomeError
+
+      const defenderIdError = validatePlayerId(values.defender_id)
+      if (defenderIdError) newErrors.defender_id = defenderIdError
+
+      const defenderFactionIdError = validateFactionId(values.defender_faction_id)
+      if (defenderFactionIdError) newErrors.defender_faction_id = defenderFactionIdError
+
+      const defenderScoreError = validateScore(values.defender_score)
+      if (defenderScoreError) newErrors.defender_score = defenderScoreError
+
+      const defenderOutcomeError = validateOutcome(values.defender_outcome)
+      if (defenderOutcomeError) newErrors.defender_outcome = defenderOutcomeError
+
+      const missionIdError = validateSelectId(values.mission_id)
+      if (missionIdError) newErrors.mission_id = missionIdError
+
+      const deploymentIdError = validateSelectId(values.deployment_id)
+      if (deploymentIdError) newErrors.deployment_id = deploymentIdError
+
+      const battlePointsIdError = validateSelectId(values.battle_points_id)
+      if (battlePointsIdError) newErrors.battle_points_id = battlePointsIdError
+
+      const roundsError = validateRounds(values.rounds)
+      if (roundsError) newErrors.rounds = roundsError
+
+      const seasonIdError = validateSeasonId(values.season_id)
+      if (seasonIdError) newErrors.season_id = seasonIdError
+
+      if (!newErrors.defender_id && values.attacker_id && values.attacker_id === values.defender_id) {
+        newErrors.defender_id = 'Attacker and defender cannot be the same player.'
       }
 
-      if (values.attacker_id && values.attacker_id === values.defender_id) {
-        setSamePlayerError('Attacker and defender cannot be the same player.')
-        return
-      }
+      setClientErrors(newErrors)
+      setResolvedFields(new Set())
+      if (Object.keys(newErrors).length > 0) return
     }
 
-    setSamePlayerError('')
+    setClientErrors({})
+    setResolvedFields(new Set())
 
     if (roundStats.length > 0) {
       formData.set('round_stats_json', JSON.stringify(roundStats))
@@ -222,11 +306,11 @@ export default function BattleReportForm({
                   name="event_date"
                   type="date"
                   max={new Date().toISOString().split('T')[0]}
-                  className={`input input-lg input-bordered w-full ${state?.errors?.event_date ? 'input-error' : ''}`}
+                  className={`input input-lg input-bordered w-full ${fieldError('event_date') ? 'input-error' : fieldSuccess('event_date') ? 'input-success' : ''}`}
                   value={values.event_date}
                   onChange={(e) => updateField('event_date', e.target.value)}
                 />
-                {state?.errors?.event_date && <p className="form-error">{state.errors.event_date}</p>}
+                {fieldError('event_date') && <p className="form-error">{fieldError('event_date')}</p>}
               </div>
               <div>
                 <label className="label" htmlFor="season_id">
@@ -235,7 +319,7 @@ export default function BattleReportForm({
                 <select
                   id="season_id"
                   name="season_id"
-                  className={`select select-lg select-bordered w-full ${state?.errors?.season_id ? 'select-error' : ''}`}
+                  className={`select select-lg select-bordered w-full ${fieldError('season_id') ? 'select-error' : fieldSuccess('season_id') ? 'select-success' : ''}`}
                   value={values.season_id}
                   onChange={(e) => updateField('season_id', e.target.value)}
                 >
@@ -247,7 +331,7 @@ export default function BattleReportForm({
                     </option>
                   ))}
                 </select>
-                {state?.errors?.season_id && <p className="form-error">{state.errors.season_id}</p>}
+                {fieldError('season_id') && <p className="form-error">{fieldError('season_id')}</p>}
               </div>
             </div>
 
@@ -259,7 +343,7 @@ export default function BattleReportForm({
                 <select
                   id="mission_id"
                   name="mission_id"
-                  className={`select select-lg select-bordered w-full ${state?.errors?.mission_id ? 'select-error' : ''}`}
+                  className={`select select-lg select-bordered w-full ${fieldError('mission_id') ? 'select-error' : fieldSuccess('mission_id') ? 'select-success' : ''}`}
                   value={values.mission_id}
                   onChange={(e) => updateField('mission_id', e.target.value)}
                 >
@@ -270,7 +354,7 @@ export default function BattleReportForm({
                     </option>
                   ))}
                 </select>
-                {state?.errors?.mission_id && <p className="form-error">{state.errors.mission_id}</p>}
+                {fieldError('mission_id') && <p className="form-error">{fieldError('mission_id')}</p>}
               </div>
               <div>
                 <label className="label" htmlFor="deployment_id">
@@ -279,7 +363,7 @@ export default function BattleReportForm({
                 <select
                   id="deployment_id"
                   name="deployment_id"
-                  className={`select select-lg select-bordered w-full ${state?.errors?.deployment_id ? 'select-error' : ''}`}
+                  className={`select select-lg select-bordered w-full ${fieldError('deployment_id') ? 'select-error' : fieldSuccess('deployment_id') ? 'select-success' : ''}`}
                   value={values.deployment_id}
                   onChange={(e) => updateField('deployment_id', e.target.value)}
                 >
@@ -290,8 +374,8 @@ export default function BattleReportForm({
                     </option>
                   ))}
                 </select>
-                {state?.errors?.deployment_id && (
-                  <p className="form-error">{state.errors.deployment_id}</p>
+                {fieldError('deployment_id') && (
+                  <p className="form-error">{fieldError('deployment_id')}</p>
                 )}
               </div>
             </div>
@@ -304,7 +388,7 @@ export default function BattleReportForm({
                 <select
                   id="battle_points_id"
                   name="battle_points_id"
-                  className={`select select-lg select-bordered w-full ${state?.errors?.battle_points_id ? 'select-error' : ''}`}
+                  className={`select select-lg select-bordered w-full ${fieldError('battle_points_id') ? 'select-error' : fieldSuccess('battle_points_id') ? 'select-success' : ''}`}
                   value={values.battle_points_id}
                   onChange={(e) => updateField('battle_points_id', e.target.value)}
                 >
@@ -315,8 +399,8 @@ export default function BattleReportForm({
                     </option>
                   ))}
                 </select>
-                {state?.errors?.battle_points_id && (
-                  <p className="form-error">{state.errors.battle_points_id}</p>
+                {fieldError('battle_points_id') && (
+                  <p className="form-error">{fieldError('battle_points_id')}</p>
                 )}
               </div>
               <div>
@@ -326,7 +410,7 @@ export default function BattleReportForm({
                 <select
                   id="rounds"
                   name="rounds"
-                  className={`select select-lg select-bordered w-full ${state?.errors?.rounds ? 'select-error' : ''}`}
+                  className={`select select-lg select-bordered w-full ${fieldError('rounds') ? 'select-error' : fieldSuccess('rounds') ? 'select-success' : ''}`}
                   value={values.rounds}
                   onChange={(e) => updateField('rounds', e.target.value)}
                 >
@@ -337,7 +421,7 @@ export default function BattleReportForm({
                   <option value="4">4</option>
                   <option value="5">5</option>
                 </select>
-                {state?.errors?.rounds && <p className="form-error">{state.errors.rounds}</p>}
+                {fieldError('rounds') && <p className="form-error">{fieldError('rounds')}</p>}
               </div>
             </div>
           </fieldset>
@@ -355,12 +439,11 @@ export default function BattleReportForm({
                 <select
                   id="attacker_id"
                   name="attacker_id"
-                  className={`select select-lg select-bordered w-full ${state?.errors?.attacker_id ? 'select-error' : ''}`}
+                  className={`select select-lg select-bordered w-full ${fieldError('attacker_id') ? 'select-error' : fieldSuccess('attacker_id') ? 'select-success' : ''}`}
                   value={values.attacker_id}
                   onChange={(e) => {
                     updateField('attacker_id', e.target.value)
                     updateField('attacker_faction_id', '')
-                    setSamePlayerError('')
                   }}
                 >
                   <option value="">Select player</option>
@@ -370,7 +453,7 @@ export default function BattleReportForm({
                     </option>
                   ))}
                 </select>
-                {state?.errors?.attacker_id && <p className="form-error">{state.errors.attacker_id}</p>}
+                {fieldError('attacker_id') && <p className="form-error">{fieldError('attacker_id')}</p>}
               </div>
               <div>
                 <label className="label" htmlFor="attacker_faction_id">
@@ -379,7 +462,7 @@ export default function BattleReportForm({
                 <select
                   id="attacker_faction_id"
                   name="attacker_faction_id"
-                  className={`select select-lg select-bordered w-full ${state?.errors?.attacker_faction_id ? 'select-error' : ''}`}
+                  className={`select select-lg select-bordered w-full ${fieldError('attacker_faction_id') ? 'select-error' : fieldSuccess('attacker_faction_id') ? 'select-success' : ''}`}
                   disabled={!values.attacker_id}
                   value={values.attacker_faction_id}
                   onChange={(e) => updateField('attacker_faction_id', e.target.value)}
@@ -391,8 +474,8 @@ export default function BattleReportForm({
                     </option>
                   ))}
                 </select>
-                {state?.errors?.attacker_faction_id && (
-                  <p className="form-error">{state.errors.attacker_faction_id}</p>
+                {fieldError('attacker_faction_id') && (
+                  <p className="form-error">{fieldError('attacker_faction_id')}</p>
                 )}
               </div>
             </div>
@@ -407,12 +490,12 @@ export default function BattleReportForm({
                   name="attacker_score"
                   type="number"
                   min={0}
-                  className={`input input-lg input-bordered w-full ${state?.errors?.attacker_score ? 'input-error' : ''}`}
+                  className={`input input-lg input-bordered w-full ${fieldError('attacker_score') ? 'input-error' : fieldSuccess('attacker_score') ? 'input-success' : ''}`}
                   value={values.attacker_score}
                   onChange={(e) => updateField('attacker_score', e.target.value)}
                 />
-                {state?.errors?.attacker_score && (
-                  <p className="form-error">{state.errors.attacker_score}</p>
+                {fieldError('attacker_score') && (
+                  <p className="form-error">{fieldError('attacker_score')}</p>
                 )}
               </div>
               <div>
@@ -422,7 +505,7 @@ export default function BattleReportForm({
                 <select
                   id="attacker_outcome"
                   name="attacker_outcome"
-                  className={`select select-lg select-bordered w-full ${state?.errors?.attacker_outcome ? 'select-error' : ''}`}
+                  className={`select select-lg select-bordered w-full ${fieldError('attacker_outcome') ? 'select-error' : fieldSuccess('attacker_outcome') ? 'select-success' : ''}`}
                   value={values.attacker_outcome}
                   onChange={(e) => updateField('attacker_outcome', e.target.value)}
                 >
@@ -431,8 +514,8 @@ export default function BattleReportForm({
                   <option value="loss">Loss</option>
                   <option value="draw">Draw</option>
                 </select>
-                {state?.errors?.attacker_outcome && (
-                  <p className="form-error">{state.errors.attacker_outcome}</p>
+                {fieldError('attacker_outcome') && (
+                  <p className="form-error">{fieldError('attacker_outcome')}</p>
                 )}
               </div>
             </div>
@@ -497,12 +580,11 @@ export default function BattleReportForm({
                 <select
                   id="defender_id"
                   name="defender_id"
-                  className={`select select-lg select-bordered w-full ${state?.errors?.defender_id || samePlayerError ? 'select-error' : ''}`}
+                  className={`select select-lg select-bordered w-full ${fieldError('defender_id') ? 'select-error' : fieldSuccess('defender_id') ? 'select-success' : ''}`}
                   value={values.defender_id}
                   onChange={(e) => {
                     updateField('defender_id', e.target.value)
                     updateField('defender_faction_id', '')
-                    setSamePlayerError('')
                   }}
                 >
                   <option value="">Select player</option>
@@ -512,8 +594,8 @@ export default function BattleReportForm({
                     </option>
                   ))}
                 </select>
-                {(state?.errors?.defender_id || samePlayerError) && (
-                  <p className="form-error">{state?.errors?.defender_id || samePlayerError}</p>
+                {fieldError('defender_id') && (
+                  <p className="form-error">{fieldError('defender_id')}</p>
                 )}
               </div>
               <div>
@@ -523,7 +605,7 @@ export default function BattleReportForm({
                 <select
                   id="defender_faction_id"
                   name="defender_faction_id"
-                  className={`select select-lg select-bordered w-full ${state?.errors?.defender_faction_id ? 'select-error' : ''}`}
+                  className={`select select-lg select-bordered w-full ${fieldError('defender_faction_id') ? 'select-error' : fieldSuccess('defender_faction_id') ? 'select-success' : ''}`}
                   disabled={!values.defender_id}
                   value={values.defender_faction_id}
                   onChange={(e) => updateField('defender_faction_id', e.target.value)}
@@ -535,8 +617,8 @@ export default function BattleReportForm({
                     </option>
                   ))}
                 </select>
-                {state?.errors?.defender_faction_id && (
-                  <p className="form-error">{state.errors.defender_faction_id}</p>
+                {fieldError('defender_faction_id') && (
+                  <p className="form-error">{fieldError('defender_faction_id')}</p>
                 )}
               </div>
             </div>
@@ -551,12 +633,12 @@ export default function BattleReportForm({
                   name="defender_score"
                   type="number"
                   min={0}
-                  className={`input input-lg input-bordered w-full ${state?.errors?.defender_score ? 'input-error' : ''}`}
+                  className={`input input-lg input-bordered w-full ${fieldError('defender_score') ? 'input-error' : fieldSuccess('defender_score') ? 'input-success' : ''}`}
                   value={values.defender_score}
                   onChange={(e) => updateField('defender_score', e.target.value)}
                 />
-                {state?.errors?.defender_score && (
-                  <p className="form-error">{state.errors.defender_score}</p>
+                {fieldError('defender_score') && (
+                  <p className="form-error">{fieldError('defender_score')}</p>
                 )}
               </div>
               <div>
@@ -566,7 +648,7 @@ export default function BattleReportForm({
                 <select
                   id="defender_outcome"
                   name="defender_outcome"
-                  className={`select select-lg select-bordered w-full ${state?.errors?.defender_outcome ? 'select-error' : ''}`}
+                  className={`select select-lg select-bordered w-full ${fieldError('defender_outcome') ? 'select-error' : fieldSuccess('defender_outcome') ? 'select-success' : ''}`}
                   value={values.defender_outcome}
                   onChange={(e) => updateField('defender_outcome', e.target.value)}
                 >
@@ -575,8 +657,8 @@ export default function BattleReportForm({
                   <option value="loss">Loss</option>
                   <option value="draw">Draw</option>
                 </select>
-                {state?.errors?.defender_outcome && (
-                  <p className="form-error">{state.errors.defender_outcome}</p>
+                {fieldError('defender_outcome') && (
+                  <p className="form-error">{fieldError('defender_outcome')}</p>
                 )}
               </div>
             </div>
@@ -750,7 +832,7 @@ export default function BattleReportForm({
             >
               + Add Round {roundStats.length > 0 && `(${roundStats.length}/5)`}
             </button>
-            {state?.errors?.round_stats && <p className="form-error mt-2">{state.errors.round_stats}</p>}
+            {fieldError('round_stats') && <p className="form-error mt-2">{fieldError('round_stats')}</p>}
           </fieldset>
         </div>
 
@@ -764,7 +846,7 @@ export default function BattleReportForm({
             <select
               id="status"
               name="status"
-              className={`select select-lg select-bordered w-full ${state?.errors?.status ? 'select-error' : ''}`}
+              className={`select select-lg select-bordered w-full ${fieldError('status') ? 'select-error' : fieldSuccess('status') ? 'select-success' : ''}`}
               value={status}
               onChange={(e) => setStatus(e.target.value as 'draft' | 'published')}
               disabled={statusLocked}
@@ -772,7 +854,7 @@ export default function BattleReportForm({
               <option value="draft">Draft</option>
               <option value="published">Publish</option>
             </select>
-            {state?.errors?.status && <p className="form-error">{state.errors.status}</p>}
+            {fieldError('status') && <p className="form-error">{fieldError('status')}</p>}
             <p className="mt-2 text-sm text-base-content/50">
               {statusLocked
                 ? 'Published reports cannot be reverted to draft. Contact an organizer or admin if needed.'

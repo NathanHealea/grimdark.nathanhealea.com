@@ -22,7 +22,8 @@ export async function getSeasons({ includeAll = false } = {}): Promise<Season[]>
 
 export async function getCurrentSeason(): Promise<Season | null> {
   const supabase = await createClient()
-  const today = new Date().toISOString().split('T')[0]
+  const d = new Date()
+  const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 
   const { data, error } = await supabase
     .from('seasons')

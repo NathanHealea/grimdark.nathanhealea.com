@@ -1,9 +1,9 @@
 {
   "name": "grimdark.nathanhealea.com",
-  "version": "2.12.0",
+  "version": "2.12.1",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --port 54400",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",

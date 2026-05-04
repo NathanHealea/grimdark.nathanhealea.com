@@ -4,6 +4,7 @@ import { getAuthUser } from '@/lib/supabase/auth'
 import { createClient } from '@/lib/supabase/server'
 import { hasRole } from '@/lib/supabase/roles'
 import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 import {
   type BattleReportFormState,
   validatePlayerId,
@@ -133,7 +134,8 @@ export async function updateBattleReport(
 
   // Non-admins can only assign current (date-in-range) published seasons
   if (seasonId && !isAdmin) {
-    const today = new Date().toISOString().split('T')[0]
+    const d = new Date()
+    const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
     const { data: season } = await supabase
       .from('seasons')
       .select('start_date, end_date, status')
@@ -218,7 +220,7 @@ export async function updateBattleReport(
     return { success: 'Draft saved successfully.' }
   }
 
-  return { success: 'Battle report published successfully.' }
+  redirect('/battle-reports')
 }
 
 export async function deleteBattleReport(reportId: string): Promise<{ error?: string }> {
