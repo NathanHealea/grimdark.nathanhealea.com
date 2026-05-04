@@ -63,6 +63,9 @@ export function validateFactionId(value: string): string | null {
 }
 
 export function validateScore(value: string): string | null {
+  if (value === '') {
+    return 'Score is required.'
+  }
 
   const num = Number(value)
 
