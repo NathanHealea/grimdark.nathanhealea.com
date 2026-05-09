@@ -2,7 +2,7 @@
 
 **Epic:** Editions
 **Type:** Feature
-**Status:** Todo
+**Status:** Completed
 **Merge Into:** epic/battle-reports
 
 ## Summary
@@ -13,24 +13,24 @@ Scope missions to editions so that each Warhammer edition has its own list of mi
 
 ### Data Model
 
-- [ ] `missions` table has an `edition_id integer not null references editions(id) on delete cascade` column
-- [ ] Existing missions are backfilled to 10th Edition before the `not null` constraint is applied
-- [ ] The previous `unique(name)` constraint is dropped; replaced with `unique(edition_id, name)`
-- [ ] RLS policies allow public read of missions belonging to published editions; admins/organizers can insert/update/delete
+- [x] `missions` table has an `edition_id integer not null references editions(id) on delete cascade` column
+- [x] Existing missions are backfilled to 10th Edition before the `not null` constraint is applied
+- [x] The previous `unique(name)` constraint is dropped; replaced with `unique(edition_id, name)`
+- [x] RLS policies allow public read of missions belonging to published editions; admins/organizers can insert/update/delete
 
 ### Admin UI
 
-- [ ] Admins (and organizers) can view the list of missions for a specific edition at `/admin/editions/[id]/missions`
-- [ ] Admins can add a new mission to an edition (just `name` for now)
-- [ ] Admins can edit an existing mission's name
-- [ ] Admins can delete a mission, with a confirmation prompt
-- [ ] Mission delete is blocked when battle reports reference it; the action surfaces an error explaining which battle reports block deletion (or how many)
-- [ ] The admin edition edit page links to "Manage Missions"
+- [x] Admins (and organizers) can view the list of missions for a specific edition at `/admin/editions/[id]/missions`
+- [x] Admins can add a new mission to an edition (just `name` for now)
+- [x] Admins can edit an existing mission's name
+- [x] Admins can delete a mission, with a confirmation prompt
+- [x] Mission delete is blocked when battle reports reference it; the action surfaces an error explaining which battle reports block deletion (or how many)
+- [ ] The admin edition edit page links to "Manage Missions" *(deferred to admin-edition-management feature)*
 
 ### Read Path Updates
 
-- [ ] `getMissions()` becomes `getMissionsByEditionId(editionId)` — fetches only missions for a given edition
-- [ ] Battle report submit/edit forms call this with the currently selected edition
+- [x] `getMissions()` becomes `getMissionsByEditionId(editionId)` — fetches only missions for a given edition
+- [x] Battle report submit/edit forms call this with the currently selected edition
 
 ## Database
 

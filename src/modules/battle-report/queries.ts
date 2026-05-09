@@ -3,7 +3,24 @@ import type { ProfileFaction } from '@/types/faction'
 import type { Profile } from '@/types/profile'
 import { createClient } from '@/lib/supabase/server'
 
-export async function getMissions(): Promise<Mission[]> {
+export async function getMissionsByEditionId(editionId: number): Promise<Mission[]> {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
+    .from('missions')
+    .select('*')
+    .eq('edition_id', editionId)
+    .order('name')
+
+  if (error) {
+    console.error('Failed to fetch missions:', error)
+    return []
+  }
+
+  return data as Mission[]
+}
+
+export async function getAllMissions(): Promise<Mission[]> {
   const supabase = await createClient()
 
   const { data, error } = await supabase.from('missions').select('*').order('name')
@@ -14,6 +31,19 @@ export async function getMissions(): Promise<Mission[]> {
   }
 
   return data as Mission[]
+}
+
+export async function getMissionById(id: number): Promise<Mission | null> {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase.from('missions').select('*').eq('id', id).maybeSingle()
+
+  if (error) {
+    console.error('Failed to fetch mission:', error)
+    return null
+  }
+
+  return data as Mission | null
 }
 
 export async function getDeployments(): Promise<Deployment[]> {
