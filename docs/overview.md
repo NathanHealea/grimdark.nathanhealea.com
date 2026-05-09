@@ -92,6 +92,18 @@ Epic Template:
 - [x] [Season roster (member signup + admin management)](./seasons/season-roster.md)
 - [x] [Draft/published mode for seasons](./seasons/season-draft-published-mode.md)
 - [x] [Admin season delete](./seasons/admin-season-delete.md)
+- [ ] [Season editions association (multi-edition support)](./seasons/season-editions.md)
+
+### Epic: Editions
+
+**Goal:** Maintain a managed catalog of Warhammer rules editions (10th, 11th, future editions) with their own per-edition missions and deployments, so seasons and battle reports stay consistent with the rules in play.
+
+**High-Level Scope:**
+
+- [ ] [Editions data model and seed](./editions/editions-data-model.md)
+- [ ] [Admin edition management](./editions/admin-edition-management.md)
+- [ ] [Edition missions management](./editions/edition-missions-management.md)
+- [ ] [Edition deployments management](./editions/edition-deployments-management.md)
 
 ### Epic: Member Profiles
 
@@ -133,6 +145,7 @@ Epic Template:
 - [x] Non-admins cannot unpublish a published battle report
 - [x] Admin battle reports management page
 - [x] [Admin battle report delete](./battle-reports/battle-report-delete.md)
+- [ ] [Battle report edition + filtered mission/deployment](./battle-reports/battle-report-edition.md)
 
 ### Epic: Standings & Leaderboard
 
