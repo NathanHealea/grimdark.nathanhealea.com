@@ -2,7 +2,7 @@
 
 **Epic:** Editions
 **Type:** Feature
-**Status:** Todo
+**Status:** Completed
 **Merge Into:** epic/battle-reports
 
 ## Summary
@@ -13,16 +13,16 @@ Introduce an `editions` table that captures each Warhammer rules edition (10th, 
 
 ### Data Model
 
-- [ ] An `editions` table exists with id, name, short_name, description, status (draft/published), is_default, and timestamps
-- [ ] At most one edition can have `is_default = true` (enforced at the database level via partial unique index)
-- [ ] `short_name` is unique (e.g., `10th`, `11th`)
-- [ ] Editions have a draft/published status mirroring the seasons pattern
-- [ ] RLS: published editions are publicly readable; admins (and organizers, mirroring seasons) can insert/update/delete; drafts are visible only to admins/organizers
+- [x] An `editions` table exists with id, name, short_name, description, status (draft/published), is_default, and timestamps
+- [x] At most one edition can have `is_default = true` (enforced at the database level via partial unique index)
+- [x] `short_name` is unique (e.g., `10th`, `11th`)
+- [x] Editions have a draft/published status mirroring the seasons pattern
+- [x] RLS: published editions are publicly readable; admins (and organizers, mirroring seasons) can insert/update/delete; drafts are visible only to admins/organizers
 
 ### Seed Data
 
-- [ ] Migration seeds **10th Edition** as published and `is_default = true`
-- [ ] Migration seeds **11th Edition** as published, `is_default = false`, with no missions or deployments yet (admin populates)
+- [x] Migration seeds **10th Edition** as published and `is_default = true`
+- [x] Migration seeds **11th Edition** as published, `is_default = false`, with no missions or deployments yet (admin populates)
 
 ### Backfill of Existing Data
 

@@ -5,8 +5,9 @@ import {
   getDeployments,
   getMemberFactions,
   getMembers,
-  getMissions,
+  getMissionsByEditionId,
 } from '@/modules/battle-report/queries'
+import { getDefaultEdition } from '@/modules/edition/queries'
 import { getFactions } from '@/modules/faction/queries'
 import { getSeasons } from '@/modules/season/queries'
 import Link from 'next/link'
@@ -39,8 +40,10 @@ export default async function SubmitBattleReportPage() {
     )
   }
 
+  const defaultEdition = await getDefaultEdition()
+
   const [missions, deployments, battlePoints, members, factions, memberFactions, seasons] = await Promise.all([
-    getMissions(),
+    defaultEdition ? getMissionsByEditionId(defaultEdition.id) : Promise.resolve([]),
     getDeployments(),
     getBattlePoints(),
     getMembers(),

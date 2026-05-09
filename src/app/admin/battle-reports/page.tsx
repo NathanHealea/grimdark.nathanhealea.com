@@ -1,6 +1,6 @@
 import BattleReportActions from '@/app/admin/battle-reports/battle-report-actions'
 import { createClient } from '@/lib/supabase/server'
-import { getBattlePoints, getBattleReports, getDeployments, getMissions } from '@/modules/battle-report/queries'
+import { getAllMissions, getBattlePoints, getBattleReports, getDeployments } from '@/modules/battle-report/queries'
 import { getFactions } from '@/modules/faction/queries'
 import { getSeasons } from '@/modules/season/queries'
 import type { Outcome } from '@/types/battle-report'
@@ -47,7 +47,7 @@ export default async function AdminBattleReportsPage() {
       getBattleReports({ includeAll: true }),
       supabase.from('profiles').select('*'),
       getFactions(),
-      getMissions(),
+      getAllMissions(),
       getDeployments(),
       getBattlePoints(),
       getSeasons(),

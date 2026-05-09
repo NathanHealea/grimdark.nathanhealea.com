@@ -1,12 +1,12 @@
 import { getAuthUser } from '@/lib/supabase/auth'
 import { hasRole } from '@/lib/supabase/roles'
 import {
+  getAllMissions,
   getBattlePoints,
   getBattleReportById,
   getDeployments,
   getMemberFactions,
   getMembers,
-  getMissions,
   getRoundStatsByReportId,
 } from '@/modules/battle-report/queries'
 import { getFactions } from '@/modules/faction/queries'
@@ -53,7 +53,7 @@ export default async function EditBattleReportPage({ params }: { params: Promise
   }
 
   const [missions, deployments, battlePoints, members, factionsList, memberFactions, seasons, roundStats] = await Promise.all([
-    getMissions(),
+    getAllMissions(),
     getDeployments(),
     getBattlePoints(),
     getMembers(),

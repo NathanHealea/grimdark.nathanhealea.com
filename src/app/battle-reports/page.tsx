@@ -4,7 +4,7 @@ import { getFactions } from '@/modules/faction/queries'
 import GuideLink from '@/modules/guides/components/guide-link'
 import {
   getBattleReports,
-  getMissions,
+  getAllMissions,
   getDeployments,
   getBattlePoints,
 } from '@/modules/battle-report/queries'
@@ -61,7 +61,7 @@ export default async function BattleReportsPage() {
       getBattleReports(),
       supabase.from('profiles').select('*'),
       getFactions(),
-      getMissions(),
+      getAllMissions(),
       getDeployments(),
       getBattlePoints(),
       getSeasons(),
