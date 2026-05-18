@@ -16,6 +16,7 @@ import {
   validateEventDate,
   validateStatus,
   validateSeasonId,
+  validateEditionId,
 } from '@/modules/battle-report/validation'
 
 export async function updateBattleReport(
@@ -63,6 +64,7 @@ export async function updateBattleReport(
   const defenderFactionId = (formData.get('defender_faction_id') as string) ?? ''
   const defenderScore = (formData.get('defender_score') as string) ?? ''
   const defenderOutcome = (formData.get('defender_outcome') as string) ?? ''
+  const editionId = (formData.get('edition_id') as string) ?? ''
   const missionId = (formData.get('mission_id') as string) ?? ''
   const deploymentId = (formData.get('deployment_id') as string) ?? ''
   const battlePointsId = (formData.get('battle_points_id') as string) ?? ''
@@ -79,6 +81,9 @@ export async function updateBattleReport(
 
   const statusError = validateStatus(status)
   if (statusError) errors.status = statusError
+
+  const editionIdError = validateEditionId(editionId)
+  if (editionIdError) errors.edition_id = editionIdError
 
   if (status === 'published') {
     const eventDateError = validateEventDate(eventDate)
@@ -163,6 +168,7 @@ export async function updateBattleReport(
     defender_faction_id: defenderFactionId || null,
     defender_score: defenderScore ? Number(defenderScore) : null,
     defender_outcome: defenderOutcome || null,
+    edition_id: Number(editionId),
     mission_id: missionId ? Number(missionId) : null,
     deployment_id: deploymentId ? Number(deploymentId) : null,
     battle_points_id: battlePointsId ? Number(battlePointsId) : null,

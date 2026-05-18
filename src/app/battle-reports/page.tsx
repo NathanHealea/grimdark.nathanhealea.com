@@ -8,6 +8,7 @@ import {
   getAllDeployments,
   getBattlePoints,
 } from '@/modules/battle-report/queries'
+import { getEditions } from '@/modules/edition/queries'
 import { getSeasons } from '@/modules/season/queries'
 export const metadata: Metadata = {
   title: 'Battle Reports',
@@ -56,7 +57,7 @@ function formatDate(dateString: string): string {
 export default async function BattleReportsPage() {
   const supabase = await createClient()
 
-  const [battleReports, { data: profiles }, factions, missions, deployments, battlePoints, seasons] =
+  const [battleReports, { data: profiles }, factions, missions, deployments, battlePoints, seasons, editions] =
     await Promise.all([
       getBattleReports(),
       supabase.from('profiles').select('*'),
@@ -65,6 +66,7 @@ export default async function BattleReportsPage() {
       getAllDeployments(),
       getBattlePoints(),
       getSeasons(),
+      getEditions(),
     ])
 
   const profileMap = new Map((profiles as Profile[] ?? []).map((p) => [p.id, p]))
@@ -73,6 +75,7 @@ export default async function BattleReportsPage() {
   const deploymentMap = new Map(deployments.map((d) => [d.id, d]))
   const battlePointsMap = new Map(battlePoints.map((bp) => [bp.id, bp]))
   const seasonMap = new Map(seasons.map((s) => [s.id, s]))
+  const editionMap = new Map(editions.map((e) => [e.id, e]))
 
   return (
     <main className="page-layout">
@@ -108,6 +111,7 @@ export default async function BattleReportsPage() {
                   const deployment = report.deployment_id ? deploymentMap.get(report.deployment_id) : null
                   const bp = report.battle_points_id ? battlePointsMap.get(report.battle_points_id) : null
                   const season = report.season_id ? seasonMap.get(report.season_id) : null
+                  const edition = editionMap.get(report.edition_id)
 
                   return (
                     <Link
@@ -163,6 +167,7 @@ export default async function BattleReportsPage() {
 
                         {/* Game details */}
                         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-base-content/60">
+                          {edition && <span className="badge badge-outline badge-sm">{edition.short_name}</span>}
                           {mission && <span>{mission.name}</span>}
                           {deployment && <span>{deployment.name}</span>}
                           {bp && <span>{bp.name}</span>}

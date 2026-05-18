@@ -19,6 +19,7 @@ export type BattleReport = {
   attacker_models_lost: number
   defender_units_lost: number
   defender_models_lost: number
+  edition_id: number
   mission_id: number | null
   deployment_id: number | null
   battle_points_id: number | null
