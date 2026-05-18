@@ -6,7 +6,7 @@ import { getFactions } from '@/modules/faction/queries'
 import {
   getBattleReportById,
   getMissionById,
-  getDeployments,
+  getDeploymentById,
   getBattlePoints,
   getRoundStatsByReportId,
 } from '@/modules/battle-report/queries'
@@ -92,13 +92,13 @@ export default async function BattleReportDetailPage({ params }: { params: Promi
 
   const supabase = await createClient()
 
-  const [auth, { data: profiles }, factions, mission, deployments, battlePoints, roundStats] =
+  const [auth, { data: profiles }, factions, mission, deployment, battlePoints, roundStats] =
     await Promise.all([
       getAuthUser({ withProfile: true }),
       supabase.from('profiles').select('*'),
       getFactions(),
       report.mission_id ? getMissionById(report.mission_id) : Promise.resolve(null),
-      getDeployments(),
+      report.deployment_id ? getDeploymentById(report.deployment_id) : Promise.resolve(null),
       getBattlePoints(),
       getRoundStatsByReportId(id),
     ])
@@ -110,13 +110,11 @@ export default async function BattleReportDetailPage({ params }: { params: Promi
 
   const profileMap = new Map((profiles as Profile[] ?? []).map((p) => [p.id, p]))
   const factionMap = new Map(factions.map((f) => [f.id, f]))
-  const deploymentMap = new Map(deployments.map((d) => [d.id, d]))
   const battlePointsMap = new Map(battlePoints.map((bp) => [bp.id, bp]))
 
   const attacker = report.attacker_id ? profileMap.get(report.attacker_id) : null
   const defender = report.defender_id ? profileMap.get(report.defender_id) : null
   const reportedBy = profileMap.get(report.reported_by)
-  const deployment = report.deployment_id ? deploymentMap.get(report.deployment_id) : null
   const bp = report.battle_points_id ? battlePointsMap.get(report.battle_points_id) : null
 
   return (

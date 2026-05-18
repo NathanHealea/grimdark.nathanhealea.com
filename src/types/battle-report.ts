@@ -54,5 +54,5 @@ export type RoundStatFormValues = {
 }
 
 export type Mission = { id: number; edition_id: number; name: string }
-export type Deployment = { id: number; name: string }
+export type Deployment = { id: number; edition_id: number; name: string }
 export type BattlePoints = { id: number; name: string; size: number }

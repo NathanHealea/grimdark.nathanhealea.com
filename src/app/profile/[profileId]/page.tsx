@@ -5,9 +5,9 @@ import { hasRole } from '@/lib/supabase/roles'
 import { createClient } from '@/lib/supabase/server'
 import { getFactions, getProfileFactionIds } from '@/modules/faction/queries'
 import {
+  getAllDeployments,
   getAllMissions,
   getBattleReportsByPlayerId,
-  getDeployments,
   getBattlePoints,
 } from '@/modules/battle-report/queries'
 import type { Outcome } from '@/types/battle-report'
@@ -110,7 +110,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ profil
       getProfileFactionIds(typedProfile.id),
       supabase.from('profiles').select('*'),
       getAllMissions(),
-      getDeployments(),
+      getAllDeployments(),
       getBattlePoints(),
     ])
   const isOwner = auth?.user.id === typedProfile.user_id
