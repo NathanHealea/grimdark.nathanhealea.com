@@ -1,6 +1,6 @@
 import BattleReportActions from '@/app/admin/battle-reports/battle-report-actions'
 import { createClient } from '@/lib/supabase/server'
-import { getAllMissions, getBattlePoints, getBattleReports, getDeployments } from '@/modules/battle-report/queries'
+import { getAllMissions, getBattlePoints, getBattleReports } from '@/modules/battle-report/queries'
 import { getFactions } from '@/modules/faction/queries'
 import { getSeasons } from '@/modules/season/queries'
 import type { Outcome } from '@/types/battle-report'
@@ -42,13 +42,12 @@ function formatDate(dateString: string): string {
 export default async function AdminBattleReportsPage() {
   const supabase = await createClient()
 
-  const [battleReports, { data: profiles }, factions, missions, deployments, battlePoints, seasons] = await Promise.all(
+  const [battleReports, { data: profiles }, factions, missions, battlePoints, seasons] = await Promise.all(
     [
       getBattleReports({ includeAll: true }),
       supabase.from('profiles').select('*'),
       getFactions(),
       getAllMissions(),
-      getDeployments(),
       getBattlePoints(),
       getSeasons(),
     ]

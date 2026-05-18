@@ -46,7 +46,24 @@ export async function getMissionById(id: number): Promise<Mission | null> {
   return data as Mission | null
 }
 
-export async function getDeployments(): Promise<Deployment[]> {
+export async function getDeploymentsByEditionId(editionId: number): Promise<Deployment[]> {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
+    .from('deployments')
+    .select('*')
+    .eq('edition_id', editionId)
+    .order('name')
+
+  if (error) {
+    console.error('Failed to fetch deployments:', error)
+    return []
+  }
+
+  return data as Deployment[]
+}
+
+export async function getAllDeployments(): Promise<Deployment[]> {
   const supabase = await createClient()
 
   const { data, error } = await supabase.from('deployments').select('*').order('name')
@@ -57,6 +74,19 @@ export async function getDeployments(): Promise<Deployment[]> {
   }
 
   return data as Deployment[]
+}
+
+export async function getDeploymentById(id: number): Promise<Deployment | null> {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase.from('deployments').select('*').eq('id', id).maybeSingle()
+
+  if (error) {
+    console.error('Failed to fetch deployment:', error)
+    return null
+  }
+
+  return data as Deployment | null
 }
 
 export async function getBattlePoints(): Promise<BattlePoints[]> {

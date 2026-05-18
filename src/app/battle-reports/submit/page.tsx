@@ -2,7 +2,7 @@ import { getAuthUser } from '@/lib/supabase/auth'
 import { hasRole } from '@/lib/supabase/roles'
 import {
   getBattlePoints,
-  getDeployments,
+  getDeploymentsByEditionId,
   getMemberFactions,
   getMembers,
   getMissionsByEditionId,
@@ -44,7 +44,7 @@ export default async function SubmitBattleReportPage() {
 
   const [missions, deployments, battlePoints, members, factions, memberFactions, seasons] = await Promise.all([
     defaultEdition ? getMissionsByEditionId(defaultEdition.id) : Promise.resolve([]),
-    getDeployments(),
+    defaultEdition ? getDeploymentsByEditionId(defaultEdition.id) : Promise.resolve([]),
     getBattlePoints(),
     getMembers(),
     getFactions(),
