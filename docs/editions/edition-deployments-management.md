@@ -2,7 +2,7 @@
 
 **Epic:** Editions
 **Type:** Feature
-**Status:** Todo
+**Status:** Completed
 **Merge Into:** epic/battle-reports
 
 ## Summary
@@ -13,24 +13,24 @@ Scope deployments to editions so that each Warhammer edition has its own list of
 
 ### Data Model
 
-- [ ] `deployments` table has an `edition_id integer not null references editions(id) on delete cascade` column
-- [ ] Existing deployments are backfilled to 10th Edition before the `not null` constraint is applied
-- [ ] The previous `unique(name)` constraint is dropped; replaced with `unique(edition_id, name)`
-- [ ] RLS policies allow public read of deployments belonging to published editions; admins/organizers can insert/update/delete
+- [x] `deployments` table has an `edition_id integer not null references editions(id) on delete cascade` column
+- [x] Existing deployments are backfilled to 10th Edition before the `not null` constraint is applied
+- [x] The previous `unique(name)` constraint is dropped; replaced with `unique(edition_id, name)`
+- [x] RLS policies allow public read of deployments belonging to published editions; admins/organizers can insert/update/delete
 
 ### Admin UI
 
-- [ ] Admins (and organizers) can view the list of deployments for a specific edition at `/admin/editions/[id]/deployments`
-- [ ] Admins can add a new deployment to an edition (just `name` for now)
-- [ ] Admins can edit an existing deployment's name
-- [ ] Admins can delete a deployment, with a confirmation prompt
-- [ ] Deployment delete is blocked when battle reports reference it; the action surfaces an error explaining which battle reports block deletion (or how many)
-- [ ] The admin edition edit page links to "Manage Deployments"
+- [x] Admins (and organizers) can view the list of deployments for a specific edition at `/admin/editions/[id]/deployments`
+- [x] Admins can add a new deployment to an edition (just `name` for now)
+- [x] Admins can edit an existing deployment's name
+- [x] Admins can delete a deployment, with a confirmation prompt
+- [x] Deployment delete is blocked when battle reports reference it; the action surfaces an error explaining which battle reports block deletion (or how many)
+- [ ] The admin edition edit page links to "Manage Deployments" *(deferred to admin-edition-management)*
 
 ### Read Path Updates
 
-- [ ] `getDeployments()` becomes `getDeploymentsByEditionId(editionId)` — fetches only deployments for a given edition
-- [ ] Battle report submit/edit forms call this with the currently selected edition
+- [x] `getDeployments()` becomes `getDeploymentsByEditionId(editionId)` — fetches only deployments for a given edition
+- [x] Battle report submit/edit forms call this with the currently selected edition
 
 ## Database
 
