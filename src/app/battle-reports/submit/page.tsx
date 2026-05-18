@@ -3,11 +3,11 @@ import { hasRole } from '@/lib/supabase/roles'
 import {
   getBattlePoints,
   getDeploymentsByEditionId,
+  getEditionsForSubmitForm,
   getMemberFactions,
   getMembers,
   getMissionsByEditionId,
 } from '@/modules/battle-report/queries'
-import { getDefaultEdition } from '@/modules/edition/queries'
 import { getFactions } from '@/modules/faction/queries'
 import { getSeasons } from '@/modules/season/queries'
 import Link from 'next/link'
@@ -40,17 +40,29 @@ export default async function SubmitBattleReportPage() {
     )
   }
 
-  const defaultEdition = await getDefaultEdition()
+  const { editions: publishedEditions, defaultEditionId } = await getEditionsForSubmitForm()
 
-  const [missions, deployments, battlePoints, members, factions, memberFactions, seasons] = await Promise.all([
-    defaultEdition ? getMissionsByEditionId(defaultEdition.id) : Promise.resolve([]),
-    defaultEdition ? getDeploymentsByEditionId(defaultEdition.id) : Promise.resolve([]),
-    getBattlePoints(),
-    getMembers(),
-    getFactions(),
-    getMemberFactions(),
-    getSeasons({ includeAll: isAdmin }),
-  ])
+  const [missionResults, deploymentResults, battlePoints, members, factions, memberFactions, seasons] =
+    await Promise.all([
+      Promise.all(publishedEditions.map((e) => getMissionsByEditionId(e.id))),
+      Promise.all(publishedEditions.map((e) => getDeploymentsByEditionId(e.id))),
+      getBattlePoints(),
+      getMembers(),
+      getFactions(),
+      getMemberFactions(),
+      getSeasons({ includeAll: isAdmin }),
+    ])
+
+  const missionsByEdition = Object.fromEntries(
+    publishedEditions.map((e, i) => [e.id, missionResults[i]])
+  )
+  const deploymentsByEdition = Object.fromEntries(
+    publishedEditions.map((e, i) => [e.id, deploymentResults[i]])
+  )
+
+  // Flat lists for legacy prop compatibility (missions/deployments for the default edition)
+  const defaultMissions = defaultEditionId ? (missionsByEdition[defaultEditionId] ?? []) : []
+  const defaultDeployments = defaultEditionId ? (deploymentsByEdition[defaultEditionId] ?? []) : []
 
   return (
     <main className="page-layout">
@@ -66,14 +78,18 @@ export default async function SubmitBattleReportPage() {
           </div>
 
           <BattleReportForm
-            missions={missions}
-            deployments={deployments}
+            missions={defaultMissions}
+            deployments={defaultDeployments}
             battlePoints={battlePoints}
             members={members}
             factions={factions}
             memberFactions={memberFactions}
             seasons={seasons}
             isAdmin={isAdmin}
+            publishedEditions={publishedEditions}
+            defaultEditionId={defaultEditionId}
+            missionsByEdition={missionsByEdition}
+            deploymentsByEdition={deploymentsByEdition}
           />
         </div>
       </div>

@@ -16,6 +16,7 @@ import {
   validateEventDate,
   validateStatus,
   validateSeasonId,
+  validateEditionId,
 } from '@/modules/battle-report/validation'
 
 export async function submitBattleReport(prevState: BattleReportFormState, formData: FormData): Promise<BattleReportFormState> {
@@ -43,6 +44,7 @@ export async function submitBattleReport(prevState: BattleReportFormState, formD
   const defenderFactionId = (formData.get('defender_faction_id') as string) ?? ''
   const defenderScore = (formData.get('defender_score') as string) ?? ''
   const defenderOutcome = (formData.get('defender_outcome') as string) ?? ''
+  const editionId = (formData.get('edition_id') as string) ?? ''
   const missionId = (formData.get('mission_id') as string) ?? ''
   const deploymentId = (formData.get('deployment_id') as string) ?? ''
   const battlePointsId = (formData.get('battle_points_id') as string) ?? ''
@@ -59,6 +61,9 @@ export async function submitBattleReport(prevState: BattleReportFormState, formD
 
   const statusError = validateStatus(status)
   if (statusError) errors.status = statusError
+
+  const editionIdError = validateEditionId(editionId)
+  if (editionIdError) errors.edition_id = editionIdError
 
   // Only validate fields when publishing
   if (status === 'published') {
@@ -154,6 +159,7 @@ export async function submitBattleReport(prevState: BattleReportFormState, formD
   if (deploymentId) insertData.deployment_id = Number(deploymentId)
   if (battlePointsId) insertData.battle_points_id = Number(battlePointsId)
   if (rounds) insertData.rounds = Number(rounds)
+  if (editionId) insertData.edition_id = Number(editionId)
   if (seasonId) insertData.season_id = Number(seasonId)
 
   const { data: insertedReport, error } = await supabase

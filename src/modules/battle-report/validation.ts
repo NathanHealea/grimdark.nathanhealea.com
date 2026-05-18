@@ -11,6 +11,7 @@ export type BattleReportFormState = FormState<{
   defender_score: string
   defender_outcome: string
   event_date: string
+  edition_id: string
   mission_id: string
   deployment_id: string
   battle_points_id: string
@@ -123,6 +124,20 @@ export function validateSeasonId(value: string): string | null {
 
   if (!Number.isInteger(num) || num < 1) {
     return 'Invalid season selection.'
+  }
+
+  return null
+}
+
+export function validateEditionId(value: string): string | null {
+  if (!value) {
+    return 'Edition is required.'
+  }
+
+  const num = Number(value)
+
+  if (!Number.isInteger(num) || num < 1) {
+    return 'Invalid edition selection.'
   }
 
   return null

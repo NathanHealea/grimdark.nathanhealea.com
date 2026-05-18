@@ -10,8 +10,10 @@ import {
   validateScore,
   validateSeasonId,
   validateSelectId,
+  validateEditionId,
 } from '@/modules/battle-report/validation'
 import type { BattlePoints, BattleReport, Deployment, Mission, RoundStatFormValues } from '@/types/battle-report'
+import type { Edition } from '@/types/edition'
 import type { Faction, ProfileFaction } from '@/types/faction'
 import type { Profile } from '@/types/profile'
 import { formatSeasonName, isCurrentSeason, isPastSeason, type Season } from '@/types/season'
@@ -31,9 +33,14 @@ type BattleReportFormProps = {
   defaultValues?: Partial<BattleReport>
   defaultRoundStats?: RoundStatFormValues[]
   reportId?: string
+  // Edition-related props
+  publishedEditions: Edition[]
+  defaultEditionId: number | null
+  missionsByEdition: Record<number, Mission[]>
+  deploymentsByEdition: Record<number, Deployment[]>
 }
 
-function toFormValues(defaults?: Partial<BattleReport>) {
+function toFormValues(defaults?: Partial<BattleReport>, defaultEditionId?: number | null) {
   return {
     event_date: defaults?.event_date ?? '',
     attacker_id: defaults?.attacker_id ?? '',
@@ -44,6 +51,7 @@ function toFormValues(defaults?: Partial<BattleReport>) {
     defender_faction_id: defaults?.defender_faction_id ?? '',
     defender_score: defaults?.defender_score != null ? String(defaults.defender_score) : '0',
     defender_outcome: defaults?.defender_outcome ?? '',
+    edition_id: defaults?.edition_id != null ? String(defaults.edition_id) : (defaultEditionId != null ? String(defaultEditionId) : ''),
     mission_id: defaults?.mission_id != null ? String(defaults.mission_id) : '',
     deployment_id: defaults?.deployment_id != null ? String(defaults.deployment_id) : '',
     battle_points_id: defaults?.battle_points_id != null ? String(defaults.battle_points_id) : '',
@@ -69,6 +77,7 @@ function validateFieldByName(name: string, value: string): string | null {
     case 'defender_score': return validateScore(value)
     case 'attacker_outcome':
     case 'defender_outcome': return validateOutcome(value)
+    case 'edition_id': return validateEditionId(value)
     case 'mission_id':
     case 'deployment_id':
     case 'battle_points_id': return validateSelectId(value)
@@ -90,6 +99,10 @@ export default function BattleReportForm({
   defaultValues,
   defaultRoundStats,
   reportId,
+  publishedEditions,
+  defaultEditionId,
+  missionsByEdition,
+  deploymentsByEdition,
 }: BattleReportFormProps) {
   const isEditMode = !!reportId
   const statusLocked = isEditMode && defaultValues?.status === 'published' && !isAdmin
@@ -99,11 +112,12 @@ export default function BattleReportForm({
 
   const [state, formAction, pending] = useActionState<BattleReportFormState, FormData>(action, null)
   const formRef = useRef<HTMLFormElement>(null)
-  const [values, setValues] = useState(() => toFormValues(defaultValues))
+  const [values, setValues] = useState(() => toFormValues(defaultValues, defaultEditionId))
   const [status, setStatus] = useState<'draft' | 'published'>(defaultValues?.status ?? 'draft')
   const [clientErrors, setClientErrors] = useState<Record<string, string>>({})
   const [resolvedFields, setResolvedFields] = useState<Set<string>>(new Set())
   const [roundStats, setRoundStats] = useState<RoundStatFormValues[]>(defaultRoundStats ?? [])
+  const [editionClearedNote, setEditionClearedNote] = useState<string | null>(null)
 
   function fieldError(key: string): string | undefined {
     return clientErrors[key] || (state?.errors as Record<string, string> | undefined)?.[key]
@@ -141,13 +155,14 @@ export default function BattleReportForm({
   // Reset form on successful submit — useActionState requires useEffect for state observation
   useEffect(() => {
     if (state?.success && !isEditMode) {
-      setValues(toFormValues()) // eslint-disable-line react-hooks/set-state-in-effect
+      setValues(toFormValues(undefined, defaultEditionId)) // eslint-disable-line react-hooks/set-state-in-effect
       setStatus('draft')
       setClientErrors({})
       setResolvedFields(new Set())
       setRoundStats([])
+      setEditionClearedNote(null)
     }
-  }, [state, isEditMode])
+  }, [state, isEditMode, defaultEditionId])
 
   function updateField(name: keyof ReturnType<typeof toFormValues>, value: string) {
     setValues((prev) => ({ ...prev, [name]: value }))
@@ -181,6 +196,54 @@ export default function BattleReportForm({
     }
   }
 
+  /**
+   * Called when the edition changes. Clears mission/deployment if they don't
+   * belong to the newly selected edition, and surfaces an inline note.
+   */
+  function updateEdition(newEditionId: string) {
+    const edId = Number(newEditionId)
+    const editionMissions = edId ? (missionsByEdition[edId] ?? []) : []
+    const editionDeployments = edId ? (deploymentsByEdition[edId] ?? []) : []
+
+    let cleared: string[] = []
+
+    setValues((prev) => {
+      const next = { ...prev, edition_id: newEditionId }
+
+      if (prev.mission_id && !editionMissions.some((m) => String(m.id) === prev.mission_id)) {
+        next.mission_id = ''
+        cleared.push('mission')
+      }
+      if (prev.deployment_id && !editionDeployments.some((d) => String(d.id) === prev.deployment_id)) {
+        next.deployment_id = ''
+        cleared.push('deployment')
+      }
+
+      return next
+    })
+
+    if (cleared.length > 0) {
+      setEditionClearedNote(`${cleared.map((c) => c.charAt(0).toUpperCase() + c.slice(1)).join(' and ')} ${cleared.length === 1 ? 'was' : 'were'} cleared because ${cleared.length === 1 ? 'it belongs' : 'they belong'} to a different edition. Pick again.`)
+    } else {
+      setEditionClearedNote(null)
+    }
+
+    // Validate edition field
+    const serverErrors = state?.errors as Record<string, string> | undefined
+    const hasError = !!clientErrors['edition_id'] || !!serverErrors?.['edition_id']
+    const wasResolved = resolvedFields.has('edition_id')
+    if (hasError || wasResolved) {
+      const error = validateEditionId(newEditionId)
+      if (!error) {
+        setClientErrors((prev) => { const next = { ...prev }; delete next['edition_id']; return next })
+        setResolvedFields((prev) => new Set([...prev, 'edition_id']))
+      } else {
+        setClientErrors((prev) => ({ ...prev, ['edition_id']: error }))
+        setResolvedFields((prev) => { const next = new Set(prev); next.delete('edition_id'); return next })
+      }
+    }
+  }
+
   const factionsByMember = useMemo(() => {
     const map: Record<string, Set<string>> = {}
     for (const pf of memberFactions) {
@@ -203,12 +266,33 @@ export default function BattleReportForm({
     return seasons.filter((s) => isCurrentSeason(s))
   }, [seasons, isAdmin])
 
+  // Edition-filtered missions and deployments
+  const currentEditionId = Number(values.edition_id) || null
+  const filteredMissions = useMemo(() => {
+    if (!currentEditionId) return missions
+    return missionsByEdition[currentEditionId] ?? []
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentEditionId, missionsByEdition, missions])
+
+  const filteredDeployments = useMemo(() => {
+    if (!currentEditionId) return deployments
+    return deploymentsByEdition[currentEditionId] ?? []
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentEditionId, deploymentsByEdition, deployments])
+
   function handleSubmit(formData: FormData) {
     formData.set('status', status)
+    // Always include edition_id in formData
+    if (values.edition_id) {
+      formData.set('edition_id', values.edition_id)
+    }
+
+    // Always validate edition_id regardless of status
+    const newErrors: Record<string, string> = {}
+    const editionIdError = validateEditionId(values.edition_id)
+    if (editionIdError) newErrors.edition_id = editionIdError
 
     if (status === 'published') {
-      const newErrors: Record<string, string> = {}
-
       const eventDateError = validateEventDate(values.event_date)
       if (eventDateError) newErrors.event_date = eventDateError
 
@@ -254,10 +338,12 @@ export default function BattleReportForm({
       if (!newErrors.defender_id && values.attacker_id && values.attacker_id === values.defender_id) {
         newErrors.defender_id = 'Attacker and defender cannot be the same player.'
       }
+    }
 
+    if (Object.keys(newErrors).length > 0) {
       setClientErrors(newErrors)
       setResolvedFields(new Set())
-      if (Object.keys(newErrors).length > 0) return
+      return
     }
 
     setClientErrors({})
@@ -335,6 +421,37 @@ export default function BattleReportForm({
               </div>
             </div>
 
+            {/* Edition selector */}
+            <div className="mt-1">
+              <div>
+                <label className="label" htmlFor="edition_id">
+                  Edition
+                </label>
+                {/* Hidden input so edition_id is always submitted */}
+                <input type="hidden" name="edition_id" value={values.edition_id} />
+                <select
+                  id="edition_id"
+                  className={`select select-lg select-bordered w-full ${fieldError('edition_id') ? 'select-error' : fieldSuccess('edition_id') ? 'select-success' : ''}`}
+                  value={values.edition_id}
+                  onChange={(e) => updateEdition(e.target.value)}
+                >
+                  <option value="">Select edition</option>
+                  {publishedEditions.map((edition) => (
+                    <option key={edition.id} value={edition.id}>
+                      {edition.name} ({edition.short_name})
+                    </option>
+                  ))}
+                </select>
+                {fieldError('edition_id') && <p className="form-error">{fieldError('edition_id')}</p>}
+              </div>
+            </div>
+
+            {editionClearedNote && (
+              <div role="alert" className="alert alert-info mt-2 text-sm">
+                <span>{editionClearedNote}</span>
+              </div>
+            )}
+
             <div className="form-grid mt-1">
               <div>
                 <label className="label" htmlFor="mission_id">
@@ -346,9 +463,10 @@ export default function BattleReportForm({
                   className={`select select-lg select-bordered w-full ${fieldError('mission_id') ? 'select-error' : fieldSuccess('mission_id') ? 'select-success' : ''}`}
                   value={values.mission_id}
                   onChange={(e) => updateField('mission_id', e.target.value)}
+                  disabled={!currentEditionId}
                 >
-                  <option value="">Select mission</option>
-                  {missions.map((mission) => (
+                  <option value="">{!currentEditionId ? 'Select an edition first' : 'Select mission'}</option>
+                  {filteredMissions.map((mission) => (
                     <option key={mission.id} value={mission.id}>
                       {mission.name}
                     </option>
@@ -366,9 +484,10 @@ export default function BattleReportForm({
                   className={`select select-lg select-bordered w-full ${fieldError('deployment_id') ? 'select-error' : fieldSuccess('deployment_id') ? 'select-success' : ''}`}
                   value={values.deployment_id}
                   onChange={(e) => updateField('deployment_id', e.target.value)}
+                  disabled={!currentEditionId}
                 >
-                  <option value="">Select deployment</option>
-                  {deployments.map((deployment) => (
+                  <option value="">{!currentEditionId ? 'Select an edition first' : 'Select deployment'}</option>
+                  {filteredDeployments.map((deployment) => (
                     <option key={deployment.id} value={deployment.id}>
                       {deployment.name}
                     </option>

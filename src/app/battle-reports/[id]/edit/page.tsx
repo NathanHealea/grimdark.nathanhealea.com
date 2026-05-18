@@ -1,12 +1,13 @@
 import { getAuthUser } from '@/lib/supabase/auth'
 import { hasRole } from '@/lib/supabase/roles'
 import {
-  getAllDeployments,
-  getAllMissions,
   getBattlePoints,
   getBattleReportById,
+  getDeploymentsByEditionId,
+  getEditionsForSubmitForm,
   getMemberFactions,
   getMembers,
+  getMissionsByEditionId,
   getRoundStatsByReportId,
 } from '@/modules/battle-report/queries'
 import { getFactions } from '@/modules/faction/queries'
@@ -52,16 +53,33 @@ export default async function EditBattleReportPage({ params }: { params: Promise
     )
   }
 
-  const [missions, deployments, battlePoints, members, factionsList, memberFactions, seasons, roundStats] = await Promise.all([
-    getAllMissions(),
-    getAllDeployments(),
-    getBattlePoints(),
-    getMembers(),
-    getFactions(),
-    getMemberFactions(),
-    getSeasons({ includeAll: isAdmin }),
-    getRoundStatsByReportId(id),
-  ])
+  const { editions: publishedEditions, defaultEditionId: rawDefaultEditionId } = await getEditionsForSubmitForm()
+
+  // For editing, prefer the report's own edition as the "default" so the form pre-selects it
+  const defaultEditionId = report.edition_id ?? rawDefaultEditionId
+
+  const [missionResults, deploymentResults, battlePoints, members, factionsList, memberFactions, seasons, roundStats] =
+    await Promise.all([
+      Promise.all(publishedEditions.map((e) => getMissionsByEditionId(e.id))),
+      Promise.all(publishedEditions.map((e) => getDeploymentsByEditionId(e.id))),
+      getBattlePoints(),
+      getMembers(),
+      getFactions(),
+      getMemberFactions(),
+      getSeasons({ includeAll: isAdmin }),
+      getRoundStatsByReportId(id),
+    ])
+
+  const missionsByEdition = Object.fromEntries(
+    publishedEditions.map((e, i) => [e.id, missionResults[i]])
+  )
+  const deploymentsByEdition = Object.fromEntries(
+    publishedEditions.map((e, i) => [e.id, deploymentResults[i]])
+  )
+
+  // Flat lists for legacy prop compatibility (scoped to the report's edition)
+  const missions = defaultEditionId ? (missionsByEdition[defaultEditionId] ?? []) : []
+  const deployments = defaultEditionId ? (deploymentsByEdition[defaultEditionId] ?? []) : []
 
   const defaultRoundStats = roundStats.map((rs) => ({
     round_number: rs.round_number,
@@ -97,6 +115,10 @@ export default async function EditBattleReportPage({ params }: { params: Promise
             defaultValues={report}
             defaultRoundStats={defaultRoundStats}
             reportId={id}
+            publishedEditions={publishedEditions}
+            defaultEditionId={defaultEditionId}
+            missionsByEdition={missionsByEdition}
+            deploymentsByEdition={deploymentsByEdition}
           />
         </div>
       </div>

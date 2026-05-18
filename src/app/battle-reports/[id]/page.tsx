@@ -10,6 +10,7 @@ import {
   getBattlePoints,
   getRoundStatsByReportId,
 } from '@/modules/battle-report/queries'
+import { getEditionById } from '@/modules/edition/queries'
 import type { Outcome } from '@/types/battle-report'
 import type { Profile } from '@/types/profile'
 import type { Faction } from '@/types/faction'
@@ -92,7 +93,7 @@ export default async function BattleReportDetailPage({ params }: { params: Promi
 
   const supabase = await createClient()
 
-  const [auth, { data: profiles }, factions, mission, deployment, battlePoints, roundStats] =
+  const [auth, { data: profiles }, factions, mission, deployment, battlePoints, roundStats, edition] =
     await Promise.all([
       getAuthUser({ withProfile: true }),
       supabase.from('profiles').select('*'),
@@ -101,6 +102,7 @@ export default async function BattleReportDetailPage({ params }: { params: Promi
       report.deployment_id ? getDeploymentById(report.deployment_id) : Promise.resolve(null),
       getBattlePoints(),
       getRoundStatsByReportId(id),
+      getEditionById(report.edition_id),
     ])
 
   const isAdmin = auth ? await hasRole(auth.user.id, 'admin') : false
@@ -236,6 +238,10 @@ export default async function BattleReportDetailPage({ params }: { params: Promi
             <h2 className="ornament section-header">Game Details</h2>
             <div className="rounded-lg bg-base-200 p-4">
               <div className="grid grid-cols-2 gap-y-3 gap-x-4 text-sm">
+                <div className="col-span-2">
+                  <p className="text-base-content/50">Edition</p>
+                  <p className="font-medium">{edition?.name ?? 'Unknown'}</p>
+                </div>
                 <div>
                   <p className="text-base-content/50">Mission</p>
                   <p className="font-medium">{mission?.name ?? (isDraft ? 'Not set' : 'Unknown')}</p>

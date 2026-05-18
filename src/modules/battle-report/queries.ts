@@ -1,6 +1,7 @@
 import type { BattlePoints, BattleReport, BattleReportRoundStat, Deployment, Mission } from '@/types/battle-report'
 import type { ProfileFaction } from '@/types/faction'
 import type { Profile } from '@/types/profile'
+import type { Edition } from '@/types/edition'
 import { createClient } from '@/lib/supabase/server'
 
 export async function getMissionsByEditionId(editionId: number): Promise<Mission[]> {
@@ -87,6 +88,34 @@ export async function getDeploymentById(id: number): Promise<Deployment | null> 
   }
 
   return data as Deployment | null
+}
+
+/**
+ * Returns all published editions and the default edition id, suitable for
+ * the battle report submit/edit form. Season-constrained edition filtering
+ * will be wired up when the season_editions feature lands; until then, all
+ * published editions are returned regardless of season selection.
+ */
+export async function getEditionsForSubmitForm(): Promise<{
+  editions: Edition[]
+  defaultEditionId: number | null
+}> {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
+    .from('editions')
+    .select('*')
+    .eq('status', 'published')
+    .order('id', { ascending: true })
+
+  if (error) {
+    console.error('Failed to fetch editions for submit form:', error)
+    return { editions: [], defaultEditionId: null }
+  }
+
+  const editions = data as Edition[]
+  const defaultEdition = editions.find((e) => e.is_default) ?? editions[0] ?? null
+  return { editions, defaultEditionId: defaultEdition?.id ?? null }
 }
 
 export async function getBattlePoints(): Promise<BattlePoints[]> {
