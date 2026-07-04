@@ -153,11 +153,11 @@ Epic Template:
 
 **High-Level Scope:**
 
-- [ ] [Force dispositions data model (table, mission matchup mapping, seed)](./11th-edition-battle-reports/force-dispositions-data-model.md)
-- [ ] [11th edition data seed (6 deployments, 25 mapped primary missions)](./11th-edition-battle-reports/11th-edition-data-seed.md)
-- [ ] [Battle report force dispositions (schema, form, validation, actions)](./11th-edition-battle-reports/battle-report-force-dispositions.md)
-- [ ] [Battle report 11th edition display (detail, feed, admin table)](./11th-edition-battle-reports/battle-report-11th-display.md)
-- [ ] [Admin force dispositions management](./11th-edition-battle-reports/admin-force-dispositions.md)
+- [x] [Force dispositions data model (table, mission matchup mapping, seed)](./11th-edition-battle-reports/force-dispositions-data-model.md)
+- [x] [11th edition data seed (6 deployments, 25 mapped primary missions)](./11th-edition-battle-reports/11th-edition-data-seed.md)
+- [x] [Battle report force dispositions (schema, form, validation, actions)](./11th-edition-battle-reports/battle-report-force-dispositions.md)
+- [x] [Battle report 11th edition display (detail, feed, admin table)](./11th-edition-battle-reports/battle-report-11th-display.md)
+- [x] [Admin force dispositions management](./11th-edition-battle-reports/admin-force-dispositions.md)
 
 ### Epic: Standings & Leaderboard
 
