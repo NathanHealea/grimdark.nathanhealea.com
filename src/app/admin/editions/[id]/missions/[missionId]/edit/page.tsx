@@ -1,4 +1,5 @@
 import { getMissionById } from '@/modules/battle-report/queries'
+import { getForceDispositionsByEditionId } from '@/modules/force-disposition/queries'
 import { getEditionById } from '@/modules/edition/queries'
 import { formatEditionLabel } from '@/types/edition'
 import type { Metadata } from 'next'
@@ -20,7 +21,11 @@ export default async function EditMissionPage({
 
   if (!editionId || !mId) notFound()
 
-  const [edition, mission] = await Promise.all([getEditionById(editionId), getMissionById(mId)])
+  const [edition, mission, forceDispositions] = await Promise.all([
+    getEditionById(editionId),
+    getMissionById(mId),
+    getForceDispositionsByEditionId(editionId),
+  ])
 
   if (!edition || !mission) notFound()
   if (mission.edition_id !== edition.id) notFound()
@@ -37,7 +42,7 @@ export default async function EditMissionPage({
           </div>
 
           <section className="mb-8">
-            <MissionForm editionId={edition.id} mission={mission} />
+            <MissionForm editionId={edition.id} mission={mission} forceDispositions={forceDispositions} />
           </section>
 
           <section>

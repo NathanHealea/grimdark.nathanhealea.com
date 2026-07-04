@@ -1,15 +1,17 @@
 'use client'
 
 import type { Mission } from '@/types/battle-report'
+import type { ForceDisposition } from '@/types/force-disposition'
 import { startTransition, useActionState, useEffect, useRef } from 'react'
 import { createMission, updateMission, type MissionFormState } from './actions'
 
 type MissionFormProps = {
   editionId: number
   mission?: Mission
+  forceDispositions?: ForceDisposition[]
 }
 
-export default function MissionForm({ editionId, mission }: MissionFormProps) {
+export default function MissionForm({ editionId, mission, forceDispositions = [] }: MissionFormProps) {
   const action = mission ? updateMission : createMission
   const [state, formAction, pending] = useActionState<MissionFormState, FormData>(action, null)
   const formRef = useRef<HTMLFormElement>(null)
@@ -69,6 +71,54 @@ export default function MissionForm({ editionId, mission }: MissionFormProps) {
           </div>
           {state?.errors?.name && <p className="mt-1 text-sm text-error">{state.errors.name}</p>}
         </div>
+
+        {forceDispositions.length > 0 && (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div>
+              <label className="label" htmlFor="force_disposition_id">
+                Disposition Deck
+              </label>
+              <select
+                id="force_disposition_id"
+                name="force_disposition_id"
+                defaultValue={mission?.force_disposition_id ?? ''}
+                className={`select select-bordered w-full ${state?.errors?.force_disposition_id ? 'select-error' : ''}`}
+              >
+                <option value="">Unmapped</option>
+                {forceDispositions.map((fd) => (
+                  <option key={fd.id} value={fd.id}>
+                    {fd.name}
+                  </option>
+                ))}
+              </select>
+              {state?.errors?.force_disposition_id && (
+                <p className="mt-1 text-sm text-error">{state.errors.force_disposition_id}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="label" htmlFor="opponent_force_disposition_id">
+                Vs Opponent Disposition
+              </label>
+              <select
+                id="opponent_force_disposition_id"
+                name="opponent_force_disposition_id"
+                defaultValue={mission?.opponent_force_disposition_id ?? ''}
+                className={`select select-bordered w-full ${state?.errors?.opponent_force_disposition_id ? 'select-error' : ''}`}
+              >
+                <option value="">Unmapped</option>
+                {forceDispositions.map((fd) => (
+                  <option key={fd.id} value={fd.id}>
+                    {fd.name}
+                  </option>
+                ))}
+              </select>
+              {state?.errors?.opponent_force_disposition_id && (
+                <p className="mt-1 text-sm text-error">{state.errors.opponent_force_disposition_id}</p>
+              )}
+            </div>
+          </div>
+        )}
       </form>
     </>
   )

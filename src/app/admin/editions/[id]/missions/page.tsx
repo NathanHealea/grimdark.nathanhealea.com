@@ -1,4 +1,5 @@
 import { getMissionsByEditionId } from '@/modules/battle-report/queries'
+import { getForceDispositionsByEditionId } from '@/modules/force-disposition/queries'
 import { getEditionById } from '@/modules/edition/queries'
 import { formatEditionLabel } from '@/types/edition'
 import type { Metadata } from 'next'
@@ -18,7 +19,11 @@ export default async function AdminEditionMissionsPage({ params }: { params: Pro
   const edition = await getEditionById(editionId)
   if (!edition) notFound()
 
-  const missions = await getMissionsByEditionId(editionId)
+  const [missions, forceDispositions] = await Promise.all([
+    getMissionsByEditionId(editionId),
+    getForceDispositionsByEditionId(editionId),
+  ])
+  const dispositionMap = new Map(forceDispositions.map((fd) => [fd.id, fd]))
 
   return (
     <main className="page-layout">
@@ -36,7 +41,7 @@ export default async function AdminEditionMissionsPage({ params }: { params: Pro
 
           <section className="mb-8">
             <h2 className="ornament section-header">Add Mission</h2>
-            <MissionForm editionId={edition.id} />
+            <MissionForm editionId={edition.id} forceDispositions={forceDispositions} />
           </section>
 
           <section>
@@ -48,6 +53,7 @@ export default async function AdminEditionMissionsPage({ params }: { params: Pro
                 <thead>
                   <tr>
                     <th>Name</th>
+                    {forceDispositions.length > 0 && <th>Disposition Mapping</th>}
                     <th>Actions</th>
                   </tr>
                 </thead>
@@ -55,6 +61,18 @@ export default async function AdminEditionMissionsPage({ params }: { params: Pro
                   {missions.map((mission) => (
                     <tr key={mission.id} className="hover">
                       <td className="font-semibold">{mission.name}</td>
+                      {forceDispositions.length > 0 && (
+                        <td className="text-sm text-base-content/60">
+                          {mission.force_disposition_id && mission.opponent_force_disposition_id ? (
+                            <>
+                              {dispositionMap.get(mission.force_disposition_id)?.name ?? 'Unknown'} &rarr; vs{' '}
+                              {dispositionMap.get(mission.opponent_force_disposition_id)?.name ?? 'Unknown'}
+                            </>
+                          ) : (
+                            <span className="text-base-content/40">Unmapped</span>
+                          )}
+                        </td>
+                      )}
                       <td>
                         <MissionActions
                           editionId={edition.id}
