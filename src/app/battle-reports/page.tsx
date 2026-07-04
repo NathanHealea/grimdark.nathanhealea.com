@@ -8,6 +8,7 @@ import {
   getAllDeployments,
   getBattlePoints,
 } from '@/modules/battle-report/queries'
+import { resolvePrimaryMissions, formatPrimaryMissionPairing } from '@/modules/battle-report/utils'
 import { getEditions } from '@/modules/edition/queries'
 import { getSeasons } from '@/modules/season/queries'
 export const metadata: Metadata = {
@@ -108,6 +109,10 @@ export default async function BattleReportsPage() {
                   const attacker = report.attacker_id ? profileMap.get(report.attacker_id) : null
                   const defender = report.defender_id ? profileMap.get(report.defender_id) : null
                   const mission = report.mission_id ? missionMap.get(report.mission_id) : null
+                  const { attackerPrimary, defenderPrimary } = mission
+                    ? { attackerPrimary: null, defenderPrimary: null }
+                    : resolvePrimaryMissions(report, missions)
+                  const missionLabel = mission?.name ?? formatPrimaryMissionPairing(attackerPrimary, defenderPrimary)
                   const deployment = report.deployment_id ? deploymentMap.get(report.deployment_id) : null
                   const bp = report.battle_points_id ? battlePointsMap.get(report.battle_points_id) : null
                   const season = report.season_id ? seasonMap.get(report.season_id) : null
@@ -168,7 +173,7 @@ export default async function BattleReportsPage() {
                         {/* Game details */}
                         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-base-content/60">
                           {edition && <span className="badge badge-outline badge-sm">{edition.short_name}</span>}
-                          {mission && <span>{mission.name}</span>}
+                          {missionLabel && <span>{missionLabel}</span>}
                           {deployment && <span>{deployment.name}</span>}
                           {bp && <span>{bp.name}</span>}
                           {report.rounds != null && <span>{report.rounds} {report.rounds === 1 ? 'round' : 'rounds'}</span>}
