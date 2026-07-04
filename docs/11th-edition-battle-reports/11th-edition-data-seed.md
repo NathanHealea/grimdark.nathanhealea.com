@@ -2,7 +2,7 @@
 
 **Epic:** 11th Edition Battle Reports
 **Type:** Feature
-**Status:** Todo
+**Status:** Done
 **Branch:** feature/11th-edition-data-seed
 **Merge Into:** epic/11th-edition-battle-reports
 
@@ -12,11 +12,11 @@ Seed the 11th edition's playable reference data from `docs/editions/11th-edition
 
 ## Acceptance Criteria
 
-- [ ] The six 11th edition deployments exist in `deployments` with `edition_id` = 11th
-- [ ] The twenty-five primary missions exist in `missions` with `edition_id` = 11th and both disposition mapping columns set
-- [ ] The mission mappings reproduce the 5×5 matrix exactly (5 mirrors + 20 asymmetric cells)
-- [ ] Re-running the migration against a database where an admin already hand-entered some of these rows does not fail or duplicate (idempotent inserts)
-- [ ] 10th edition data is untouched
+- [x] The six 11th edition deployments exist in `deployments` with `edition_id` = 11th
+- [x] The twenty-five primary missions exist in `missions` with `edition_id` = 11th and both disposition mapping columns set
+- [x] The mission mappings reproduce the 5×5 matrix exactly (5 mirrors + 20 asymmetric cells)
+- [x] Re-running the migration against a database where an admin already hand-entered some of these rows does not fail or duplicate (idempotent inserts)
+- [x] 10th edition data is untouched
 
 ## Database
 
