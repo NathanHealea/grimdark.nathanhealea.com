@@ -7,7 +7,38 @@ import { revalidatePath } from 'next/cache'
 
 export type MissionFormState = FormState<{
   name: string
+  force_disposition_id: string
+  opponent_force_disposition_id: string
 }>
+
+function parseDispositionMapping(formData: FormData): {
+  errors?: Record<string, string>
+  forceDispositionId: number | null
+  opponentForceDispositionId: number | null
+} {
+  const rawDeck = (formData.get('force_disposition_id') as string) ?? ''
+  const rawOpponent = (formData.get('opponent_force_disposition_id') as string) ?? ''
+
+  if (!rawDeck !== !rawOpponent) {
+    const message = 'Set both the disposition deck and opponent disposition, or neither.'
+    return {
+      errors: rawDeck
+        ? { opponent_force_disposition_id: message }
+        : { force_disposition_id: message },
+      forceDispositionId: null,
+      opponentForceDispositionId: null,
+    }
+  }
+
+  return {
+    forceDispositionId: rawDeck ? Number(rawDeck) : null,
+    opponentForceDispositionId: rawOpponent ? Number(rawOpponent) : null,
+  }
+}
+
+function isPairingViolation(error: { code?: string; message?: string }): boolean {
+  return error.code === '23505' && (error.message ?? '').includes('missions_disposition_pairing_unique')
+}
 
 export async function createMission(prevState: MissionFormState, formData: FormData): Promise<MissionFormState> {
   const supabase = await createClient()
@@ -33,11 +64,24 @@ export async function createMission(prevState: MissionFormState, formData: FormD
   const errors: Record<string, string> = {}
   if (!name) errors.name = 'Name is required.'
 
+  const mapping = parseDispositionMapping(formData)
+  if (mapping.errors) Object.assign(errors, mapping.errors)
+
   if (Object.keys(errors).length > 0) return { errors }
 
-  const { error } = await supabase.from('missions').insert({ edition_id: editionId, name })
+  const { error } = await supabase.from('missions').insert({
+    edition_id: editionId,
+    name,
+    force_disposition_id: mapping.forceDispositionId,
+    opponent_force_disposition_id: mapping.opponentForceDispositionId,
+  })
 
   if (error) {
+    if (isPairingViolation(error)) {
+      return {
+        errors: { opponent_force_disposition_id: 'This deck already has a mission against that opponent disposition.' },
+      }
+    }
     if (error.code === '23505') {
       return { errors: { name: 'A mission with this name already exists in this edition.' } }
     }
@@ -73,11 +117,26 @@ export async function updateMission(prevState: MissionFormState, formData: FormD
   const errors: Record<string, string> = {}
   if (!name) errors.name = 'Name is required.'
 
+  const mapping = parseDispositionMapping(formData)
+  if (mapping.errors) Object.assign(errors, mapping.errors)
+
   if (Object.keys(errors).length > 0) return { errors }
 
-  const { error } = await supabase.from('missions').update({ name }).eq('id', missionId)
+  const { error } = await supabase
+    .from('missions')
+    .update({
+      name,
+      force_disposition_id: mapping.forceDispositionId,
+      opponent_force_disposition_id: mapping.opponentForceDispositionId,
+    })
+    .eq('id', missionId)
 
   if (error) {
+    if (isPairingViolation(error)) {
+      return {
+        errors: { opponent_force_disposition_id: 'This deck already has a mission against that opponent disposition.' },
+      }
+    }
     if (error.code === '23505') {
       return { errors: { name: 'A mission with this name already exists in this edition.' } }
     }
