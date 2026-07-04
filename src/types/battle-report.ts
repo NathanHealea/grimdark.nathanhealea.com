@@ -54,6 +54,12 @@ export type RoundStatFormValues = {
   defender_models_lost: string
 }
 
-export type Mission = { id: number; edition_id: number; name: string }
+export type Mission = {
+  id: number
+  edition_id: number
+  name: string
+  force_disposition_id: number | null
+  opponent_force_disposition_id: number | null
+}
 export type Deployment = { id: number; edition_id: number; name: string }
 export type BattlePoints = { id: number; name: string; size: number }
