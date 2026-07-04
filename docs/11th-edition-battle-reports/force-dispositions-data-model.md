@@ -2,7 +2,7 @@
 
 **Epic:** 11th Edition Battle Reports
 **Type:** Feature
-**Status:** Todo
+**Status:** Done
 **Branch:** feature/force-dispositions-data-model
 **Merge Into:** epic/11th-edition-battle-reports
 
@@ -12,15 +12,15 @@ Introduce a `force_dispositions` table capturing the five 11th edition Force Dis
 
 ## Acceptance Criteria
 
-- [ ] A `force_dispositions` table exists with id, edition_id, name, description, and timestamps
-- [ ] Disposition names are unique per edition
-- [ ] RLS mirrors the missions pattern: publicly readable, admins/organizers can insert/update/delete
-- [ ] The migration seeds the five 11th edition Force Dispositions (with their deck themes as descriptions)
-- [ ] `missions` gains nullable `force_disposition_id` (the deck the mission belongs to) and `opponent_force_disposition_id` (the opponent disposition it is scored against)
-- [ ] A mission has either both mapping columns set or neither (check constraint) — all existing 10th edition missions remain unmapped
-- [ ] At most one mission exists per (edition, disposition, opponent disposition) triple (partial unique index)
-- [ ] `ForceDisposition` type and query module exist following the edition/mission module patterns
-- [ ] `Mission` type includes the two new nullable fields and mission queries select them
+- [x] A `force_dispositions` table exists with id, edition_id, name, description, and timestamps
+- [x] Disposition names are unique per edition
+- [x] RLS mirrors the missions pattern: publicly readable, admins/organizers can insert/update/delete
+- [x] The migration seeds the five 11th edition Force Dispositions (with their deck themes as descriptions)
+- [x] `missions` gains nullable `force_disposition_id` (the deck the mission belongs to) and `opponent_force_disposition_id` (the opponent disposition it is scored against)
+- [x] A mission has either both mapping columns set or neither (check constraint) — all existing 10th edition missions remain unmapped
+- [x] At most one mission exists per (edition, disposition, opponent disposition) triple (partial unique index)
+- [x] `ForceDisposition` type and query module exist following the edition/mission module patterns
+- [x] `Mission` type includes the two new nullable fields and mission queries select them
 
 ## Database
 
