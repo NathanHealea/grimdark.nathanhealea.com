@@ -2,7 +2,7 @@
 
 **Epic:** 11th Edition Battle Reports
 **Type:** Feature
-**Status:** Todo
+**Status:** Done
 **Branch:** feature/battle-report-11th-display
 **Merge Into:** epic/11th-edition-battle-reports
 
@@ -12,12 +12,12 @@ Surface the 11th edition fields everywhere battle reports are read: the detail v
 
 ## Acceptance Criteria
 
-- [ ] Detail view: disposition reports show each player's Force Disposition and derived primary mission in the Players section, and the Game Details grid replaces the single "Mission" entry with the two primaries (or "A vs B" pairing summary)
-- [ ] Detail view: recorded secondary modes render per player ("Secondaries: Tactical"); unrecorded modes are omitted, not shown as empty
-- [ ] Feed cards: disposition reports show the disposition pairing (e.g. "Death Trap vs Reconnaissance Sweep") where classic reports show the mission name
-- [ ] Admin battle reports table renders disposition reports without an empty Mission cell
-- [ ] 10th edition reports are pixel-identical to today in all three surfaces
-- [ ] Round stats, scores, outcomes, tabled, units/models lost render unchanged for both editions
+- [x] Detail view: disposition reports show each player's Force Disposition and derived primary mission in the Players section, and the Game Details grid replaces the single "Mission" entry with the two primaries (or "A vs B" pairing summary)
+- [x] Detail view: recorded secondary modes render per player ("Secondaries: Tactical"); unrecorded modes are omitted, not shown as empty
+- [x] Feed cards: disposition reports show the disposition pairing (e.g. "Death Trap vs Reconnaissance Sweep") where classic reports show the mission name
+- [x] Admin battle reports table renders disposition reports without an empty Mission cell
+- [x] 10th edition reports are pixel-identical to today in all three surfaces
+- [x] Round stats, scores, outcomes, tabled, units/models lost render unchanged for both editions
 
 ## Implementation
 

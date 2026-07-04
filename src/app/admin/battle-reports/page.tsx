@@ -1,6 +1,7 @@
 import BattleReportActions from '@/app/admin/battle-reports/battle-report-actions'
 import { createClient } from '@/lib/supabase/server'
 import { getAllMissions, getBattlePoints, getBattleReports } from '@/modules/battle-report/queries'
+import { resolvePrimaryMissions, formatPrimaryMissionPairing } from '@/modules/battle-report/utils'
 import { getFactions } from '@/modules/faction/queries'
 import { getEditions } from '@/modules/edition/queries'
 import { getSeasons } from '@/modules/season/queries'
@@ -100,6 +101,10 @@ export default async function AdminBattleReportsPage() {
                     const attacker = report.attacker_id ? profileMap.get(report.attacker_id) : null
                     const defender = report.defender_id ? profileMap.get(report.defender_id) : null
                     const mission = report.mission_id ? missionMap.get(report.mission_id) : null
+                    const { attackerPrimary, defenderPrimary } = mission
+                      ? { attackerPrimary: null, defenderPrimary: null }
+                      : resolvePrimaryMissions(report, missions)
+                    const missionLabel = mission?.name ?? formatPrimaryMissionPairing(attackerPrimary, defenderPrimary)
                     const bp = report.battle_points_id ? battlePointsMap.get(report.battle_points_id) : null
                     const season = report.season_id ? seasonMap.get(report.season_id) : null
                     const edition = editionMap.get(report.edition_id)
@@ -173,9 +178,9 @@ export default async function AdminBattleReportsPage() {
                           )}
                         </td>
                         <td className="text-sm">
-                          {mission ? (
+                          {missionLabel ? (
                             <div>
-                              <p>{mission.name}</p>
+                              <p>{missionLabel}</p>
                               {bp && <p className="text-xs text-base-content/60">{bp.name}</p>}
                             </div>
                           ) : (
