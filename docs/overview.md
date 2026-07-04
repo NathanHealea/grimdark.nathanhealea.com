@@ -147,6 +147,18 @@ Epic Template:
 - [x] [Admin battle report delete](./battle-reports/battle-report-delete.md)
 - [ ] [Battle report edition + filtered mission/deployment](./battle-reports/battle-report-edition.md)
 
+### Epic: 11th Edition Battle Reports
+
+**Goal:** Record 11th edition games — Force Dispositions, matrix-derived primary missions, and secondary mission tracking — alongside unchanged 10th edition reporting, with the report's required edition field driving which form the user fills out.
+
+**High-Level Scope:**
+
+- [ ] [Force dispositions data model (table, mission matchup mapping, seed)](./11th-edition-battle-reports/force-dispositions-data-model.md)
+- [ ] [11th edition data seed (6 deployments, 25 mapped primary missions)](./11th-edition-battle-reports/11th-edition-data-seed.md)
+- [ ] [Battle report force dispositions (schema, form, validation, actions)](./11th-edition-battle-reports/battle-report-force-dispositions.md)
+- [ ] [Battle report 11th edition display (detail, feed, admin table)](./11th-edition-battle-reports/battle-report-11th-display.md)
+- [ ] [Admin force dispositions management](./11th-edition-battle-reports/admin-force-dispositions.md)
+
 ### Epic: Standings & Leaderboard
 
 **Goal:** Automatically track league rankings based on battle report results.
