@@ -9,6 +9,7 @@ import {
   getMissionsByEditionId,
 } from '@/modules/battle-report/queries'
 import { getFactions } from '@/modules/faction/queries'
+import { getForceDispositionsByEditionId } from '@/modules/force-disposition/queries'
 import { getSeasons } from '@/modules/season/queries'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
@@ -42,10 +43,11 @@ export default async function SubmitBattleReportPage() {
 
   const { editions: publishedEditions, defaultEditionId } = await getEditionsForSubmitForm()
 
-  const [missionResults, deploymentResults, battlePoints, members, factions, memberFactions, seasons] =
+  const [missionResults, deploymentResults, dispositionResults, battlePoints, members, factions, memberFactions, seasons] =
     await Promise.all([
       Promise.all(publishedEditions.map((e) => getMissionsByEditionId(e.id))),
       Promise.all(publishedEditions.map((e) => getDeploymentsByEditionId(e.id))),
+      Promise.all(publishedEditions.map((e) => getForceDispositionsByEditionId(e.id))),
       getBattlePoints(),
       getMembers(),
       getFactions(),
@@ -58,6 +60,9 @@ export default async function SubmitBattleReportPage() {
   )
   const deploymentsByEdition = Object.fromEntries(
     publishedEditions.map((e, i) => [e.id, deploymentResults[i]])
+  )
+  const dispositionsByEdition = Object.fromEntries(
+    publishedEditions.map((e, i) => [e.id, dispositionResults[i]])
   )
 
   // Flat lists for legacy prop compatibility (missions/deployments for the default edition)
@@ -90,6 +95,7 @@ export default async function SubmitBattleReportPage() {
             defaultEditionId={defaultEditionId}
             missionsByEdition={missionsByEdition}
             deploymentsByEdition={deploymentsByEdition}
+            dispositionsByEdition={dispositionsByEdition}
           />
         </div>
       </div>

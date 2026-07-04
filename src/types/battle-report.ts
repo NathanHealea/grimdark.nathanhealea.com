@@ -2,6 +2,8 @@ export type Outcome = 'win' | 'loss' | 'draw'
 
 export type BattleReportStatus = 'draft' | 'published'
 
+export type SecondaryMode = 'tactical' | 'fixed'
+
 export type BattleReport = {
   id: string
   status: BattleReportStatus
@@ -20,6 +22,10 @@ export type BattleReport = {
   defender_units_lost: number
   defender_models_lost: number
   edition_id: number
+  attacker_force_disposition_id: number | null
+  defender_force_disposition_id: number | null
+  attacker_secondary_mode: SecondaryMode | null
+  defender_secondary_mode: SecondaryMode | null
   mission_id: number | null
   deployment_id: number | null
   battle_points_id: number | null

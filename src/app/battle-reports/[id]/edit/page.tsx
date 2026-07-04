@@ -11,6 +11,7 @@ import {
   getRoundStatsByReportId,
 } from '@/modules/battle-report/queries'
 import { getFactions } from '@/modules/faction/queries'
+import { getForceDispositionsByEditionId } from '@/modules/force-disposition/queries'
 import { getSeasons } from '@/modules/season/queries'
 import type { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
@@ -58,10 +59,11 @@ export default async function EditBattleReportPage({ params }: { params: Promise
   // For editing, prefer the report's own edition as the "default" so the form pre-selects it
   const defaultEditionId = report.edition_id ?? rawDefaultEditionId
 
-  const [missionResults, deploymentResults, battlePoints, members, factionsList, memberFactions, seasons, roundStats] =
+  const [missionResults, deploymentResults, dispositionResults, battlePoints, members, factionsList, memberFactions, seasons, roundStats] =
     await Promise.all([
       Promise.all(publishedEditions.map((e) => getMissionsByEditionId(e.id))),
       Promise.all(publishedEditions.map((e) => getDeploymentsByEditionId(e.id))),
+      Promise.all(publishedEditions.map((e) => getForceDispositionsByEditionId(e.id))),
       getBattlePoints(),
       getMembers(),
       getFactions(),
@@ -75,6 +77,9 @@ export default async function EditBattleReportPage({ params }: { params: Promise
   )
   const deploymentsByEdition = Object.fromEntries(
     publishedEditions.map((e, i) => [e.id, deploymentResults[i]])
+  )
+  const dispositionsByEdition = Object.fromEntries(
+    publishedEditions.map((e, i) => [e.id, dispositionResults[i]])
   )
 
   // Flat lists for legacy prop compatibility (scoped to the report's edition)
@@ -119,6 +124,7 @@ export default async function EditBattleReportPage({ params }: { params: Promise
             defaultEditionId={defaultEditionId}
             missionsByEdition={missionsByEdition}
             deploymentsByEdition={deploymentsByEdition}
+            dispositionsByEdition={dispositionsByEdition}
           />
         </div>
       </div>

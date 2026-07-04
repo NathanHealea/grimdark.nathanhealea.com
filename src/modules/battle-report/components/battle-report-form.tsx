@@ -4,16 +4,19 @@ import {
   type BattleReportFormState,
   validateEventDate,
   validateFactionId,
+  validateForceDisposition,
   validateOutcome,
   validatePlayerId,
   validateRounds,
   validateScore,
   validateSeasonId,
+  validateSecondaryMode,
   validateSelectId,
   validateEditionId,
 } from '@/modules/battle-report/validation'
 import type { BattlePoints, BattleReport, Deployment, Mission, RoundStatFormValues } from '@/types/battle-report'
 import type { Edition } from '@/types/edition'
+import type { ForceDisposition } from '@/types/force-disposition'
 import type { Faction, ProfileFaction } from '@/types/faction'
 import type { Profile } from '@/types/profile'
 import { formatSeasonName, isCurrentSeason, isPastSeason, type Season } from '@/types/season'
@@ -38,6 +41,7 @@ type BattleReportFormProps = {
   defaultEditionId: number | null
   missionsByEdition: Record<number, Mission[]>
   deploymentsByEdition: Record<number, Deployment[]>
+  dispositionsByEdition: Record<number, ForceDisposition[]>
 }
 
 function toFormValues(defaults?: Partial<BattleReport>, defaultEditionId?: number | null) {
@@ -53,6 +57,10 @@ function toFormValues(defaults?: Partial<BattleReport>, defaultEditionId?: numbe
     defender_outcome: defaults?.defender_outcome ?? '',
     edition_id: defaults?.edition_id != null ? String(defaults.edition_id) : (defaultEditionId != null ? String(defaultEditionId) : ''),
     mission_id: defaults?.mission_id != null ? String(defaults.mission_id) : '',
+    attacker_force_disposition_id: defaults?.attacker_force_disposition_id != null ? String(defaults.attacker_force_disposition_id) : '',
+    defender_force_disposition_id: defaults?.defender_force_disposition_id != null ? String(defaults.defender_force_disposition_id) : '',
+    attacker_secondary_mode: defaults?.attacker_secondary_mode ?? '',
+    defender_secondary_mode: defaults?.defender_secondary_mode ?? '',
     deployment_id: defaults?.deployment_id != null ? String(defaults.deployment_id) : '',
     battle_points_id: defaults?.battle_points_id != null ? String(defaults.battle_points_id) : '',
     rounds: defaults?.rounds != null ? String(defaults.rounds) : '',
@@ -78,6 +86,10 @@ function validateFieldByName(name: string, value: string): string | null {
     case 'attacker_outcome':
     case 'defender_outcome': return validateOutcome(value)
     case 'edition_id': return validateEditionId(value)
+    case 'attacker_force_disposition_id':
+    case 'defender_force_disposition_id': return validateForceDisposition(value, { required: true })
+    case 'attacker_secondary_mode':
+    case 'defender_secondary_mode': return validateSecondaryMode(value)
     case 'mission_id':
     case 'deployment_id':
     case 'battle_points_id': return validateSelectId(value)
@@ -103,6 +115,7 @@ export default function BattleReportForm({
   defaultEditionId,
   missionsByEdition,
   deploymentsByEdition,
+  dispositionsByEdition,
 }: BattleReportFormProps) {
   const isEditMode = !!reportId
   const statusLocked = isEditMode && defaultValues?.status === 'published' && !isAdmin
@@ -197,15 +210,16 @@ export default function BattleReportForm({
   }
 
   /**
-   * Called when the edition changes. Clears mission/deployment if they don't
-   * belong to the newly selected edition, and surfaces an inline note.
+   * Called when the edition changes. Clears mission/deployment/dispositions if
+   * they don't belong to the newly selected edition, and surfaces an inline note.
    */
   function updateEdition(newEditionId: string) {
     const edId = Number(newEditionId)
     const editionMissions = edId ? (missionsByEdition[edId] ?? []) : []
     const editionDeployments = edId ? (deploymentsByEdition[edId] ?? []) : []
+    const editionDispositions = edId ? (dispositionsByEdition[edId] ?? []) : []
 
-    let cleared: string[] = []
+    const cleared: string[] = []
 
     setValues((prev) => {
       const next = { ...prev, edition_id: newEditionId }
@@ -218,12 +232,25 @@ export default function BattleReportForm({
         next.deployment_id = ''
         cleared.push('deployment')
       }
+      // Disposition ids are edition-scoped — they never carry over
+      const attackerDispositionStale =
+        prev.attacker_force_disposition_id &&
+        !editionDispositions.some((fd) => String(fd.id) === prev.attacker_force_disposition_id)
+      const defenderDispositionStale =
+        prev.defender_force_disposition_id &&
+        !editionDispositions.some((fd) => String(fd.id) === prev.defender_force_disposition_id)
+      if (attackerDispositionStale || defenderDispositionStale) {
+        next.attacker_force_disposition_id = ''
+        next.defender_force_disposition_id = ''
+        cleared.push('force dispositions')
+      }
 
       return next
     })
 
     if (cleared.length > 0) {
-      setEditionClearedNote(`${cleared.map((c) => c.charAt(0).toUpperCase() + c.slice(1)).join(' and ')} ${cleared.length === 1 ? 'was' : 'were'} cleared because ${cleared.length === 1 ? 'it belongs' : 'they belong'} to a different edition. Pick again.`)
+      const plural = cleared.length > 1 || cleared.includes('force dispositions')
+      setEditionClearedNote(`${cleared.map((c) => c.charAt(0).toUpperCase() + c.slice(1)).join(' and ')} ${plural ? 'were' : 'was'} cleared because ${plural ? 'they belong' : 'it belongs'} to a different edition. Pick again.`)
     } else {
       setEditionClearedNote(null)
     }
@@ -280,6 +307,30 @@ export default function BattleReportForm({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentEditionId, deploymentsByEdition, deployments])
 
+  // Editions with force dispositions (11th) swap the Mission select for
+  // per-player disposition selects; the primary missions are derived
+  const editionDispositions = currentEditionId ? (dispositionsByEdition[currentEditionId] ?? []) : []
+  const usesDispositions = editionDispositions.length > 0
+
+  const attackerDispositionId = Number(values.attacker_force_disposition_id) || null
+  const defenderDispositionId = Number(values.defender_force_disposition_id) || null
+  const attackerPrimary =
+    attackerDispositionId && defenderDispositionId
+      ? filteredMissions.find(
+          (m) =>
+            m.force_disposition_id === attackerDispositionId &&
+            m.opponent_force_disposition_id === defenderDispositionId,
+        )
+      : undefined
+  const defenderPrimary =
+    attackerDispositionId && defenderDispositionId
+      ? filteredMissions.find(
+          (m) =>
+            m.force_disposition_id === defenderDispositionId &&
+            m.opponent_force_disposition_id === attackerDispositionId,
+        )
+      : undefined
+
   function handleSubmit(formData: FormData) {
     formData.set('status', status)
     // Always include edition_id in formData
@@ -320,8 +371,22 @@ export default function BattleReportForm({
       const defenderOutcomeError = validateOutcome(values.defender_outcome)
       if (defenderOutcomeError) newErrors.defender_outcome = defenderOutcomeError
 
-      const missionIdError = validateSelectId(values.mission_id)
-      if (missionIdError) newErrors.mission_id = missionIdError
+      if (usesDispositions) {
+        const attackerDispositionError = validateForceDisposition(values.attacker_force_disposition_id, { required: true })
+        if (attackerDispositionError) newErrors.attacker_force_disposition_id = attackerDispositionError
+
+        const defenderDispositionError = validateForceDisposition(values.defender_force_disposition_id, { required: true })
+        if (defenderDispositionError) newErrors.defender_force_disposition_id = defenderDispositionError
+      } else {
+        const missionIdError = validateSelectId(values.mission_id)
+        if (missionIdError) newErrors.mission_id = missionIdError
+      }
+
+      const attackerSecondaryModeError = validateSecondaryMode(values.attacker_secondary_mode)
+      if (attackerSecondaryModeError) newErrors.attacker_secondary_mode = attackerSecondaryModeError
+
+      const defenderSecondaryModeError = validateSecondaryMode(values.defender_secondary_mode)
+      if (defenderSecondaryModeError) newErrors.defender_secondary_mode = defenderSecondaryModeError
 
       const deploymentIdError = validateSelectId(values.deployment_id)
       if (deploymentIdError) newErrors.deployment_id = deploymentIdError
@@ -452,28 +517,95 @@ export default function BattleReportForm({
               </div>
             )}
 
+            {usesDispositions && (
+              <>
+                <div className="form-grid mt-1">
+                  <div>
+                    <label className="label" htmlFor="attacker_force_disposition_id">
+                      Attacker Force Disposition
+                    </label>
+                    <select
+                      id="attacker_force_disposition_id"
+                      name="attacker_force_disposition_id"
+                      className={`select select-lg select-bordered w-full ${fieldError('attacker_force_disposition_id') ? 'select-error' : fieldSuccess('attacker_force_disposition_id') ? 'select-success' : ''}`}
+                      value={values.attacker_force_disposition_id}
+                      onChange={(e) => updateField('attacker_force_disposition_id', e.target.value)}
+                    >
+                      <option value="">Select force disposition</option>
+                      {editionDispositions.map((fd) => (
+                        <option key={fd.id} value={fd.id}>
+                          {fd.name}
+                        </option>
+                      ))}
+                    </select>
+                    {fieldError('attacker_force_disposition_id') && (
+                      <p className="form-error">{fieldError('attacker_force_disposition_id')}</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="label" htmlFor="defender_force_disposition_id">
+                      Defender Force Disposition
+                    </label>
+                    <select
+                      id="defender_force_disposition_id"
+                      name="defender_force_disposition_id"
+                      className={`select select-lg select-bordered w-full ${fieldError('defender_force_disposition_id') ? 'select-error' : fieldSuccess('defender_force_disposition_id') ? 'select-success' : ''}`}
+                      value={values.defender_force_disposition_id}
+                      onChange={(e) => updateField('defender_force_disposition_id', e.target.value)}
+                    >
+                      <option value="">Select force disposition</option>
+                      {editionDispositions.map((fd) => (
+                        <option key={fd.id} value={fd.id}>
+                          {fd.name}
+                        </option>
+                      ))}
+                    </select>
+                    {fieldError('defender_force_disposition_id') && (
+                      <p className="form-error">{fieldError('defender_force_disposition_id')}</p>
+                    )}
+                  </div>
+                </div>
+
+                {attackerDispositionId != null && defenderDispositionId != null && (
+                  <div className="mt-2 rounded-lg bg-base-200 p-4 text-sm">
+                    <span className="label-meta">Primary Missions</span>
+                    {attackerPrimary || defenderPrimary ? (
+                      <p className="mt-1">
+                        Attacker plays <span className="font-semibold">{attackerPrimary?.name ?? '—'}</span> —
+                        Defender plays <span className="font-semibold">{defenderPrimary?.name ?? '—'}</span>
+                      </p>
+                    ) : (
+                      <p className="mt-1">No mission mapped for this matchup.</p>
+                    )}
+                  </div>
+                )}
+              </>
+            )}
+
             <div className="form-grid mt-1">
-              <div>
-                <label className="label" htmlFor="mission_id">
-                  Mission
-                </label>
-                <select
-                  id="mission_id"
-                  name="mission_id"
-                  className={`select select-lg select-bordered w-full ${fieldError('mission_id') ? 'select-error' : fieldSuccess('mission_id') ? 'select-success' : ''}`}
-                  value={values.mission_id}
-                  onChange={(e) => updateField('mission_id', e.target.value)}
-                  disabled={!currentEditionId}
-                >
-                  <option value="">{!currentEditionId ? 'Select an edition first' : 'Select mission'}</option>
-                  {filteredMissions.map((mission) => (
-                    <option key={mission.id} value={mission.id}>
-                      {mission.name}
-                    </option>
-                  ))}
-                </select>
-                {fieldError('mission_id') && <p className="form-error">{fieldError('mission_id')}</p>}
-              </div>
+              {!usesDispositions && (
+                <div>
+                  <label className="label" htmlFor="mission_id">
+                    Mission
+                  </label>
+                  <select
+                    id="mission_id"
+                    name="mission_id"
+                    className={`select select-lg select-bordered w-full ${fieldError('mission_id') ? 'select-error' : fieldSuccess('mission_id') ? 'select-success' : ''}`}
+                    value={values.mission_id}
+                    onChange={(e) => updateField('mission_id', e.target.value)}
+                    disabled={!currentEditionId}
+                  >
+                    <option value="">{!currentEditionId ? 'Select an edition first' : 'Select mission'}</option>
+                    {filteredMissions.map((mission) => (
+                      <option key={mission.id} value={mission.id}>
+                        {mission.name}
+                      </option>
+                    ))}
+                  </select>
+                  {fieldError('mission_id') && <p className="form-error">{fieldError('mission_id')}</p>}
+                </div>
+              )}
               <div>
                 <label className="label" htmlFor="deployment_id">
                   Deployment
@@ -498,6 +630,49 @@ export default function BattleReportForm({
                 )}
               </div>
             </div>
+
+            {usesDispositions && (
+              <div className="form-grid mt-1">
+                <div>
+                  <label className="label" htmlFor="attacker_secondary_mode">
+                    Attacker Secondary Missions <span className="text-sm text-base-content/50">(optional)</span>
+                  </label>
+                  <select
+                    id="attacker_secondary_mode"
+                    name="attacker_secondary_mode"
+                    className={`select select-lg select-bordered w-full ${fieldError('attacker_secondary_mode') ? 'select-error' : fieldSuccess('attacker_secondary_mode') ? 'select-success' : ''}`}
+                    value={values.attacker_secondary_mode}
+                    onChange={(e) => updateField('attacker_secondary_mode', e.target.value)}
+                  >
+                    <option value="">Not recorded</option>
+                    <option value="tactical">Tactical</option>
+                    <option value="fixed">Fixed</option>
+                  </select>
+                  {fieldError('attacker_secondary_mode') && (
+                    <p className="form-error">{fieldError('attacker_secondary_mode')}</p>
+                  )}
+                </div>
+                <div>
+                  <label className="label" htmlFor="defender_secondary_mode">
+                    Defender Secondary Missions <span className="text-sm text-base-content/50">(optional)</span>
+                  </label>
+                  <select
+                    id="defender_secondary_mode"
+                    name="defender_secondary_mode"
+                    className={`select select-lg select-bordered w-full ${fieldError('defender_secondary_mode') ? 'select-error' : fieldSuccess('defender_secondary_mode') ? 'select-success' : ''}`}
+                    value={values.defender_secondary_mode}
+                    onChange={(e) => updateField('defender_secondary_mode', e.target.value)}
+                  >
+                    <option value="">Not recorded</option>
+                    <option value="tactical">Tactical</option>
+                    <option value="fixed">Fixed</option>
+                  </select>
+                  {fieldError('defender_secondary_mode') && (
+                    <p className="form-error">{fieldError('defender_secondary_mode')}</p>
+                  )}
+                </div>
+              </div>
+            )}
 
             <div className="form-grid mt-1">
               <div>
