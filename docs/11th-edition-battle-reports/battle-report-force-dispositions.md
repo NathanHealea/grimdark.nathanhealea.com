@@ -2,7 +2,7 @@
 
 **Epic:** 11th Edition Battle Reports
 **Type:** Feature
-**Status:** Todo
+**Status:** Done
 **Branch:** feature/battle-report-force-dispositions
 **Merge Into:** epic/11th-edition-battle-reports
 
@@ -14,22 +14,22 @@ Record 11th edition games on battle reports. When the selected edition uses Forc
 
 ### Data Model
 
-- [ ] `battle_reports` has nullable `attacker_force_disposition_id` / `defender_force_disposition_id` FKs to `force_dispositions`
-- [ ] `battle_reports` has nullable `attacker_secondary_mode` / `defender_secondary_mode` (`'tactical'` or `'fixed'`)
-- [ ] A published report requires either a mission (classic) or both dispositions (disposition edition) — `published_fields_required` updated
-- [ ] The edition-integrity trigger also rejects dispositions that don't belong to the report's edition, and rejects a report carrying both a mission and dispositions
+- [x] `battle_reports` has nullable `attacker_force_disposition_id` / `defender_force_disposition_id` FKs to `force_dispositions`
+- [x] `battle_reports` has nullable `attacker_secondary_mode` / `defender_secondary_mode` (`'tactical'` or `'fixed'`)
+- [x] A published report requires either a mission (classic) or both dispositions (disposition edition) — `published_fields_required` updated
+- [x] The edition-integrity trigger also rejects dispositions that don't belong to the report's edition, and rejects a report carrying both a mission and dispositions
 
 ### Submit / Edit Form
 
-- [ ] Selecting an edition with Force Dispositions (11th) hides the Mission dropdown and shows an "Attacker Force Disposition" and "Defender Force Disposition" select, populated from that edition's dispositions
-- [ ] Once both dispositions are chosen, the form displays each player's derived primary mission (read-only), resolved from the mission mapping matrix
-- [ ] Optional "Secondary Missions" mode select (Tactical / Fixed / not recorded) per player
-- [ ] Selecting an edition without dispositions (10th) renders exactly the current form — single Mission dropdown, no disposition fields
-- [ ] Changing edition clears fields that don't belong to the new edition (mission, deployment, dispositions) with the existing inline cleared-note pattern
-- [ ] Publishing requires both dispositions on a disposition edition (mission not required); drafts save with any subset
-- [ ] Deployment continues to filter by edition (already works — the 11th list comes from the data seed)
-- [ ] Server-side validation rejects published disposition-edition reports missing a disposition, dispositions from another edition, or a mission set alongside dispositions
-- [ ] Editing an existing 10th edition report is unchanged; editing an 11th edition report pre-fills dispositions and secondary modes
+- [x] Selecting an edition with Force Dispositions (11th) hides the Mission dropdown and shows an "Attacker Force Disposition" and "Defender Force Disposition" select, populated from that edition's dispositions
+- [x] Once both dispositions are chosen, the form displays each player's derived primary mission (read-only), resolved from the mission mapping matrix
+- [x] Optional "Secondary Missions" mode select (Tactical / Fixed / not recorded) per player
+- [x] Selecting an edition without dispositions (10th) renders exactly the current form — single Mission dropdown, no disposition fields
+- [x] Changing edition clears fields that don't belong to the new edition (mission, deployment, dispositions) with the existing inline cleared-note pattern
+- [x] Publishing requires both dispositions on a disposition edition (mission not required); drafts save with any subset
+- [x] Deployment continues to filter by edition (already works — the 11th list comes from the data seed)
+- [x] Server-side validation rejects published disposition-edition reports missing a disposition, dispositions from another edition, or a mission set alongside dispositions
+- [x] Editing an existing 10th edition report is unchanged; editing an 11th edition report pre-fills dispositions and secondary modes
 
 ## Database
 
