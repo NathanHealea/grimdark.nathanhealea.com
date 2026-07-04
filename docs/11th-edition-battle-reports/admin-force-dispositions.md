@@ -2,7 +2,7 @@
 
 **Epic:** 11th Edition Battle Reports
 **Type:** Feature
-**Status:** Todo
+**Status:** Done
 **Branch:** feature/admin-force-dispositions
 **Merge Into:** epic/11th-edition-battle-reports
 
@@ -12,14 +12,14 @@ Give admins and organizers a management page for an edition's Force Dispositions
 
 ## Acceptance Criteria
 
-- [ ] `/admin/editions/[id]/force-dispositions` lists the edition's dispositions with add/edit/delete, guarded by `hasAnyRole(admin|organizer)` like the missions page
-- [ ] Admins can create, rename, and edit the description of a disposition
-- [ ] Deleting a disposition is blocked with a readable error when missions map to it or battle reports reference it
-- [ ] The mission form (`/admin/editions/[id]/missions`) gains optional "Disposition deck" and "Vs opponent disposition" selects populated from the edition's dispositions
-- [ ] The disposition selects are hidden entirely for editions with no dispositions (10th edition admin UX is unchanged)
-- [ ] Mission validation enforces both-or-neither on the two mapping fields and surfaces the duplicate-pairing unique violation as a friendly field error
-- [ ] The missions list page shows each mission's deck and opponent disposition (e.g. "Take and Hold → vs Disruption") for mapped missions
-- [ ] Non-admin/organizer users cannot reach the page or invoke the actions
+- [x] `/admin/editions/[id]/force-dispositions` lists the edition's dispositions with add/edit/delete, guarded by `hasAnyRole(admin|organizer)` like the missions page
+- [x] Admins can create, rename, and edit the description of a disposition
+- [x] Deleting a disposition is blocked with a readable error when missions map to it or battle reports reference it
+- [x] The mission form (`/admin/editions/[id]/missions`) gains optional "Disposition deck" and "Vs opponent disposition" selects populated from the edition's dispositions
+- [x] The disposition selects are hidden entirely for editions with no dispositions (10th edition admin UX is unchanged)
+- [x] Mission validation enforces both-or-neither on the two mapping fields and surfaces the duplicate-pairing unique violation as a friendly field error
+- [x] The missions list page shows each mission's deck and opponent disposition (e.g. "Take and Hold → vs Disruption") for mapped missions
+- [x] Non-admin/organizer users cannot reach the page or invoke the actions
 
 ## Routes
 
