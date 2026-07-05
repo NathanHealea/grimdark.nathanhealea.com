@@ -2,12 +2,14 @@ import { getAuthUser } from '@/lib/supabase/auth'
 import { hasRole } from '@/lib/supabase/roles'
 import {
   getBattlePoints,
-  getDeployments,
+  getDeploymentsByEditionId,
+  getEditionsForSubmitForm,
   getMemberFactions,
   getMembers,
-  getMissions,
+  getMissionsByEditionId,
 } from '@/modules/battle-report/queries'
 import { getFactions } from '@/modules/faction/queries'
+import { getForceDispositionsByEditionId } from '@/modules/force-disposition/queries'
 import { getSeasons } from '@/modules/season/queries'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
@@ -39,15 +41,33 @@ export default async function SubmitBattleReportPage() {
     )
   }
 
-  const [missions, deployments, battlePoints, members, factions, memberFactions, seasons] = await Promise.all([
-    getMissions(),
-    getDeployments(),
-    getBattlePoints(),
-    getMembers(),
-    getFactions(),
-    getMemberFactions(),
-    getSeasons({ includeAll: isAdmin }),
-  ])
+  const { editions: publishedEditions, defaultEditionId } = await getEditionsForSubmitForm()
+
+  const [missionResults, deploymentResults, dispositionResults, battlePoints, members, factions, memberFactions, seasons] =
+    await Promise.all([
+      Promise.all(publishedEditions.map((e) => getMissionsByEditionId(e.id))),
+      Promise.all(publishedEditions.map((e) => getDeploymentsByEditionId(e.id))),
+      Promise.all(publishedEditions.map((e) => getForceDispositionsByEditionId(e.id))),
+      getBattlePoints(),
+      getMembers(),
+      getFactions(),
+      getMemberFactions(),
+      getSeasons({ includeAll: isAdmin }),
+    ])
+
+  const missionsByEdition = Object.fromEntries(
+    publishedEditions.map((e, i) => [e.id, missionResults[i]])
+  )
+  const deploymentsByEdition = Object.fromEntries(
+    publishedEditions.map((e, i) => [e.id, deploymentResults[i]])
+  )
+  const dispositionsByEdition = Object.fromEntries(
+    publishedEditions.map((e, i) => [e.id, dispositionResults[i]])
+  )
+
+  // Flat lists for legacy prop compatibility (missions/deployments for the default edition)
+  const defaultMissions = defaultEditionId ? (missionsByEdition[defaultEditionId] ?? []) : []
+  const defaultDeployments = defaultEditionId ? (deploymentsByEdition[defaultEditionId] ?? []) : []
 
   return (
     <main className="page-layout">
@@ -63,14 +83,19 @@ export default async function SubmitBattleReportPage() {
           </div>
 
           <BattleReportForm
-            missions={missions}
-            deployments={deployments}
+            missions={defaultMissions}
+            deployments={defaultDeployments}
             battlePoints={battlePoints}
             members={members}
             factions={factions}
             memberFactions={memberFactions}
             seasons={seasons}
             isAdmin={isAdmin}
+            publishedEditions={publishedEditions}
+            defaultEditionId={defaultEditionId}
+            missionsByEdition={missionsByEdition}
+            deploymentsByEdition={deploymentsByEdition}
+            dispositionsByEdition={dispositionsByEdition}
           />
         </div>
       </div>

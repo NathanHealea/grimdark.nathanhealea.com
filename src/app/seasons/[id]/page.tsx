@@ -3,10 +3,10 @@ import { hasRole } from '@/lib/supabase/roles'
 import { createClient } from '@/lib/supabase/server'
 import GuideLink from '@/modules/guides/components/guide-link'
 import {
+  getAllDeployments,
+  getAllMissions,
   getBattlePoints,
   getBattleReportsBySeasonId,
-  getDeployments,
-  getMissions,
 } from '@/modules/battle-report/queries'
 import { getFactions, getProfileFactionIds } from '@/modules/faction/queries'
 import LeaderboardTable from '@/modules/leaderboard/components/leaderboard-table'
@@ -110,8 +110,8 @@ export default async function SeasonDetailPage({ params }: { params: Promise<{ i
       getBattleReportsBySeasonId(seasonId),
       supabase.from('profiles').select('*'),
       getFactions(),
-      getMissions(),
-      getDeployments(),
+      getAllMissions(),
+      getAllDeployments(),
       getBattlePoints(),
       getSeasonRoster(seasonId),
     ])

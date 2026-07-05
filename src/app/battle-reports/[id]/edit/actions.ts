@@ -16,7 +16,11 @@ import {
   validateEventDate,
   validateStatus,
   validateSeasonId,
+  validateEditionId,
+  validateForceDisposition,
+  validateSecondaryMode,
 } from '@/modules/battle-report/validation'
+import { getForceDispositionsByEditionId } from '@/modules/force-disposition/queries'
 
 export async function updateBattleReport(
   reportId: string,
@@ -63,7 +67,12 @@ export async function updateBattleReport(
   const defenderFactionId = (formData.get('defender_faction_id') as string) ?? ''
   const defenderScore = (formData.get('defender_score') as string) ?? ''
   const defenderOutcome = (formData.get('defender_outcome') as string) ?? ''
+  const editionId = (formData.get('edition_id') as string) ?? ''
   const missionId = (formData.get('mission_id') as string) ?? ''
+  const attackerDispositionId = (formData.get('attacker_force_disposition_id') as string) ?? ''
+  const defenderDispositionId = (formData.get('defender_force_disposition_id') as string) ?? ''
+  const attackerSecondaryMode = (formData.get('attacker_secondary_mode') as string) ?? ''
+  const defenderSecondaryMode = (formData.get('defender_secondary_mode') as string) ?? ''
   const deploymentId = (formData.get('deployment_id') as string) ?? ''
   const battlePointsId = (formData.get('battle_points_id') as string) ?? ''
   const rounds = (formData.get('rounds') as string) ?? ''
@@ -79,6 +88,52 @@ export async function updateBattleReport(
 
   const statusError = validateStatus(status)
   if (statusError) errors.status = statusError
+
+  const editionIdError = validateEditionId(editionId)
+  if (editionIdError) errors.edition_id = editionIdError
+
+  // Whether the selected edition records force dispositions instead of a
+  // mission is recomputed here — never trusted from the client
+  const editionDispositions = editionIdError ? [] : await getForceDispositionsByEditionId(Number(editionId))
+  const usesDispositions = editionDispositions.length > 0
+
+  const attackerDispositionError = validateForceDisposition(attackerDispositionId, {
+    required: status === 'published' && usesDispositions,
+  })
+  if (attackerDispositionError) errors.attacker_force_disposition_id = attackerDispositionError
+
+  const defenderDispositionError = validateForceDisposition(defenderDispositionId, {
+    required: status === 'published' && usesDispositions,
+  })
+  if (defenderDispositionError) errors.defender_force_disposition_id = defenderDispositionError
+
+  if (!usesDispositions && (attackerDispositionId || defenderDispositionId)) {
+    errors.attacker_force_disposition_id = 'Force dispositions are not used for this edition.'
+  }
+
+  if (usesDispositions && missionId) {
+    errors.mission_id = 'Missions are not recorded directly for this edition.'
+  }
+
+  // Dispositions are recorded as a pair
+  if (!attackerDispositionId !== !defenderDispositionId) {
+    const missing = attackerDispositionId ? 'defender_force_disposition_id' : 'attacker_force_disposition_id'
+    errors[missing] = 'Both force dispositions must be set together.'
+  }
+
+  // Dispositions must belong to the selected edition
+  if (attackerDispositionId && usesDispositions && !editionDispositions.some((d) => d.id === Number(attackerDispositionId))) {
+    errors.attacker_force_disposition_id = 'Force disposition does not belong to the selected edition.'
+  }
+  if (defenderDispositionId && usesDispositions && !editionDispositions.some((d) => d.id === Number(defenderDispositionId))) {
+    errors.defender_force_disposition_id = 'Force disposition does not belong to the selected edition.'
+  }
+
+  const attackerSecondaryModeError = validateSecondaryMode(attackerSecondaryMode)
+  if (attackerSecondaryModeError) errors.attacker_secondary_mode = attackerSecondaryModeError
+
+  const defenderSecondaryModeError = validateSecondaryMode(defenderSecondaryMode)
+  if (defenderSecondaryModeError) errors.defender_secondary_mode = defenderSecondaryModeError
 
   if (status === 'published') {
     const eventDateError = validateEventDate(eventDate)
@@ -108,8 +163,10 @@ export async function updateBattleReport(
     const defenderOutcomeError = validateOutcome(defenderOutcome)
     if (defenderOutcomeError) errors.defender_outcome = defenderOutcomeError
 
-    const missionIdError = validateSelectId(missionId)
-    if (missionIdError) errors.mission_id = missionIdError
+    if (!usesDispositions) {
+      const missionIdError = validateSelectId(missionId)
+      if (missionIdError) errors.mission_id = missionIdError
+    }
 
     const deploymentIdError = validateSelectId(deploymentId)
     if (deploymentIdError) errors.deployment_id = deploymentIdError
@@ -163,7 +220,12 @@ export async function updateBattleReport(
     defender_faction_id: defenderFactionId || null,
     defender_score: defenderScore ? Number(defenderScore) : null,
     defender_outcome: defenderOutcome || null,
+    edition_id: Number(editionId),
     mission_id: missionId ? Number(missionId) : null,
+    attacker_force_disposition_id: attackerDispositionId ? Number(attackerDispositionId) : null,
+    defender_force_disposition_id: defenderDispositionId ? Number(defenderDispositionId) : null,
+    attacker_secondary_mode: attackerSecondaryMode || null,
+    defender_secondary_mode: defenderSecondaryMode || null,
     deployment_id: deploymentId ? Number(deploymentId) : null,
     battle_points_id: battlePointsId ? Number(battlePointsId) : null,
     rounds: rounds ? Number(rounds) : null,

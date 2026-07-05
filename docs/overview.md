@@ -92,6 +92,18 @@ Epic Template:
 - [x] [Season roster (member signup + admin management)](./seasons/season-roster.md)
 - [x] [Draft/published mode for seasons](./seasons/season-draft-published-mode.md)
 - [x] [Admin season delete](./seasons/admin-season-delete.md)
+- [ ] [Season editions association (multi-edition support)](./seasons/season-editions.md)
+
+### Epic: Editions
+
+**Goal:** Maintain a managed catalog of Warhammer rules editions (10th, 11th, future editions) with their own per-edition missions and deployments, so seasons and battle reports stay consistent with the rules in play.
+
+**High-Level Scope:**
+
+- [ ] [Editions data model and seed](./editions/editions-data-model.md)
+- [ ] [Admin edition management](./editions/admin-edition-management.md)
+- [ ] [Edition missions management](./editions/edition-missions-management.md)
+- [ ] [Edition deployments management](./editions/edition-deployments-management.md)
 
 ### Epic: Member Profiles
 
@@ -133,6 +145,19 @@ Epic Template:
 - [x] Non-admins cannot unpublish a published battle report
 - [x] Admin battle reports management page
 - [x] [Admin battle report delete](./battle-reports/battle-report-delete.md)
+- [ ] [Battle report edition + filtered mission/deployment](./battle-reports/battle-report-edition.md)
+
+### Epic: 11th Edition Battle Reports
+
+**Goal:** Record 11th edition games — Force Dispositions, matrix-derived primary missions, and secondary mission tracking — alongside unchanged 10th edition reporting, with the report's required edition field driving which form the user fills out.
+
+**High-Level Scope:**
+
+- [x] [Force dispositions data model (table, mission matchup mapping, seed)](./11th-edition-battle-reports/force-dispositions-data-model.md)
+- [x] [11th edition data seed (6 deployments, 25 mapped primary missions)](./11th-edition-battle-reports/11th-edition-data-seed.md)
+- [x] [Battle report force dispositions (schema, form, validation, actions)](./11th-edition-battle-reports/battle-report-force-dispositions.md)
+- [x] [Battle report 11th edition display (detail, feed, admin table)](./11th-edition-battle-reports/battle-report-11th-display.md)
+- [x] [Admin force dispositions management](./11th-edition-battle-reports/admin-force-dispositions.md)
 
 ### Epic: Standings & Leaderboard
 

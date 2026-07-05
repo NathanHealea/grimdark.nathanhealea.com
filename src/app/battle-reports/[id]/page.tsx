@@ -5,11 +5,15 @@ import { createClient } from '@/lib/supabase/server'
 import { getFactions } from '@/modules/faction/queries'
 import {
   getBattleReportById,
-  getMissions,
-  getDeployments,
+  getMissionById,
+  getMissionsByEditionId,
+  getDeploymentById,
   getBattlePoints,
   getRoundStatsByReportId,
 } from '@/modules/battle-report/queries'
+import { resolvePrimaryMissions, formatPrimaryMissionPairing } from '@/modules/battle-report/utils'
+import { getForceDispositionsByEditionId } from '@/modules/force-disposition/queries'
+import { getEditionById } from '@/modules/edition/queries'
 import type { Outcome } from '@/types/battle-report'
 import type { Profile } from '@/types/profile'
 import type { Faction } from '@/types/faction'
@@ -84,23 +88,30 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 export default async function BattleReportDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
 
-  const supabase = await createClient()
-
-  const [report, auth, { data: profiles }, factions, missions, deployments, battlePoints, roundStats] =
-    await Promise.all([
-      getBattleReportById(id),
-      getAuthUser({ withProfile: true }),
-      supabase.from('profiles').select('*'),
-      getFactions(),
-      getMissions(),
-      getDeployments(),
-      getBattlePoints(),
-      getRoundStatsByReportId(id),
-    ])
+  const report = await getBattleReportById(id)
 
   if (!report) {
     notFound()
   }
+
+  const supabase = await createClient()
+
+  const hasDispositions =
+    report.attacker_force_disposition_id != null && report.defender_force_disposition_id != null
+
+  const [auth, { data: profiles }, factions, mission, deployment, battlePoints, roundStats, edition, dispositions, editionMissions] =
+    await Promise.all([
+      getAuthUser({ withProfile: true }),
+      supabase.from('profiles').select('*'),
+      getFactions(),
+      report.mission_id ? getMissionById(report.mission_id) : Promise.resolve(null),
+      report.deployment_id ? getDeploymentById(report.deployment_id) : Promise.resolve(null),
+      getBattlePoints(),
+      getRoundStatsByReportId(id),
+      getEditionById(report.edition_id),
+      hasDispositions ? getForceDispositionsByEditionId(report.edition_id) : Promise.resolve([]),
+      hasDispositions ? getMissionsByEditionId(report.edition_id) : Promise.resolve([]),
+    ])
 
   const isAdmin = auth ? await hasRole(auth.user.id, 'admin') : false
   const isReporter = auth ? auth.profile.id === report.reported_by : false
@@ -109,16 +120,22 @@ export default async function BattleReportDetailPage({ params }: { params: Promi
 
   const profileMap = new Map((profiles as Profile[] ?? []).map((p) => [p.id, p]))
   const factionMap = new Map(factions.map((f) => [f.id, f]))
-  const missionMap = new Map(missions.map((m) => [m.id, m]))
-  const deploymentMap = new Map(deployments.map((d) => [d.id, d]))
   const battlePointsMap = new Map(battlePoints.map((bp) => [bp.id, bp]))
 
   const attacker = report.attacker_id ? profileMap.get(report.attacker_id) : null
   const defender = report.defender_id ? profileMap.get(report.defender_id) : null
   const reportedBy = profileMap.get(report.reported_by)
-  const mission = report.mission_id ? missionMap.get(report.mission_id) : null
-  const deployment = report.deployment_id ? deploymentMap.get(report.deployment_id) : null
   const bp = report.battle_points_id ? battlePointsMap.get(report.battle_points_id) : null
+
+  const dispositionMap = new Map(dispositions.map((d) => [d.id, d]))
+  const attackerDisposition = report.attacker_force_disposition_id
+    ? dispositionMap.get(report.attacker_force_disposition_id)
+    : null
+  const defenderDisposition = report.defender_force_disposition_id
+    ? dispositionMap.get(report.defender_force_disposition_id)
+    : null
+  const { attackerPrimary, defenderPrimary } = resolvePrimaryMissions(report, editionMissions)
+  const primaryPairing = formatPrimaryMissionPairing(attackerPrimary, defenderPrimary)
 
   return (
     <main className="page-layout">
@@ -191,6 +208,24 @@ export default async function BattleReportDetailPage({ params }: { params: Promi
                 ) : (
                   <p className="text-sm text-base-content/40 italic">Not yet assigned</p>
                 )}
+                {attackerDisposition && (
+                  <div className="mt-3 space-y-1 text-sm">
+                    <p className="text-base-content/60">
+                      Force Disposition:{' '}
+                      <span className="font-medium text-base-content">{attackerDisposition.name}</span>
+                    </p>
+                    <p className="text-base-content/60">
+                      Primary Mission:{' '}
+                      <span className="font-medium text-base-content">{attackerPrimary?.name ?? '—'}</span>
+                    </p>
+                    {report.attacker_secondary_mode && (
+                      <p className="text-base-content/60">
+                        Secondaries:{' '}
+                        <span className="font-medium text-base-content capitalize">{report.attacker_secondary_mode}</span>
+                      </p>
+                    )}
+                  </div>
+                )}
               </div>
 
               {/* Defender */}
@@ -230,6 +265,24 @@ export default async function BattleReportDetailPage({ params }: { params: Promi
                 ) : (
                   <p className="text-sm text-base-content/40 italic">Not yet assigned</p>
                 )}
+                {defenderDisposition && (
+                  <div className="mt-3 space-y-1 text-sm">
+                    <p className="text-base-content/60">
+                      Force Disposition:{' '}
+                      <span className="font-medium text-base-content">{defenderDisposition.name}</span>
+                    </p>
+                    <p className="text-base-content/60">
+                      Primary Mission:{' '}
+                      <span className="font-medium text-base-content">{defenderPrimary?.name ?? '—'}</span>
+                    </p>
+                    {report.defender_secondary_mode && (
+                      <p className="text-base-content/60">
+                        Secondaries:{' '}
+                        <span className="font-medium text-base-content capitalize">{report.defender_secondary_mode}</span>
+                      </p>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -239,10 +292,21 @@ export default async function BattleReportDetailPage({ params }: { params: Promi
             <h2 className="ornament section-header">Game Details</h2>
             <div className="rounded-lg bg-base-200 p-4">
               <div className="grid grid-cols-2 gap-y-3 gap-x-4 text-sm">
-                <div>
-                  <p className="text-base-content/50">Mission</p>
-                  <p className="font-medium">{mission?.name ?? (isDraft ? 'Not set' : 'Unknown')}</p>
+                <div className="col-span-2">
+                  <p className="text-base-content/50">Edition</p>
+                  <p className="font-medium">{edition?.name ?? 'Unknown'}</p>
                 </div>
+                {hasDispositions ? (
+                  <div>
+                    <p className="text-base-content/50">Primary Missions</p>
+                    <p className="font-medium">{primaryPairing ?? '—'}</p>
+                  </div>
+                ) : (
+                  <div>
+                    <p className="text-base-content/50">Mission</p>
+                    <p className="font-medium">{mission?.name ?? (isDraft ? 'Not set' : 'Unknown')}</p>
+                  </div>
+                )}
                 <div>
                   <p className="text-base-content/50">Deployment</p>
                   <p className="font-medium">{deployment?.name ?? (isDraft ? 'Not set' : 'Unknown')}</p>

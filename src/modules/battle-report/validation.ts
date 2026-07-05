@@ -1,5 +1,5 @@
 import type { FormState } from '@/types/forms'
-import type { Outcome, BattleReportStatus } from '@/types/battle-report'
+import type { Outcome, BattleReportStatus, SecondaryMode } from '@/types/battle-report'
 
 export type BattleReportFormState = FormState<{
   attacker_id: string
@@ -11,7 +11,12 @@ export type BattleReportFormState = FormState<{
   defender_score: string
   defender_outcome: string
   event_date: string
+  edition_id: string
   mission_id: string
+  attacker_force_disposition_id: string
+  defender_force_disposition_id: string
+  attacker_secondary_mode: string
+  defender_secondary_mode: string
   deployment_id: string
   battle_points_id: string
   rounds: string
@@ -128,6 +133,20 @@ export function validateSeasonId(value: string): string | null {
   return null
 }
 
+export function validateEditionId(value: string): string | null {
+  if (!value) {
+    return 'Edition is required.'
+  }
+
+  const num = Number(value)
+
+  if (!Number.isInteger(num) || num < 1) {
+    return 'Invalid edition selection.'
+  }
+
+  return null
+}
+
 export function validateRoundStatField(value: string): string | null {
   const num = Number(value)
 
@@ -147,6 +166,32 @@ export function validateSelectId(value: string): string | null {
 
   if (!Number.isInteger(num) || num < 1) {
     return 'Invalid selection.'
+  }
+
+  return null
+}
+
+export function validateForceDisposition(value: string, { required }: { required: boolean }): string | null {
+  if (!value) {
+    return required ? 'Force disposition is required.' : null
+  }
+
+  const num = Number(value)
+
+  if (!Number.isInteger(num) || num < 1) {
+    return 'Invalid force disposition selection.'
+  }
+
+  return null
+}
+
+const VALID_SECONDARY_MODES: SecondaryMode[] = ['tactical', 'fixed']
+
+export function validateSecondaryMode(value: string): string | null {
+  if (!value) return null // optional field
+
+  if (!VALID_SECONDARY_MODES.includes(value as SecondaryMode)) {
+    return 'Secondary missions mode must be tactical or fixed.'
   }
 
   return null

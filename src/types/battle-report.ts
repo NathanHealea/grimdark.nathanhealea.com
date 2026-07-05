@@ -2,6 +2,8 @@ export type Outcome = 'win' | 'loss' | 'draw'
 
 export type BattleReportStatus = 'draft' | 'published'
 
+export type SecondaryMode = 'tactical' | 'fixed'
+
 export type BattleReport = {
   id: string
   status: BattleReportStatus
@@ -19,6 +21,11 @@ export type BattleReport = {
   attacker_models_lost: number
   defender_units_lost: number
   defender_models_lost: number
+  edition_id: number
+  attacker_force_disposition_id: number | null
+  defender_force_disposition_id: number | null
+  attacker_secondary_mode: SecondaryMode | null
+  defender_secondary_mode: SecondaryMode | null
   mission_id: number | null
   deployment_id: number | null
   battle_points_id: number | null
@@ -53,6 +60,12 @@ export type RoundStatFormValues = {
   defender_models_lost: string
 }
 
-export type Mission = { id: number; name: string }
-export type Deployment = { id: number; name: string }
+export type Mission = {
+  id: number
+  edition_id: number
+  name: string
+  force_disposition_id: number | null
+  opponent_force_disposition_id: number | null
+}
+export type Deployment = { id: number; edition_id: number; name: string }
 export type BattlePoints = { id: number; name: string; size: number }

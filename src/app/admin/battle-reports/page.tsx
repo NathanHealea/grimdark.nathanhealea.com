@@ -1,7 +1,9 @@
 import BattleReportActions from '@/app/admin/battle-reports/battle-report-actions'
 import { createClient } from '@/lib/supabase/server'
-import { getBattlePoints, getBattleReports, getDeployments, getMissions } from '@/modules/battle-report/queries'
+import { getAllMissions, getBattlePoints, getBattleReports } from '@/modules/battle-report/queries'
+import { resolvePrimaryMissions, formatPrimaryMissionPairing } from '@/modules/battle-report/utils'
 import { getFactions } from '@/modules/faction/queries'
+import { getEditions } from '@/modules/edition/queries'
 import { getSeasons } from '@/modules/season/queries'
 import type { Outcome } from '@/types/battle-report'
 import type { Faction } from '@/types/faction'
@@ -42,15 +44,15 @@ function formatDate(dateString: string): string {
 export default async function AdminBattleReportsPage() {
   const supabase = await createClient()
 
-  const [battleReports, { data: profiles }, factions, missions, deployments, battlePoints, seasons] = await Promise.all(
+  const [battleReports, { data: profiles }, factions, missions, battlePoints, seasons, editions] = await Promise.all(
     [
       getBattleReports({ includeAll: true }),
       supabase.from('profiles').select('*'),
       getFactions(),
-      getMissions(),
-      getDeployments(),
+      getAllMissions(),
       getBattlePoints(),
       getSeasons(),
+      getEditions({ includeAll: true }),
     ]
   )
 
@@ -59,6 +61,7 @@ export default async function AdminBattleReportsPage() {
   const missionMap = new Map(missions.map((m) => [m.id, m]))
   const battlePointsMap = new Map(battlePoints.map((bp) => [bp.id, bp]))
   const seasonMap = new Map(seasons.map((s) => [s.id, s]))
+  const editionMap = new Map(editions.map((e) => [e.id, e]))
 
   const published = battleReports.filter((r) => r.status === 'published')
   const drafts = battleReports.filter((r) => r.status === 'draft')
@@ -86,6 +89,7 @@ export default async function AdminBattleReportsPage() {
                     <th>Date</th>
                     <th>Attacker</th>
                     <th>Defender</th>
+                    <th>Edition</th>
                     <th>Mission</th>
                     <th>Season</th>
                     <th>Reported By</th>
@@ -97,8 +101,13 @@ export default async function AdminBattleReportsPage() {
                     const attacker = report.attacker_id ? profileMap.get(report.attacker_id) : null
                     const defender = report.defender_id ? profileMap.get(report.defender_id) : null
                     const mission = report.mission_id ? missionMap.get(report.mission_id) : null
+                    const { attackerPrimary, defenderPrimary } = mission
+                      ? { attackerPrimary: null, defenderPrimary: null }
+                      : resolvePrimaryMissions(report, missions)
+                    const missionLabel = mission?.name ?? formatPrimaryMissionPairing(attackerPrimary, defenderPrimary)
                     const bp = report.battle_points_id ? battlePointsMap.get(report.battle_points_id) : null
                     const season = report.season_id ? seasonMap.get(report.season_id) : null
+                    const edition = editionMap.get(report.edition_id)
                     const reportedBy = profileMap.get(report.reported_by)
 
                     return (
@@ -162,9 +171,16 @@ export default async function AdminBattleReportsPage() {
                           )}
                         </td>
                         <td className="text-sm">
-                          {mission ? (
+                          {edition ? (
+                            <span className="badge badge-outline badge-sm">{edition.short_name}</span>
+                          ) : (
+                            <span className="text-base-content/40">&mdash;</span>
+                          )}
+                        </td>
+                        <td className="text-sm">
+                          {missionLabel ? (
                             <div>
-                              <p>{mission.name}</p>
+                              <p>{missionLabel}</p>
                               {bp && <p className="text-xs text-base-content/60">{bp.name}</p>}
                             </div>
                           ) : (
