@@ -2,8 +2,9 @@
 
 **Epic:** Editions
 **Type:** Feature
-**Status:** Todo
-**Merge Into:** epic/battle-reports
+**Status:** Completed
+**Branch:** epic/edition-management
+**Merge Into:** main
 
 ## Summary
 
@@ -11,15 +12,15 @@ Provide an admin UI for managing editions: list, create, edit, delete, and set t
 
 ## Acceptance Criteria
 
-- [ ] Admins (and organizers) can view a list of all editions at `/admin/editions`
-- [ ] List shows name, short name, status (draft/published), default flag, and counts of missions, deployments, seasons, and battle reports
-- [ ] Admins can create a new edition (name, short_name, description, status)
-- [ ] Admins can edit an existing edition's name, short_name, description, and status
-- [ ] Admins can mark an edition as the default; doing so unsets the previous default
-- [ ] Admins can delete an edition only when no `season_editions` rows reference it and no battle reports reference it; the action is blocked with a clear message otherwise
-- [ ] An "Editions" link appears in the admin navigation
-- [ ] Non-admins (excluding organizers) receive 403 / unauthorized when attempting to access admin edition routes
-- [ ] Each edition row links to its missions and deployments management pages
+- [x] Admins (and organizers) can view a list of all editions at `/admin/editions`
+- [x] List shows name, short name, status (draft/published), default flag, and counts of missions, deployments, dispositions, and battle reports
+- [x] Admins can create a new edition (name, short_name, description, status)
+- [x] Admins can edit an existing edition's name, short_name, description, and status
+- [x] Admins can mark an edition as the default; doing so unsets the previous default
+- [x] Admins can delete an edition only when no battle reports reference it; the action is blocked with a clear message otherwise
+- [x] An "Editions" link appears in the admin navigation
+- [x] Non-admins (excluding organizers) receive 403 / unauthorized when attempting to access admin edition routes (enforced by middleware)
+- [x] Each edition row links to its missions and deployments management pages
 
 ## Routes
 
@@ -226,6 +227,16 @@ No automated test suite exists in the repo. Manual verification:
 5. Delete the 12th draft (no references); confirm it disappears.
 6. Try to delete 10th once `season_editions` / `battle_reports.edition_id` exist with references; confirm the guard message names the counts.
 7. Sign in as a regular `member`; confirm `/admin/editions` is inaccessible.
+
+## Implementation Notes (as built)
+
+Adaptations made when this feature landed (after its dependent features had already shipped):
+
+- **No `season_editions` table.** That join table was never built (seasons are not scoped per-edition). The delete guard therefore checks **only** `battle_reports.edition_id`, and the list page shows no "Seasons" count column.
+- **List counts are Missions / Deployments / Dispositions / Reports.** A "Dispositions" (force dispositions) count replaces the planned "Seasons" count, since force dispositions are edition-scoped and useful to see before deleting.
+- **Delete guard is against `battle_reports` only.** `missions`, `deployments`, and `force_dispositions` all use `on delete cascade` and are removed with the edition. `battle_reports.edition_id` is a plain NOT NULL FK, so a referenced edition cannot be deleted — the guard surfaces this with an explicit count.
+- **Route protection via middleware.** `/admin/*` is gated for admin + organizer in `src/middleware.ts`; the pages do not re-gate. Server actions independently verify `hasAnyRole(user.id, ['admin', 'organizer'])`.
+- **Delete + Set-as-Default live on both the list row actions menu and the edit page** (edit page adds a Danger Zone delete button).
 
 ## Notes
 

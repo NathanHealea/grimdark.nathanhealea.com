@@ -100,10 +100,10 @@ Epic Template:
 
 **High-Level Scope:**
 
-- [ ] [Editions data model and seed](./editions/editions-data-model.md)
-- [ ] [Admin edition management](./editions/admin-edition-management.md)
-- [ ] [Edition missions management](./editions/edition-missions-management.md)
-- [ ] [Edition deployments management](./editions/edition-deployments-management.md)
+- [x] [Editions data model and seed](./editions/editions-data-model.md)
+- [x] [Admin edition management](./editions/admin-edition-management.md)
+- [x] [Edition missions management](./editions/edition-missions-management.md)
+- [x] [Edition deployments management](./editions/edition-deployments-management.md)
 
 ### Epic: Member Profiles
 
