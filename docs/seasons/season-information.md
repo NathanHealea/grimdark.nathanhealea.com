@@ -19,7 +19,6 @@ Provide a season system that organizes league play into time-bounded periods. Ea
 
 ### Battle Report Assignment
 
-- [ ] Battle reports are automatically assigned to the active season when created
 - [x] A `season_id` column on `battle_reports` stores the assignment (nullable for reports created when no season is active)
 - [ ] Assignment happens via a database trigger on insert of battle reports
 - [x] Existing battle reports can be backfilled by admins when a season is created
