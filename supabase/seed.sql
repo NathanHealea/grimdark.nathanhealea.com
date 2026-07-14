@@ -1,16 +1,25 @@
 -- Seed data for local development
+-- Subset of real data pulled from the live environment (project pbqmepwuxrcnmspnucgh).
+--
 -- Password for all users: Password1234
--- Email pattern: user#@grimdark.nathanhealea.com
+-- Email pattern: <user_name>@grimdark.nathanhealea.com
 --
--- Roles, factions, missions, deployments, and battle_points are seeded by migrations.
--- This file seeds: auth users, profiles, faction assignments, seasons, battle reports, rosters.
+-- Roles, factions, missions, deployments, editions, force_dispositions, and
+-- battle_points are seeded by migrations. This file seeds: auth users, profiles,
+-- faction assignments, the season, season rosters, and battle reports.
 --
--- Users:
---   llamanat3r@grimdark.nathanhealea.com  Llamanat3r   (admin auth role, organizer profile role)
---   organizer@grimdark.nathanhealea  WarSmith_IX  (organizer auth role, organizer profile role)
---   user3@grimdark.nathanhealea.com  BoltMagnet   (member)
---   user4@grimdark.nathanhealea.com  DiceGoblin   (member)
---   user5@grimdark.nathanhealea.com  VoidReaper   (member)
+-- Auth roles: only Llamanat3r is an admin. Everyone else is a plain 'user'
+-- (auto-assigned by the handle_new_profile_role trigger on profile insert).
+--
+-- Users (profile display_name — email — auth role):
+--   matt_the_grey          matt_the_grey@grimdark.nathanhealea.com          user
+--   palekingwithagun       palekingwithagun@grimdark.nathanhealea.com       user
+--   KiloBravo              kilobravo@grimdark.nathanhealea.com              user
+--   Knight                 knight@grimdark.nathanhealea.com                 user
+--   grand_cappuccino_pptx  grand_cappuccino_pptx@grimdark.nathanhealea.com  user
+--   Llamanat3r             llamanat3r@grimdark.nathanhealea.com             admin
+--   shield0109             shield0109@grimdark.nathanhealea.com             user
+--   bluesnoweyes           bluesnoweyes@grimdark.nathanhealea.com           user
 
 -- ============================================================================
 -- Auth Users
@@ -22,28 +31,43 @@ INSERT INTO auth.users (
   raw_app_meta_data, raw_user_meta_data,
   created_at, updated_at, confirmation_token, recovery_token
 ) VALUES
-  ('a0000000-0000-4000-8000-000000000001', '00000000-0000-0000-0000-000000000000',
+  ('ada5319e-3a88-4b3d-9f33-d7d5704932d5', '00000000-0000-0000-0000-000000000000',
+   'authenticated', 'authenticated', 'matt_the_grey@grimdark.nathanhealea.com',
+   crypt('Password1234', gen_salt('bf')), now(), '',
+   '{"provider":"email","providers":["email"]}', '{}',
+   now(), now(), '', ''),
+  ('1db9658f-4c92-4e25-baf0-9ff4e0024752', '00000000-0000-0000-0000-000000000000',
+   'authenticated', 'authenticated', 'palekingwithagun@grimdark.nathanhealea.com',
+   crypt('Password1234', gen_salt('bf')), now(), '',
+   '{"provider":"email","providers":["email"]}', '{}',
+   now(), now(), '', ''),
+  ('d9f0f8a6-cbfd-40fd-865f-db7013c5cc26', '00000000-0000-0000-0000-000000000000',
+   'authenticated', 'authenticated', 'kilobravo@grimdark.nathanhealea.com',
+   crypt('Password1234', gen_salt('bf')), now(), '',
+   '{"provider":"email","providers":["email"]}', '{}',
+   now(), now(), '', ''),
+  ('8ac5f8d2-1f4f-42e0-b9f4-b8eb5f252fe2', '00000000-0000-0000-0000-000000000000',
+   'authenticated', 'authenticated', 'knight@grimdark.nathanhealea.com',
+   crypt('Password1234', gen_salt('bf')), now(), '',
+   '{"provider":"email","providers":["email"]}', '{}',
+   now(), now(), '', ''),
+  ('0662f84a-76a1-4421-b068-c05d458386f5', '00000000-0000-0000-0000-000000000000',
+   'authenticated', 'authenticated', 'grand_cappuccino_pptx@grimdark.nathanhealea.com',
+   crypt('Password1234', gen_salt('bf')), now(), '',
+   '{"provider":"email","providers":["email"]}', '{}',
+   now(), now(), '', ''),
+  ('733f6fc6-bb3b-4be5-8840-39d20404896d', '00000000-0000-0000-0000-000000000000',
    'authenticated', 'authenticated', 'llamanat3r@grimdark.nathanhealea.com',
    crypt('Password1234', gen_salt('bf')), now(), '',
    '{"provider":"email","providers":["email"]}', '{}',
    now(), now(), '', ''),
-  ('a0000000-0000-4000-8000-000000000002', '00000000-0000-0000-0000-000000000000',
-   'authenticated', 'authenticated', 'organizer@grimdark.nathanhealea',
+  ('7e98517a-3901-4aa9-837e-fac6c793f9b1', '00000000-0000-0000-0000-000000000000',
+   'authenticated', 'authenticated', 'shield0109@grimdark.nathanhealea.com',
    crypt('Password1234', gen_salt('bf')), now(), '',
    '{"provider":"email","providers":["email"]}', '{}',
    now(), now(), '', ''),
-  ('a0000000-0000-4000-8000-000000000003', '00000000-0000-0000-0000-000000000000',
-   'authenticated', 'authenticated', 'user3@grimdark.nathanhealea.com',
-   crypt('Password1234', gen_salt('bf')), now(), '',
-   '{"provider":"email","providers":["email"]}', '{}',
-   now(), now(), '', ''),
-  ('a0000000-0000-4000-8000-000000000004', '00000000-0000-0000-0000-000000000000',
-   'authenticated', 'authenticated', 'user4@grimdark.nathanhealea.com',
-   crypt('Password1234', gen_salt('bf')), now(), '',
-   '{"provider":"email","providers":["email"]}', '{}',
-   now(), now(), '', ''),
-  ('a0000000-0000-4000-8000-000000000005', '00000000-0000-0000-0000-000000000000',
-   'authenticated', 'authenticated', 'user5@grimdark.nathanhealea.com',
+  ('cd361275-f0db-4511-9043-3c1402ae24a1', '00000000-0000-0000-0000-000000000000',
+   'authenticated', 'authenticated', 'bluesnoweyes@grimdark.nathanhealea.com',
    crypt('Password1234', gen_salt('bf')), now(), '',
    '{"provider":"email","providers":["email"]}', '{}',
    now(), now(), '', '')
@@ -63,104 +87,140 @@ UPDATE auth.users SET
 
 -- Auth identities (required for Supabase email auth to work)
 INSERT INTO auth.identities (id, user_id, provider_id, provider, identity_data, last_sign_in_at, created_at, updated_at) VALUES
-  ('a0000000-0000-4000-8000-000000000001', 'a0000000-0000-4000-8000-000000000001',
-   'a0000000-0000-4000-8000-000000000001', 'email',
-   '{"sub":"a0000000-0000-4000-8000-000000000001","email":"llamanat3r@grimdark.nathanhealea.com"}',
+  ('ada5319e-3a88-4b3d-9f33-d7d5704932d5', 'ada5319e-3a88-4b3d-9f33-d7d5704932d5',
+   'ada5319e-3a88-4b3d-9f33-d7d5704932d5', 'email',
+   '{"sub":"ada5319e-3a88-4b3d-9f33-d7d5704932d5","email":"matt_the_grey@grimdark.nathanhealea.com"}',
    now(), now(), now()),
-  ('a0000000-0000-4000-8000-000000000002', 'a0000000-0000-4000-8000-000000000002',
-   'a0000000-0000-4000-8000-000000000002', 'email',
-   '{"sub":"a0000000-0000-4000-8000-000000000002","email":"organizer@grimdark.nathanhealea"}',
+  ('1db9658f-4c92-4e25-baf0-9ff4e0024752', '1db9658f-4c92-4e25-baf0-9ff4e0024752',
+   '1db9658f-4c92-4e25-baf0-9ff4e0024752', 'email',
+   '{"sub":"1db9658f-4c92-4e25-baf0-9ff4e0024752","email":"palekingwithagun@grimdark.nathanhealea.com"}',
    now(), now(), now()),
-  ('a0000000-0000-4000-8000-000000000003', 'a0000000-0000-4000-8000-000000000003',
-   'a0000000-0000-4000-8000-000000000003', 'email',
-   '{"sub":"a0000000-0000-4000-8000-000000000003","email":"user3@grimdark.nathanhealea.com"}',
+  ('d9f0f8a6-cbfd-40fd-865f-db7013c5cc26', 'd9f0f8a6-cbfd-40fd-865f-db7013c5cc26',
+   'd9f0f8a6-cbfd-40fd-865f-db7013c5cc26', 'email',
+   '{"sub":"d9f0f8a6-cbfd-40fd-865f-db7013c5cc26","email":"kilobravo@grimdark.nathanhealea.com"}',
    now(), now(), now()),
-  ('a0000000-0000-4000-8000-000000000004', 'a0000000-0000-4000-8000-000000000004',
-   'a0000000-0000-4000-8000-000000000004', 'email',
-   '{"sub":"a0000000-0000-4000-8000-000000000004","email":"user4@grimdark.nathanhealea.com"}',
+  ('8ac5f8d2-1f4f-42e0-b9f4-b8eb5f252fe2', '8ac5f8d2-1f4f-42e0-b9f4-b8eb5f252fe2',
+   '8ac5f8d2-1f4f-42e0-b9f4-b8eb5f252fe2', 'email',
+   '{"sub":"8ac5f8d2-1f4f-42e0-b9f4-b8eb5f252fe2","email":"knight@grimdark.nathanhealea.com"}',
    now(), now(), now()),
-  ('a0000000-0000-4000-8000-000000000005', 'a0000000-0000-4000-8000-000000000005',
-   'a0000000-0000-4000-8000-000000000005', 'email',
-   '{"sub":"a0000000-0000-4000-8000-000000000005","email":"user5@grimdark.nathanhealea.com"}',
+  ('0662f84a-76a1-4421-b068-c05d458386f5', '0662f84a-76a1-4421-b068-c05d458386f5',
+   '0662f84a-76a1-4421-b068-c05d458386f5', 'email',
+   '{"sub":"0662f84a-76a1-4421-b068-c05d458386f5","email":"grand_cappuccino_pptx@grimdark.nathanhealea.com"}',
+   now(), now(), now()),
+  ('733f6fc6-bb3b-4be5-8840-39d20404896d', '733f6fc6-bb3b-4be5-8840-39d20404896d',
+   '733f6fc6-bb3b-4be5-8840-39d20404896d', 'email',
+   '{"sub":"733f6fc6-bb3b-4be5-8840-39d20404896d","email":"llamanat3r@grimdark.nathanhealea.com"}',
+   now(), now(), now()),
+  ('7e98517a-3901-4aa9-837e-fac6c793f9b1', '7e98517a-3901-4aa9-837e-fac6c793f9b1',
+   '7e98517a-3901-4aa9-837e-fac6c793f9b1', 'email',
+   '{"sub":"7e98517a-3901-4aa9-837e-fac6c793f9b1","email":"shield0109@grimdark.nathanhealea.com"}',
+   now(), now(), now()),
+  ('cd361275-f0db-4511-9043-3c1402ae24a1', 'cd361275-f0db-4511-9043-3c1402ae24a1',
+   'cd361275-f0db-4511-9043-3c1402ae24a1', 'email',
+   '{"sub":"cd361275-f0db-4511-9043-3c1402ae24a1","email":"bluesnoweyes@grimdark.nathanhealea.com"}',
    now(), now(), now())
 ON CONFLICT (id) DO NOTHING;
-
--- ============================================================================
--- Auth Roles
--- ============================================================================
--- Trigger handle_new_profile_role auto-assigns role_id=1 ('user') on profile creation.
--- Only manually assign admin (2) and organizer (3).
-INSERT INTO public.user_roles (user_id, role_id) VALUES
-  ('a0000000-0000-4000-8000-000000000001', 3),  -- Llamanat3r: admin
-  ('a0000000-0000-4000-8000-000000000002', 4)   -- WarSmith_IX: organizer
-ON CONFLICT (user_id, role_id) DO NOTHING;
 
 -- ============================================================================
 -- Profiles
 -- ============================================================================
 -- profile_id auto-increments via sequence. user_id links to auth.users.
-INSERT INTO public.profiles (id, user_id, display_name, bio, role, created_at, updated_at) VALUES
-  ('a0000000-0000-4000-8000-000000000001', 'a0000000-0000-4000-8000-000000000001',
-   'Llamanat3r',
-   'What started as painting a few models for a friend has now turned into purging heretics off the table with flamers and meltas. The Emperor''s light shall guide our fight!',
-   'organizer', now() - interval '30 days', now()),
-  ('a0000000-0000-4000-8000-000000000002', 'a0000000-0000-4000-8000-000000000002',
-   'WarSmith_IX',
-   'Iron within, iron without. The galaxy will burn beneath the treads of the Iron Warriors.',
-   'organizer', now() - interval '25 days', now()),
-  ('a0000000-0000-4000-8000-000000000003', 'a0000000-0000-4000-8000-000000000003',
-   'BoltMagnet',
-   'For Sanguinius! The Death Company hungers for vengeance.',
-   'member', now() - interval '20 days', now()),
-  ('a0000000-0000-4000-8000-000000000004', 'a0000000-0000-4000-8000-000000000004',
-   'DiceGoblin',
-   'WAAAGH! Green iz best! More dakka solves every problem.',
-   'member', now() - interval '15 days', now()),
-  ('a0000000-0000-4000-8000-000000000005', 'a0000000-0000-4000-8000-000000000005',
-   'VoidReaper',
-   'Grandfather Nurgle provides. Embrace the rot, accept the gifts.',
-   'member', now() - interval '10 days', now())
+-- The handle_new_profile_role trigger auto-assigns the 'user' auth role on insert.
+-- Every player is a 'member'; Llamanat3r is the sole organizer/admin.
+INSERT INTO public.profiles (id, display_name, bio, created_at, updated_at, profile_id, avatar_url, user_id, link_id, role) VALUES
+  ('ada5319e-3a88-4b3d-9f33-d7d5704932d5', 'matt_the_grey',
+   'Wolf tyrant, lord of the league. Might as well give me the trophy now.',
+   '2026-02-23 19:04:12.57807+00', '2026-02-23 22:18:33.721245+00', 4,
+   'https://cdn.discordapp.com/avatars/401996909511966720/f93f5b6400a05f3c177c413fb281608d.png',
+   'ada5319e-3a88-4b3d-9f33-d7d5704932d5', NULL, 'member'),
+  ('285435bd-1657-4b06-988d-b9d06e24ea87', 'palekingwithagun',
+   NULL,
+   '2026-03-01 07:48:52.667046+00', '2026-03-02 06:06:25.215637+00', 7,
+   'https://cdn.discordapp.com/avatars/681947567990243393/c777ad004a9941814e037417c7afa3af.png',
+   '1db9658f-4c92-4e25-baf0-9ff4e0024752', NULL, 'member'),
+  ('d9f0f8a6-cbfd-40fd-865f-db7013c5cc26', 'KiloBravo',
+   'Keith',
+   '2026-02-20 20:39:36.598095+00', '2026-03-09 17:51:28.233638+00', 2,
+   'https://pbqmepwuxrcnmspnucgh.supabase.co/storage/v1/object/public/avatars/d9f0f8a6-cbfd-40fd-865f-db7013c5cc26/avatar.png?t=1773078686663',
+   'd9f0f8a6-cbfd-40fd-865f-db7013c5cc26', NULL, 'member'),
+  ('8ac5f8d2-1f4f-42e0-b9f4-b8eb5f252fe2', 'Knight',
+   NULL,
+   '2026-02-20 20:54:21.43555+00', '2026-03-16 18:55:10.767808+00', 3,
+   NULL,
+   '8ac5f8d2-1f4f-42e0-b9f4-b8eb5f252fe2', NULL, 'member'),
+  ('65e306b2-67f8-4fe1-97c6-53b833cf66ad', 'grand_cappuccino_pptx',
+   NULL,
+   '2026-02-26 16:20:43.691897+00', '2026-04-23 03:16:11.296453+00', 6,
+   'https://cdn.discordapp.com/avatars/676558929731256320/a55e8ae8ca87bfed4af0fe0efd2ace5e.png',
+   '0662f84a-76a1-4421-b068-c05d458386f5', '676558929731256320', 'member'),
+  ('733f6fc6-bb3b-4be5-8840-39d20404896d', 'Llamanat3r',
+   'What start as painting models a few models for a friend, has now turn into purging heretics off the table with flamers and meltas. The Emperor''s light shall guide our fight!',
+   '2026-02-18 16:45:11.71439+00', '2026-07-13 02:38:24.620165+00', 1,
+   'https://pbqmepwuxrcnmspnucgh.supabase.co/storage/v1/object/public/avatars/733f6fc6-bb3b-4be5-8840-39d20404896d/avatar.png?t=1771540017280',
+   '733f6fc6-bb3b-4be5-8840-39d20404896d', NULL, 'organizer'),
+  ('ce9bf524-9aa6-4e75-b2ba-012e774dc163', 'shield0109',
+   NULL,
+   '2026-07-13 02:46:34.316795+00', '2026-07-13 02:46:34.316795+00', 8,
+   'https://cdn.discordapp.com/avatars/394251796778057738/b60350ab5a066bf758091feb9dec7fc5.png',
+   '7e98517a-3901-4aa9-837e-fac6c793f9b1', NULL, 'member'),
+  ('a3405965-5de0-42cb-8564-1db680409dc2', 'bluesnoweyes',
+   'Been collecting since 2006 and playing since 2013. I have a ton of factions, but space bugs live rent free in my heart <3',
+   '2026-02-23 22:29:43.330905+00', '2026-07-13 17:05:37.942618+00', 5,
+   'https://cdn.discordapp.com/avatars/342910035489193985/9fda761d08b5f8af80f0dad6ecdea0b5.png',
+   'cd361275-f0db-4511-9043-3c1402ae24a1', '342910035489193985', 'member')
 ON CONFLICT (id) DO NOTHING;
 
 SELECT setval('profiles_profile_id_seq', (SELECT COALESCE(MAX(profile_id), 1) FROM public.profiles));
 
 -- ============================================================================
--- Profile Factions (lookup by name since faction UUIDs are auto-generated)
+-- Auth Roles
+-- ============================================================================
+-- The handle_new_profile_role trigger already assigned role_id=1 ('user') to
+-- every profile above. Only Llamanat3r is elevated to admin.
+INSERT INTO public.user_roles (user_id, role_id) VALUES
+  ('733f6fc6-bb3b-4be5-8840-39d20404896d', 3)  -- Llamanat3r: admin
+ON CONFLICT (user_id, role_id) DO NOTHING;
+
+-- ============================================================================
+-- Profile Factions (lookup by name — sub-faction UUIDs are generated per-env)
 -- ============================================================================
 INSERT INTO public.profile_factions (profile_id, faction_id)
 SELECT p.id, f.id FROM (VALUES
+  ('matt_the_grey', 'Space Wolves'),
+  ('grand_cappuccino_pptx', 'World Eaters'),
+  ('grand_cappuccino_pptx', 'Grey Knights'),
+  ('grand_cappuccino_pptx', 'Necrons'),
+  ('palekingwithagun', 'Death Guard'),
+  ('KiloBravo', 'World Eaters'),
+  ('KiloBravo', 'Imperial Knights'),
+  ('Knight', 'Chaos Space Marines'),
+  ('Knight', 'Dark Angels'),
   ('Llamanat3r', 'Adepta Sororitas'),
-  ('WarSmith_IX', 'Tyranids'),
-  ('WarSmith_IX', 'Drukhari'),
-  ('BoltMagnet', 'Blood Angels'),
-  ('DiceGoblin', 'Orks'),
-  ('VoidReaper', 'Death Guard'),
-  ('VoidReaper', 'Chaos Space Marines')
+  ('Llamanat3r', 'Black Templars'),
+  ('bluesnoweyes', 'Tyranids'),
+  ('bluesnoweyes', 'Chaos Daemons'),
+  ('bluesnoweyes', 'Chaos Space Marines'),
+  ('bluesnoweyes', 'Death Guard'),
+  ('bluesnoweyes', 'Thousand Sons'),
+  ('bluesnoweyes', 'Dark Angels'),
+  ('bluesnoweyes', 'Astra Militarum'),
+  ('bluesnoweyes', 'Drukhari'),
+  ('bluesnoweyes', 'Leagues of Votann')
 ) AS v(display_name, faction_name)
 JOIN public.profiles p ON p.display_name = v.display_name
 JOIN public.factions f ON f.name = v.faction_name
 ON CONFLICT (profile_id, faction_id) DO NOTHING;
 
 -- ============================================================================
--- Seasons (3: past, current, future)
+-- Seasons
 -- ============================================================================
--- battle_points_id: 5 = Strike Force (2000), 6 = Onslaught (3000)
-INSERT INTO public.seasons (id, number, name, start_date, end_date, battle_points_id, description, rules, status) VALUES
-  (1, 1, 'Prelude to War',
-   '2025-10-01', '2025-12-31', 5,
-   'The opening salvos have been fired across the Segmentum Pacificus. Warlords test their mettle in skirmishes, forging rivalries that will define the wars to come. Every commander must prove their worth before the true crusade begins.',
-   E'Season Rules\n- Round Robin style, each player will play each other player.\n- Games are played at Strike Force (2000 pts).\n\nFaction Rules\n1. You must stay with the same faction throughout the season.\n2. You can change army list between games.',
-   'published'),
-  (2, 2, 'The Crusade Begins',
-   '2026-02-01', '2026-04-30', 5,
-   'War has come in earnest. Ancient rivalries reignite as commanders marshal their forces for dominance. Every battle shapes the standings. Every victory echoes across the sector. There is no peace amongst the stars. Only war.',
-   E'Season Rules\n- Round Robin style, each player will play each other player.\n- No Challenge or Twist Cards.\n- Games are played at Strike Force (2000 pts).\n\nFaction Rules\n1. You must stay with the same faction throughout the season.\n2. You can change army list between games.\n\nGame Setup Rules\n1. Set up Terrain.\n2. Set up Objective Markers.\n3. Draw Mission card and layout deployment zones.\n4. Roll off — winner decides Attacker or Defender.\n5. Roll off — winner decides who goes first.',
-   'published'),
-  (3, 3, 'The Dark Imperium',
-   '2026-06-01', '2026-08-31', 6,
-   'The stakes have never been higher. Onslaught-scale warfare engulfs the sector as the greatest commanders bring their full might to bear. Only the strongest will survive the Dark Imperium.',
-   NULL,
-   'draft')
+-- battle_points_id: 5 = Strike Force (2000)
+INSERT INTO public.seasons (id, number, name, start_date, end_date, battle_points_id, description, rules, status, created_at, updated_at) VALUES
+  (1, 1, 'The Crusade Begins',
+   '2026-03-01', '2026-05-31', 5,
+   'War has come to the Segmentum Pacificus. As ancient rivalries reignite and new threats emerge from the void, warlords marshal their forces for dominance. The Grimdark League opens its first campaign — a brutal proving ground where commanders will forge their legacies in blood and fire. Every battle shapes the standings. Every victory echoes across the sector. There is no peace amongst the stars. Only war. Welcome to the Crusade.',
+   E'Season Rules\n- Round Robin style, each player will play each other player.\n- No Challenge or Twist Cards\n- Games are to played at Strike Force (2000 pts) points.\n    - If an opponent is only able to play at Strike Force, the game will be played at Incursion (1000 pts) points. \n\nFaction Rules\n1. You must stay with the same faction through out the season.\n2. You can change Army list between games. \n\nGame Setup Rules\n1. Set up Terrain.\n2. Set up Objective Markers.\n3. Draw Mission card and layout deployment zones. \n4. Role, Winner decides if they are Attacker or Defender.\n    - Defender will deploy first.\n5. Role, Winner decided who goes first.',
+   'published', '2026-02-25 23:31:15.626237+00', '2026-03-02 06:17:23.827778+00')
 ON CONFLICT (id) DO NOTHING;
 
 SELECT setval('seasons_id_seq', (SELECT COALESCE(MAX(id), 1) FROM public.seasons));
@@ -168,220 +228,231 @@ SELECT setval('seasons_id_seq', (SELECT COALESCE(MAX(id), 1) FROM public.seasons
 -- ============================================================================
 -- Season Rosters (faction lookup by name)
 -- ============================================================================
--- Season 1 (past): 4 players
 INSERT INTO public.season_roster (season_id, profile_id, faction_id, joined_at)
 SELECT 1, p.id, f.id, v.joined_at::timestamptz
 FROM (VALUES
-  ('Llamanat3r', 'Adepta Sororitas', '2025-09-28 10:00:00+00'),
-  ('BoltMagnet', 'Blood Angels', '2025-09-28 12:00:00+00'),
-  ('DiceGoblin', 'Orks', '2025-09-29 09:00:00+00'),
-  ('VoidReaper', 'Death Guard', '2025-09-30 14:00:00+00')
-) AS v(display_name, faction_name, joined_at)
-JOIN public.profiles p ON p.display_name = v.display_name
-JOIN public.factions f ON f.name = v.faction_name
-ON CONFLICT (season_id, profile_id) DO NOTHING;
-
--- Season 2 (current): all 5 players
-INSERT INTO public.season_roster (season_id, profile_id, faction_id, joined_at)
-SELECT 2, p.id, f.id, v.joined_at::timestamptz
-FROM (VALUES
-  ('Llamanat3r', 'Adepta Sororitas', '2026-01-25 10:00:00+00'),
-  ('WarSmith_IX', 'Tyranids', '2026-01-26 11:00:00+00'),
-  ('BoltMagnet', 'Blood Angels', '2026-01-27 09:00:00+00'),
-  ('DiceGoblin', 'Orks', '2026-01-28 15:00:00+00'),
-  ('VoidReaper', 'Death Guard', '2026-01-29 08:00:00+00')
-) AS v(display_name, faction_name, joined_at)
-JOIN public.profiles p ON p.display_name = v.display_name
-JOIN public.factions f ON f.name = v.faction_name
-ON CONFLICT (season_id, profile_id) DO NOTHING;
-
--- Season 3 (future): 3 early sign-ups
-INSERT INTO public.season_roster (season_id, profile_id, faction_id, joined_at)
-SELECT 3, p.id, f.id, v.joined_at::timestamptz
-FROM (VALUES
-  ('Llamanat3r', 'Adepta Sororitas', '2026-03-01 10:00:00+00'),
-  ('WarSmith_IX', 'Drukhari', '2026-03-01 12:00:00+00'),
-  ('BoltMagnet', 'Blood Angels', '2026-03-02 09:00:00+00')
+  ('matt_the_grey', 'Space Wolves', '2026-02-28 06:06:18.073375+00'),
+  ('Llamanat3r', 'Adepta Sororitas', '2026-02-28 06:06:24.832467+00'),
+  ('KiloBravo', 'World Eaters', '2026-02-28 06:06:34.099904+00'),
+  ('Knight', 'Chaos Space Marines', '2026-02-28 06:07:28.427623+00'),
+  ('bluesnoweyes', 'Tyranids', '2026-02-28 06:07:33.244297+00'),
+  ('grand_cappuccino_pptx', 'Necrons', '2026-03-01 15:29:08.455364+00'),
+  ('palekingwithagun', 'Death Guard', '2026-03-02 06:16:55.146262+00')
 ) AS v(display_name, faction_name, joined_at)
 JOIN public.profiles p ON p.display_name = v.display_name
 JOIN public.factions f ON f.name = v.faction_name
 ON CONFLICT (season_id, profile_id) DO NOTHING;
 
 -- ============================================================================
--- Battle Reports (10 reports with mixed outcomes across seasons)
+-- Battle Reports (faction lookup by name; profile UUIDs are stable)
 -- ============================================================================
--- Season 1 reports (past season)
 
--- Report 1: Llamanat3r (Sororitas) wins vs BoltMagnet (Blood Angels)
+-- Report 1: matt_the_grey (Space Wolves) wins vs Llamanat3r (Adepta Sororitas)
 INSERT INTO public.battle_reports (
   id, attacker_id, attacker_faction_id, attacker_score, attacker_outcome,
   defender_id, defender_faction_id, defender_score, defender_outcome,
   mission_id, deployment_id, battle_points_id, rounds, reported_by,
-  event_date, season_id, status, created_at, updated_at
+  created_at, updated_at, event_date, season_id, status,
+  attacker_tabled, defender_tabled, attacker_units_lost, attacker_models_lost,
+  defender_units_lost, defender_models_lost, edition_id,
+  attacker_force_disposition_id, defender_force_disposition_id,
+  attacker_secondary_mode, defender_secondary_mode
 )
-SELECT
-  'b0000000-0000-4000-8000-000000000001'::uuid,
-  'a0000000-0000-4000-8000-000000000001'::uuid, af.id, 45, 'win',
-  'a0000000-0000-4000-8000-000000000003'::uuid, df.id, 32, 'loss',
-  1, 1, 5, 5, 'a0000000-0000-4000-8000-000000000001'::uuid,
-  '2025-10-15'::date, 1, 'published', '2025-10-15 20:00:00+00'::timestamptz, '2025-10-15 20:00:00+00'::timestamptz
+SELECT '0b3a68cd-1b1f-417f-8409-ef73f345eb6e'::uuid,
+  '733f6fc6-bb3b-4be5-8840-39d20404896d'::uuid, af.id, 13, 'loss',
+  'ada5319e-3a88-4b3d-9f33-d7d5704932d5'::uuid, df.id, 14, 'win',
+  8, 2, 5, 3, '733f6fc6-bb3b-4be5-8840-39d20404896d'::uuid,
+  '2026-02-23 22:21:38.003388+00'::timestamptz, '2026-07-05 15:32:21.059676+00'::timestamptz, '2026-02-21'::date, NULL, 'published',
+  false, false, 0, 0, 0, 0, 1, NULL, NULL, NULL, NULL
 FROM public.factions af, public.factions df
-WHERE af.name = 'Adepta Sororitas' AND df.name = 'Blood Angels'
+WHERE af.name = 'Adepta Sororitas' AND df.name = 'Space Wolves'
 ON CONFLICT (id) DO NOTHING;
 
--- Report 2: DiceGoblin (Orks) draws with VoidReaper (Death Guard)
+-- Report 2: bluesnoweyes (Tyranids) wins vs KiloBravo (World Eaters)
 INSERT INTO public.battle_reports (
   id, attacker_id, attacker_faction_id, attacker_score, attacker_outcome,
   defender_id, defender_faction_id, defender_score, defender_outcome,
   mission_id, deployment_id, battle_points_id, rounds, reported_by,
-  event_date, season_id, status, created_at, updated_at
+  created_at, updated_at, event_date, season_id, status,
+  attacker_tabled, defender_tabled, attacker_units_lost, attacker_models_lost,
+  defender_units_lost, defender_models_lost, edition_id,
+  attacker_force_disposition_id, defender_force_disposition_id,
+  attacker_secondary_mode, defender_secondary_mode
 )
-SELECT
-  'b0000000-0000-4000-8000-000000000002'::uuid,
-  'a0000000-0000-4000-8000-000000000004'::uuid, af.id, 38, 'draw',
-  'a0000000-0000-4000-8000-000000000005'::uuid, df.id, 38, 'draw',
-  3, 2, 5, 4, 'a0000000-0000-4000-8000-000000000004'::uuid,
-  '2025-10-22'::date, 1, 'published', '2025-10-22 19:30:00+00'::timestamptz, '2025-10-22 19:30:00+00'::timestamptz
+SELECT '17b23078-b91b-4d5f-99f7-292b3d249156'::uuid,
+  'a3405965-5de0-42cb-8564-1db680409dc2'::uuid, af.id, 33, 'win',
+  'd9f0f8a6-cbfd-40fd-865f-db7013c5cc26'::uuid, df.id, 29, 'loss',
+  7, 2, 5, 3, 'd9f0f8a6-cbfd-40fd-865f-db7013c5cc26'::uuid,
+  '2026-02-23 23:08:52.499955+00'::timestamptz, '2026-07-05 15:32:21.059676+00'::timestamptz, '2026-02-21'::date, NULL, 'published',
+  false, false, 0, 0, 0, 0, 1, NULL, NULL, NULL, NULL
 FROM public.factions af, public.factions df
-WHERE af.name = 'Orks' AND df.name = 'Death Guard'
+WHERE af.name = 'Tyranids' AND df.name = 'World Eaters'
 ON CONFLICT (id) DO NOTHING;
 
--- Report 3: BoltMagnet (Blood Angels) wins vs DiceGoblin (Orks)
+-- Report 3: bluesnoweyes (Tyranids) wins vs palekingwithagun (Death Guard)
 INSERT INTO public.battle_reports (
   id, attacker_id, attacker_faction_id, attacker_score, attacker_outcome,
   defender_id, defender_faction_id, defender_score, defender_outcome,
   mission_id, deployment_id, battle_points_id, rounds, reported_by,
-  event_date, season_id, status, created_at, updated_at
+  created_at, updated_at, event_date, season_id, status,
+  attacker_tabled, defender_tabled, attacker_units_lost, attacker_models_lost,
+  defender_units_lost, defender_models_lost, edition_id,
+  attacker_force_disposition_id, defender_force_disposition_id,
+  attacker_secondary_mode, defender_secondary_mode
 )
-SELECT
-  'b0000000-0000-4000-8000-000000000003'::uuid,
-  'a0000000-0000-4000-8000-000000000003'::uuid, af.id, 52, 'win',
-  'a0000000-0000-4000-8000-000000000004'::uuid, df.id, 28, 'loss',
-  5, 3, 5, 5, 'a0000000-0000-4000-8000-000000000003'::uuid,
-  '2025-11-05'::date, 1, 'published', '2025-11-05 21:00:00+00'::timestamptz, '2025-11-05 21:00:00+00'::timestamptz
+SELECT '45d0eb7e-b9d7-40ef-a233-54956e440eec'::uuid,
+  'a3405965-5de0-42cb-8564-1db680409dc2'::uuid, af.id, 84, 'win',
+  '285435bd-1657-4b06-988d-b9d06e24ea87'::uuid, df.id, 62, 'loss',
+  4, 1, 5, 5, 'a3405965-5de0-42cb-8564-1db680409dc2'::uuid,
+  '2026-03-02 14:11:08.181907+00'::timestamptz, '2026-07-05 15:32:21.059676+00'::timestamptz, '2026-03-01'::date, 1, 'published',
+  false, false, 0, 0, 0, 0, 1, NULL, NULL, NULL, NULL
 FROM public.factions af, public.factions df
-WHERE af.name = 'Blood Angels' AND df.name = 'Orks'
+WHERE af.name = 'Tyranids' AND df.name = 'Death Guard'
 ON CONFLICT (id) DO NOTHING;
 
--- Report 4: VoidReaper (Death Guard) wins vs Llamanat3r (Sororitas)
+-- Report 4: grand_cappuccino_pptx (Necrons) wins vs Llamanat3r (Adepta Sororitas)
 INSERT INTO public.battle_reports (
   id, attacker_id, attacker_faction_id, attacker_score, attacker_outcome,
   defender_id, defender_faction_id, defender_score, defender_outcome,
   mission_id, deployment_id, battle_points_id, rounds, reported_by,
-  event_date, season_id, status, created_at, updated_at
+  created_at, updated_at, event_date, season_id, status,
+  attacker_tabled, defender_tabled, attacker_units_lost, attacker_models_lost,
+  defender_units_lost, defender_models_lost, edition_id,
+  attacker_force_disposition_id, defender_force_disposition_id,
+  attacker_secondary_mode, defender_secondary_mode
 )
-SELECT
-  'b0000000-0000-4000-8000-000000000004'::uuid,
-  'a0000000-0000-4000-8000-000000000005'::uuid, af.id, 41, 'win',
-  'a0000000-0000-4000-8000-000000000001'::uuid, df.id, 35, 'loss',
-  7, 4, 5, 4, 'a0000000-0000-4000-8000-000000000005'::uuid,
-  '2025-11-19'::date, 1, 'published', '2025-11-19 18:30:00+00'::timestamptz, '2025-11-19 18:30:00+00'::timestamptz
+SELECT 'b4cfdcb8-3c4c-4b4e-8866-5b604c95d52c'::uuid,
+  '65e306b2-67f8-4fe1-97c6-53b833cf66ad'::uuid, af.id, 19, 'win',
+  '733f6fc6-bb3b-4be5-8840-39d20404896d'::uuid, df.id, 4, 'loss',
+  4, 3, 5, 1, '733f6fc6-bb3b-4be5-8840-39d20404896d'::uuid,
+  '2026-03-01 23:01:24.782919+00'::timestamptz, '2026-07-05 15:32:21.059676+00'::timestamptz, '2026-03-01'::date, NULL, 'published',
+  false, false, 0, 7, 2, 10, 1, NULL, NULL, NULL, NULL
 FROM public.factions af, public.factions df
-WHERE af.name = 'Death Guard' AND df.name = 'Adepta Sororitas'
+WHERE af.name = 'Necrons' AND df.name = 'Adepta Sororitas'
 ON CONFLICT (id) DO NOTHING;
 
--- Season 2 reports (current season)
-
--- Report 5: Llamanat3r (Sororitas) wins vs WarSmith_IX (Tyranids)
+-- Report 5: matt_the_grey (Space Wolves) wins vs Llamanat3r (Adepta Sororitas)
 INSERT INTO public.battle_reports (
   id, attacker_id, attacker_faction_id, attacker_score, attacker_outcome,
   defender_id, defender_faction_id, defender_score, defender_outcome,
   mission_id, deployment_id, battle_points_id, rounds, reported_by,
-  event_date, season_id, status, created_at, updated_at
+  created_at, updated_at, event_date, season_id, status,
+  attacker_tabled, defender_tabled, attacker_units_lost, attacker_models_lost,
+  defender_units_lost, defender_models_lost, edition_id,
+  attacker_force_disposition_id, defender_force_disposition_id,
+  attacker_secondary_mode, defender_secondary_mode
 )
-SELECT
-  'b0000000-0000-4000-8000-000000000005'::uuid,
-  'a0000000-0000-4000-8000-000000000001'::uuid, af.id, 60, 'win',
-  'a0000000-0000-4000-8000-000000000002'::uuid, df.id, 45, 'loss',
-  2, 5, 5, 5, 'a0000000-0000-4000-8000-000000000001'::uuid,
-  '2026-02-10'::date, 2, 'published', '2026-02-10 20:00:00+00'::timestamptz, '2026-02-10 20:00:00+00'::timestamptz
+SELECT '5ddb725f-11ac-4480-b619-89a9579f351e'::uuid,
+  'ada5319e-3a88-4b3d-9f33-d7d5704932d5'::uuid, af.id, 92, 'win',
+  '733f6fc6-bb3b-4be5-8840-39d20404896d'::uuid, df.id, 15, 'loss',
+  8, 1, 5, 5, '733f6fc6-bb3b-4be5-8840-39d20404896d'::uuid,
+  '2026-03-14 03:51:51.849095+00'::timestamptz, '2026-07-05 15:32:21.059676+00'::timestamptz, '2026-03-13'::date, 1, 'published',
+  false, false, 0, 0, 0, 0, 1, NULL, NULL, NULL, NULL
 FROM public.factions af, public.factions df
-WHERE af.name = 'Adepta Sororitas' AND df.name = 'Tyranids'
+WHERE af.name = 'Space Wolves' AND df.name = 'Adepta Sororitas'
 ON CONFLICT (id) DO NOTHING;
 
--- Report 6: VoidReaper (Death Guard) wins vs BoltMagnet (Blood Angels) — defender wins
+-- Report 6: KiloBravo (World Eaters) wins vs bluesnoweyes (Tyranids) — defender reported
 INSERT INTO public.battle_reports (
   id, attacker_id, attacker_faction_id, attacker_score, attacker_outcome,
   defender_id, defender_faction_id, defender_score, defender_outcome,
   mission_id, deployment_id, battle_points_id, rounds, reported_by,
-  event_date, season_id, status, created_at, updated_at
+  created_at, updated_at, event_date, season_id, status,
+  attacker_tabled, defender_tabled, attacker_units_lost, attacker_models_lost,
+  defender_units_lost, defender_models_lost, edition_id,
+  attacker_force_disposition_id, defender_force_disposition_id,
+  attacker_secondary_mode, defender_secondary_mode
 )
-SELECT
-  'b0000000-0000-4000-8000-000000000006'::uuid,
-  'a0000000-0000-4000-8000-000000000003'::uuid, af.id, 48, 'loss',
-  'a0000000-0000-4000-8000-000000000005'::uuid, df.id, 55, 'win',
-  4, 6, 5, 5, 'a0000000-0000-4000-8000-000000000003'::uuid,
-  '2026-02-17'::date, 2, 'published', '2026-02-17 19:00:00+00'::timestamptz, '2026-02-17 19:00:00+00'::timestamptz
+SELECT 'f7834102-3f88-4a77-84a4-b7c654463918'::uuid,
+  'a3405965-5de0-42cb-8564-1db680409dc2'::uuid, af.id, 65, 'loss',
+  'd9f0f8a6-cbfd-40fd-865f-db7013c5cc26'::uuid, df.id, 69, 'win',
+  1, 5, 5, 5, 'a3405965-5de0-42cb-8564-1db680409dc2'::uuid,
+  '2026-03-17 03:12:13.625836+00'::timestamptz, '2026-07-05 15:32:21.059676+00'::timestamptz, '2026-03-13'::date, 1, 'published',
+  false, false, 14, 45, 0, 0, 1, NULL, NULL, NULL, NULL
 FROM public.factions af, public.factions df
-WHERE af.name = 'Blood Angels' AND df.name = 'Death Guard'
+WHERE af.name = 'Tyranids' AND df.name = 'World Eaters'
 ON CONFLICT (id) DO NOTHING;
 
--- Report 7: DiceGoblin (Orks) wins vs WarSmith_IX (Tyranids)
+-- Report 7: Knight (Dark Angels) wins vs bluesnoweyes (Tyranids)
 INSERT INTO public.battle_reports (
   id, attacker_id, attacker_faction_id, attacker_score, attacker_outcome,
   defender_id, defender_faction_id, defender_score, defender_outcome,
   mission_id, deployment_id, battle_points_id, rounds, reported_by,
-  event_date, season_id, status, created_at, updated_at
+  created_at, updated_at, event_date, season_id, status,
+  attacker_tabled, defender_tabled, attacker_units_lost, attacker_models_lost,
+  defender_units_lost, defender_models_lost, edition_id,
+  attacker_force_disposition_id, defender_force_disposition_id,
+  attacker_secondary_mode, defender_secondary_mode
 )
-SELECT
-  'b0000000-0000-4000-8000-000000000007'::uuid,
-  'a0000000-0000-4000-8000-000000000004'::uuid, af.id, 42, 'win',
-  'a0000000-0000-4000-8000-000000000002'::uuid, df.id, 30, 'loss',
-  6, 7, 5, 3, 'a0000000-0000-4000-8000-000000000004'::uuid,
-  '2026-02-22'::date, 2, 'published', '2026-02-22 21:00:00+00'::timestamptz, '2026-02-22 21:00:00+00'::timestamptz
+SELECT 'e8694a9a-1f87-4214-93b9-e231c44abfb4'::uuid,
+  'a3405965-5de0-42cb-8564-1db680409dc2'::uuid, af.id, 37, 'loss',
+  '8ac5f8d2-1f4f-42e0-b9f4-b8eb5f252fe2'::uuid, df.id, 58, 'win',
+  5, 5, 3, 4, '8ac5f8d2-1f4f-42e0-b9f4-b8eb5f252fe2'::uuid,
+  '2026-03-29 01:15:08.203319+00'::timestamptz, '2026-07-05 15:32:21.059676+00'::timestamptz, '2026-03-28'::date, 1, 'published',
+  false, false, 5, 14, 2, 18, 1, NULL, NULL, NULL, NULL
 FROM public.factions af, public.factions df
-WHERE af.name = 'Orks' AND df.name = 'Tyranids'
+WHERE af.name = 'Tyranids' AND df.name = 'Dark Angels'
 ON CONFLICT (id) DO NOTHING;
 
--- Report 8: Llamanat3r (Sororitas) wins vs DiceGoblin (Orks)
+-- Report 8: grand_cappuccino_pptx (Necrons) wins vs palekingwithagun (Death Guard)
 INSERT INTO public.battle_reports (
   id, attacker_id, attacker_faction_id, attacker_score, attacker_outcome,
   defender_id, defender_faction_id, defender_score, defender_outcome,
   mission_id, deployment_id, battle_points_id, rounds, reported_by,
-  event_date, season_id, status, created_at, updated_at
+  created_at, updated_at, event_date, season_id, status,
+  attacker_tabled, defender_tabled, attacker_units_lost, attacker_models_lost,
+  defender_units_lost, defender_models_lost, edition_id,
+  attacker_force_disposition_id, defender_force_disposition_id,
+  attacker_secondary_mode, defender_secondary_mode
 )
-SELECT
-  'b0000000-0000-4000-8000-000000000008'::uuid,
-  'a0000000-0000-4000-8000-000000000001'::uuid, af.id, 51, 'win',
-  'a0000000-0000-4000-8000-000000000004'::uuid, df.id, 39, 'loss',
-  8, 1, 5, 5, 'a0000000-0000-4000-8000-000000000001'::uuid,
-  '2026-02-28'::date, 2, 'published', '2026-02-28 20:30:00+00'::timestamptz, '2026-02-28 20:30:00+00'::timestamptz
+SELECT 'd39edc6e-33bc-47b6-973b-445aa8826f18'::uuid,
+  '65e306b2-67f8-4fe1-97c6-53b833cf66ad'::uuid, af.id, 20, 'win',
+  '285435bd-1657-4b06-988d-b9d06e24ea87'::uuid, df.id, 10, 'loss',
+  3, 4, 5, 2, '65e306b2-67f8-4fe1-97c6-53b833cf66ad'::uuid,
+  '2026-04-23 03:20:25.286705+00'::timestamptz, '2026-07-05 15:32:21.059676+00'::timestamptz, '2026-04-22'::date, 1, 'published',
+  false, false, 1, 2, 4, 15, 1, NULL, NULL, NULL, NULL
 FROM public.factions af, public.factions df
-WHERE af.name = 'Adepta Sororitas' AND df.name = 'Orks'
+WHERE af.name = 'Necrons' AND df.name = 'Death Guard'
 ON CONFLICT (id) DO NOTHING;
 
--- Report 9: WarSmith_IX (Tyranids) draws with BoltMagnet (Blood Angels)
+-- Report 9: bluesnoweyes (Tyranids) wins vs Llamanat3r (Adepta Sororitas)
 INSERT INTO public.battle_reports (
   id, attacker_id, attacker_faction_id, attacker_score, attacker_outcome,
   defender_id, defender_faction_id, defender_score, defender_outcome,
   mission_id, deployment_id, battle_points_id, rounds, reported_by,
-  event_date, season_id, status, created_at, updated_at
+  created_at, updated_at, event_date, season_id, status,
+  attacker_tabled, defender_tabled, attacker_units_lost, attacker_models_lost,
+  defender_units_lost, defender_models_lost, edition_id,
+  attacker_force_disposition_id, defender_force_disposition_id,
+  attacker_secondary_mode, defender_secondary_mode
 )
-SELECT
-  'b0000000-0000-4000-8000-000000000009'::uuid,
-  'a0000000-0000-4000-8000-000000000002'::uuid, af.id, 44, 'draw',
-  'a0000000-0000-4000-8000-000000000003'::uuid, df.id, 44, 'draw',
-  9, 2, 5, 5, 'a0000000-0000-4000-8000-000000000002'::uuid,
-  '2026-03-01'::date, 2, 'published', '2026-03-01 19:00:00+00'::timestamptz, '2026-03-01 19:00:00+00'::timestamptz
+SELECT '528feeb3-41de-4215-9522-0116292ed6ac'::uuid,
+  'a3405965-5de0-42cb-8564-1db680409dc2'::uuid, af.id, 53, 'win',
+  '733f6fc6-bb3b-4be5-8840-39d20404896d'::uuid, df.id, 19, 'loss',
+  2, 6, 5, 4, 'a3405965-5de0-42cb-8564-1db680409dc2'::uuid,
+  '2026-05-04 16:24:02.04472+00'::timestamptz, '2026-07-05 15:32:21.059676+00'::timestamptz, '2026-05-01'::date, 1, 'published',
+  false, false, 4, 40, 7, 35, 1, NULL, NULL, NULL, NULL
 FROM public.factions af, public.factions df
-WHERE af.name = 'Tyranids' AND df.name = 'Blood Angels'
+WHERE af.name = 'Tyranids' AND df.name = 'Adepta Sororitas'
 ON CONFLICT (id) DO NOTHING;
 
--- No-season pickup game
-
--- Report 10: VoidReaper (Chaos Space Marines) wins vs DiceGoblin (Orks)
+-- Report 10: Llamanat3r (Black Templars) wins vs bluesnoweyes (Leagues of Votann) — 11th edition
 INSERT INTO public.battle_reports (
   id, attacker_id, attacker_faction_id, attacker_score, attacker_outcome,
   defender_id, defender_faction_id, defender_score, defender_outcome,
   mission_id, deployment_id, battle_points_id, rounds, reported_by,
-  event_date, season_id, status, created_at, updated_at
+  created_at, updated_at, event_date, season_id, status,
+  attacker_tabled, defender_tabled, attacker_units_lost, attacker_models_lost,
+  defender_units_lost, defender_models_lost, edition_id,
+  attacker_force_disposition_id, defender_force_disposition_id,
+  attacker_secondary_mode, defender_secondary_mode
 )
-SELECT
-  'b0000000-0000-4000-8000-000000000010'::uuid,
-  'a0000000-0000-4000-8000-000000000005'::uuid, af.id, 55, 'win',
-  'a0000000-0000-4000-8000-000000000004'::uuid, df.id, 22, 'loss',
-  10, 3, 5, 3, 'a0000000-0000-4000-8000-000000000005'::uuid,
-  '2026-01-12'::date, NULL, 'published', '2026-01-12 18:00:00+00'::timestamptz, '2026-01-12 18:00:00+00'::timestamptz
+SELECT '266dd2b2-9752-4d28-812a-199f432c44cb'::uuid,
+  '733f6fc6-bb3b-4be5-8840-39d20404896d'::uuid, af.id, 27, 'win',
+  'a3405965-5de0-42cb-8564-1db680409dc2'::uuid, df.id, 18, 'loss',
+  NULL, 10, 1, 3, '733f6fc6-bb3b-4be5-8840-39d20404896d'::uuid,
+  '2026-07-13 02:35:24.861445+00'::timestamptz, '2026-07-13 17:06:08.178893+00'::timestamptz, '2026-07-11'::date, NULL, 'published',
+  false, false, 0, 0, 0, 0, 2, 1, 1, NULL, NULL
 FROM public.factions af, public.factions df
-WHERE af.name = 'Chaos Space Marines' AND df.name = 'Orks'
+WHERE af.name = 'Black Templars' AND df.name = 'Leagues of Votann'
 ON CONFLICT (id) DO NOTHING;
