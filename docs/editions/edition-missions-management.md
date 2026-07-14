@@ -25,7 +25,7 @@ Scope missions to editions so that each Warhammer edition has its own list of mi
 - [x] Admins can edit an existing mission's name
 - [x] Admins can delete a mission, with a confirmation prompt
 - [x] Mission delete is blocked when battle reports reference it; the action surfaces an error explaining which battle reports block deletion (or how many)
-- [ ] The admin edition edit page links to "Manage Missions" *(deferred to admin-edition-management feature)*
+- [x] The admin edition edit page links to "Manage Missions" *(deferred to admin-edition-management feature)*
 
 ### Read Path Updates
 

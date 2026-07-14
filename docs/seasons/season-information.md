@@ -2,7 +2,7 @@
 
 **Epic:** Seasons
 **Type:** Feature
-**Status:** Completed
+**Status:** In Progress
 
 ## Summary
 
@@ -14,23 +14,23 @@ Provide a season system that organizes league play into time-bounded periods. Ea
 
 - [x] A `seasons` table exists with name, start/end dates, battle size, description, and active status
 - [x] Each season references a `battle_points` row for its battle size
-- [x] Only one season can be active at a time (enforced at the database level)
+- [ ] Only one season can be active at a time (enforced at the database level)
 - [x] Seasons table has RLS policies: public read, admin-only insert/update/delete
 
 ### Battle Report Assignment
 
-- [x] Battle reports are automatically assigned to the active season when created
+- [ ] Battle reports are automatically assigned to the active season when created
 - [x] A `season_id` column on `battle_reports` stores the assignment (nullable for reports created when no season is active)
-- [x] Assignment happens via a database trigger on insert of battle reports
+- [ ] Assignment happens via a database trigger on insert of battle reports
 - [x] Existing battle reports can be backfilled by admins when a season is created
 
 ### Admin Management
 
 - [x] Admins can create a new season from the admin panel
 - [x] Admins can edit an existing season (name, dates, battle size, description, active status)
-- [x] Admins can deactivate a season (but not delete — historical data is preserved)
+- [ ] Admins can deactivate a season (but not delete — historical data is preserved)
 - [x] Season management page is accessible at `/admin/seasons`
-- [x] Setting a season as active automatically deactivates the previously active season
+- [ ] Setting a season as active automatically deactivates the previously active season
 
 ### Public Display
 

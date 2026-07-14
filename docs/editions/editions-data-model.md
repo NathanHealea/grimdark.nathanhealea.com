@@ -2,7 +2,7 @@
 
 **Epic:** Editions
 **Type:** Feature
-**Status:** Completed
+**Status:** In Progress
 **Merge Into:** epic/battle-reports
 
 ## Summary
@@ -26,11 +26,11 @@ Introduce an `editions` table that captures each Warhammer rules edition (10th, 
 
 ### Backfill of Existing Data
 
-- [ ] All existing `missions` rows are reassigned to 10th Edition
-- [ ] All existing `deployments` rows are reassigned to 10th Edition
+- [x] All existing `missions` rows are reassigned to 10th Edition
+- [x] All existing `deployments` rows are reassigned to 10th Edition
 - [ ] All existing seasons receive a `season_editions` row pointing to 10th Edition (marked default) — see `season-editions.md`
-- [ ] All existing `battle_reports` rows are reassigned to 10th Edition
-- [ ] After backfill, the `edition_id` columns on missions / deployments / battle_reports can be set to NOT NULL (where appropriate per their feature docs)
+- [x] All existing `battle_reports` rows are reassigned to 10th Edition
+- [x] After backfill, the `edition_id` columns on missions / deployments / battle_reports can be set to NOT NULL (where appropriate per their feature docs)
 
 ## Database
 

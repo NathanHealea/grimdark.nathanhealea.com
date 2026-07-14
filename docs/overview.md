@@ -88,7 +88,7 @@ Epic Template:
 
 **High-Level Scope:**
 
-- [x] [Season information (start/end dates, format, point limits)](./seasons/season-information.md)
+- [ ] [Season information (start/end dates, format, point limits)](./seasons/season-information.md)
 - [x] [Season roster (member signup + admin management)](./seasons/season-roster.md)
 - [x] [Draft/published mode for seasons](./seasons/season-draft-published-mode.md)
 - [x] [Admin season delete](./seasons/admin-season-delete.md)
@@ -100,7 +100,7 @@ Epic Template:
 
 **High-Level Scope:**
 
-- [x] [Editions data model and seed](./editions/editions-data-model.md)
+- [ ] [Editions data model and seed](./editions/editions-data-model.md)
 - [x] [Admin edition management](./editions/admin-edition-management.md)
 - [x] [Edition missions management](./editions/edition-missions-management.md)
 - [x] [Edition deployments management](./editions/edition-deployments-management.md)
@@ -129,7 +129,7 @@ Epic Template:
 - [x] [Factions data model and seed data](./factions/factions-data-model.md)
 - [ ] [Browse factions page](./factions/browse-factions.md)
 - [x] [Select factions for profile](./factions/select-factions-for-profile.md)
-- [x] [Reusable faction selector component](./factions/faction-selector-component.md)
+- [ ] [Reusable faction selector component](./factions/faction-selector-component.md)
 
 ### Epic: Battle Reports
 

@@ -25,7 +25,7 @@ Scope deployments to editions so that each Warhammer edition has its own list of
 - [x] Admins can edit an existing deployment's name
 - [x] Admins can delete a deployment, with a confirmation prompt
 - [x] Deployment delete is blocked when battle reports reference it; the action surfaces an error explaining which battle reports block deletion (or how many)
-- [ ] The admin edition edit page links to "Manage Deployments" *(deferred to admin-edition-management)*
+- [x] The admin edition edit page links to "Manage Deployments" *(deferred to admin-edition-management)*
 
 ### Read Path Updates
 

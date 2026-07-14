@@ -2,7 +2,7 @@
 
 **Epic:** 11th Edition Battle Reports
 **Type:** Feature
-**Status:** Done
+**Status:** Completed
 **Branch:** feature/battle-report-force-dispositions
 **Merge Into:** epic/11th-edition-battle-reports
 

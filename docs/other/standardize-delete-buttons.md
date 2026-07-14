@@ -2,7 +2,7 @@
 
 **Epic:** Other
 **Type:** Enhancement
-**Status:** Completed
+**Status:** In Progress
 
 ## Summary
 
@@ -14,8 +14,8 @@ Delete and remove buttons currently use inconsistent styles — some are solid r
 
 ## Acceptance Criteria
 
-- [x] All delete/remove buttons use `btn btn-error btn-outline` with their current size class
-- [x] Delete season button (edit page) uses `btn btn-error btn-outline btn-lg w-full`
+- [ ] All delete/remove buttons use `btn btn-error btn-outline` with their current size class
+- [ ] Delete season button (edit page) uses `btn btn-error btn-outline btn-lg w-full`
 - [x] Remove faction button uses `btn btn-error btn-outline btn-xs`
 - [x] Remove photo button uses `btn btn-error btn-outline btn-xs`
 - [x] Unlink auth button uses `btn btn-error btn-outline btn-sm`

@@ -2,7 +2,7 @@
 
 **Epic:** Battle Reports
 **Type:** Feature
-**Status:** Todo
+**Status:** In Progress
 **Merge Into:** epic/battle-reports
 
 ## Summary
@@ -20,29 +20,29 @@ Existing battle reports are backfilled to 10th Edition. The detail view and feed
 
 ### Data Model
 
-- [ ] `battle_reports` table has an `edition_id integer not null references editions(id)` column
-- [ ] Existing battle reports are backfilled to 10th Edition before the `not null` constraint is applied
-- [ ] Deleting an edition with referencing battle reports is blocked (see `admin-edition-management.md`)
+- [x] `battle_reports` table has an `edition_id integer not null references editions(id)` column
+- [x] Existing battle reports are backfilled to 10th Edition before the `not null` constraint is applied
+- [x] Deleting an edition with referencing battle reports is blocked (see `admin-edition-management.md`)
 
 ### Submit / Edit Form
 
-- [ ] A battle report can be submitted without a season; `season_id` remains nullable on `battle_reports`
-- [ ] When **no season** is selected, the edition selector lists **all published editions** and the reporter can pick any of them; the selector defaults to the global default edition
+- [x] A battle report can be submitted without a season; `season_id` remains nullable on `battle_reports`
+- [x] When **no season** is selected, the edition selector lists **all published editions** and the reporter can pick any of them; the selector defaults to the global default edition
 - [ ] When a season **is** selected, the edition selector lists only that season's allowed editions and pre-selects the season's default edition
   - If the season has exactly one edition, the selector renders as read-only / disabled
   - If the season has multiple editions, the selector is enabled and the player can change it
 - [ ] Clearing a previously selected season returns the selector to the full published-editions list (still defaulting to whatever edition was chosen, if it remains valid; otherwise the global default)
-- [ ] Mission and deployment dropdowns are filtered to the selected edition
-- [ ] Mission and deployment dropdowns are disabled until an edition is determined
-- [ ] Changing the edition (directly, or indirectly via season change) clears any previously selected mission/deployment if they don't belong to the new edition
-- [ ] Server-side validation rejects submissions where the mission or deployment does not belong to the chosen edition
+- [x] Mission and deployment dropdowns are filtered to the selected edition
+- [x] Mission and deployment dropdowns are disabled until an edition is determined
+- [x] Changing the edition (directly, or indirectly via season change) clears any previously selected mission/deployment if they don't belong to the new edition
+- [x] Server-side validation rejects submissions where the mission or deployment does not belong to the chosen edition
 - [ ] Server-side validation rejects submissions where, if a season is set, the chosen edition is not in that season's allowed editions
-- [ ] Validation rejects submissions with no edition (defensive — the form should always provide one, season or no season)
+- [x] Validation rejects submissions with no edition (defensive — the form should always provide one, season or no season)
 
 ### Display
 
-- [ ] The battle report detail view shows the edition (badge or short_name) alongside mission and deployment
-- [ ] The battle report feed/listing card shows the edition badge
+- [x] The battle report detail view shows the edition (badge or short_name) alongside mission and deployment
+- [x] The battle report feed/listing card shows the edition badge
 
 ## Database
 

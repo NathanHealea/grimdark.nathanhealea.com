@@ -2,7 +2,7 @@
 
 **Epic:** Battle Reports
 **Type:** Feature
-**Status:** Todo
+**Status:** In Progress
 
 ## Summary
 
@@ -12,9 +12,9 @@ Refactor the battle report submission form so that player selection is context-a
 
 ### Player Selection Without Season
 
-- [ ] When no season is active (or the season field is unset), the player dropdowns show all profiles with role `member` or `organizer`
-- [ ] Both linked and unlinked profiles appear in the dropdown
-- [ ] Players are sorted alphabetically by display name
+- [x] When no season is active (or the season field is unset), the player dropdowns show all profiles with role `member` or `organizer`
+- [x] Both linked and unlinked profiles appear in the dropdown
+- [x] Players are sorted alphabetically by display name
 
 ### Player Selection With Season
 
@@ -25,15 +25,15 @@ Refactor the battle report submission form so that player selection is context-a
 
 ### Season Selection on Form
 
-- [ ] The battle report form includes a season selector
+- [x] The battle report form includes a season selector
 - [ ] The active season (if any) is pre-selected by default
-- [ ] Admins can select any season or "No Season" to submit an unscoped report
-- [ ] The season is saved on the battle report as `season_id`
+- [x] Admins can select any season or "No Season" to submit an unscoped report
+- [x] The season is saved on the battle report as `season_id`
 
 ### Existing Behavior
 
 - [ ] The existing auto-assignment trigger (active season assigned on insert) continues to work as a fallback
-- [ ] Battle reports submitted without a season selection still work
+- [x] Battle reports submitted without a season selection still work
 - [ ] Server-side validation ensures selected players belong to the chosen season (if one is selected)
 
 ## Routes

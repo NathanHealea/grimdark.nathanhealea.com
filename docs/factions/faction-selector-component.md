@@ -2,7 +2,7 @@
 
 **Epic:** Factions
 **Type:** Feature
-**Status:** Completed
+**Status:** In Progress
 
 ## Summary
 

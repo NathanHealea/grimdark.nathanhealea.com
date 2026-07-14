@@ -2,7 +2,7 @@
 
 **Epic:** 11th Edition Battle Reports
 **Type:** Feature
-**Status:** Done
+**Status:** Completed
 **Branch:** feature/11th-edition-data-seed
 **Merge Into:** epic/11th-edition-battle-reports
 
