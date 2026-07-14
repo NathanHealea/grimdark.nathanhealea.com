@@ -20,6 +20,7 @@ export const memberLinks: NavLink[] = [
 export const adminLinks: NavLink[] = [
   { href: '/admin/battle-reports', label: 'Battle Reports' },
   { href: '/admin/seasons', label: 'Seasons' },
+  { href: '/admin/editions', label: 'Editions' },
 ]
 
 export const adminOnlyLinks: NavLink[] = [{ href: '/admin/user-management', label: 'Users' }]

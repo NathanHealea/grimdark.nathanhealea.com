@@ -1,6 +1,6 @@
 {
   "name": "grimdark.nathanhealea.com",
-  "version": "2.13.0",
+  "version": "2.13.1",
   "private": true,
   "scripts": {
     "dev": "next dev --port 54400",
@@ -9,7 +9,11 @@
     "lint": "eslint",
     "prettify": "prettier --write .",
     "db:types": "npx supabase gen types typescript --linked > src/types/supabase.ts",
-    "db:start": "npx supabase start"
+    "db:start": "npx supabase start",
+    "db:stop": "npx supabase stop",
+    "db:pull": "npx supabase db pull",
+    "db:restart": "npm run db:stop && npm run db:start",
+    "db:reset": "npx supabase db reset"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.9",
