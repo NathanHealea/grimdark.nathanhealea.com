@@ -13,7 +13,8 @@
     "db:stop": "npx supabase stop",
     "db:pull": "npx supabase db pull",
     "db:restart": "npm run db:stop && npm run db:start",
-    "db:reset": "npx supabase db reset"
+    "db:reset": "npx supabase db reset",
+    "db:update": "npx supabase db push"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.9",
