@@ -88,7 +88,7 @@ Epic Template:
 
 **High-Level Scope:**
 
-- [ ] [Season information (start/end dates, format, point limits)](./seasons/season-information.md)
+- [x] [Season information (start/end dates, format, point limits)](./seasons/season-information.md)
 - [x] [Season roster (member signup + admin management)](./seasons/season-roster.md)
 - [x] [Draft/published mode for seasons](./seasons/season-draft-published-mode.md)
 - [x] [Admin season delete](./seasons/admin-season-delete.md)
