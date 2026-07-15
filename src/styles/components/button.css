@@ -1,0 +1,10 @@
+/*
+ * Button
+ *
+ * Back-link button migrated from the DaisyUI globals (was btn btn-ghost btn-sm).
+ * Ghost styling on shadcn tokens; the full button family lands in doc 02.
+ */
+
+.btn-back {
+  @apply -ml-2 mb-4 inline-flex h-7 items-center gap-1 rounded-md px-2.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground;
+}

@@ -1,0 +1,18 @@
+/*
+ * Form primitives
+ *
+ * Form section/grid/error aliases migrated from the DaisyUI globals. The
+ * fieldset background maps to the muted token; errors to the destructive token.
+ */
+
+.form-section {
+  @apply flex flex-col gap-2 rounded-xl bg-muted p-5;
+}
+
+.form-grid {
+  @apply grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2;
+}
+
+.form-error {
+  @apply mt-1 text-sm text-destructive;
+}

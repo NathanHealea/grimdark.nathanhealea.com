@@ -1,48 +1,102 @@
 @import 'tailwindcss';
+@import 'tw-animate-css';
 
-@plugin 'daisyui' {
-  themes: grimdark --default;
+/* ── Component stylesheets (semantic DaisyUI-style aliases on shadcn tokens) ── */
+@import '../styles/components/layout.css' layer(components);
+@import '../styles/components/typography.css' layer(components);
+@import '../styles/components/form.css' layer(components);
+@import '../styles/components/checkbox.css' layer(components);
+@import '../styles/components/card.css' layer(components);
+@import '../styles/components/table.css' layer(components);
+@import '../styles/components/button.css' layer(components);
+
+/*
+ * Theme token mapping — exposes the shadcn CSS variables below as Tailwind
+ * theme colors (bg-background, text-foreground, border-border, etc.) and the
+ * derived radius scale.
+ */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
+/*
+ * Grimdark theme — dark-only. OKLch equivalents of the original DaisyUI palette:
+ * near-black bases (#0a0a0a / #141414 / #2a2a2a), light content (#e5e5e5),
+ * gold brand (#c9a84c), and the muted status hues.
+ */
+:root {
+  color-scheme: dark;
+  --radius: 0.5rem;
 
-@plugin "daisyui/theme" {
-  name: "grimdark";
-  default: true;
-  prefersdark: true;
-  color-scheme: "dark";
-  --color-base-100: #0a0a0a;
-  --color-base-200: #141414;
-  --color-base-300: #2a2a2a;
-  --color-base-content: #e5e5e5;
-  --color-primary: #c9a84c;
-  --color-primary-content: #0a0a0a;
-  --color-secondary: #2a2a2a;
-  --color-secondary-content: #e5e5e5;
-  --color-accent: #c9a84c;
-  --color-accent-content: #0a0a0a;
-  --color-neutral: #141414;
-  --color-neutral-content: #a3a3a3;
-  --color-info: #4a6a8b;
-  --color-info-content: #e5e5e5;
-  --color-success: #4a7c59;
-  --color-success-content: #e5e5e5;
-  --color-warning: #a36b2b;
-  --color-warning-content: #e5e5e5;
-  --color-error: #8b2020;
-  --color-error-content: #e5e5e5;
-  --radius-selector: 2rem;
-  --radius-field: 0.5rem;
-  --radius-box: 1rem;
-  --size-selector: 0.25rem;
-  --size-field: 0.25rem;
-  --border: 2px;
-  --depth: 1;
-  --noise: 0;
+  --background: oklch(0.145 0 0); /* #0a0a0a — base-100 */
+  --foreground: oklch(0.922 0 0); /* #e5e5e5 — base-content */
+
+  --card: oklch(0.191 0 0); /* #141414 — base-200 */
+  --card-foreground: oklch(0.922 0 0);
+
+  --popover: oklch(0.191 0 0);
+  --popover-foreground: oklch(0.922 0 0);
+
+  --primary: oklch(0.743 0.117 89.5); /* #c9a84c — gold brand */
+  --primary-foreground: oklch(0.145 0 0);
+
+  --secondary: oklch(0.285 0 0); /* #2a2a2a — base-300 */
+  --secondary-foreground: oklch(0.922 0 0);
+
+  --muted: oklch(0.285 0 0);
+  --muted-foreground: oklch(0.715 0 0); /* #a3a3a3 — neutral-content */
+
+  --accent: oklch(0.285 0 0);
+  --accent-foreground: oklch(0.922 0 0);
+
+  --destructive: oklch(0.422 0.143 25.8); /* #8b2020 — error */
+  --destructive-foreground: oklch(0.922 0 0);
+
+  --success: oklch(0.541 0.077 152.7); /* #4a7c59 */
+  --warning: oklch(0.576 0.106 66.1); /* #a36b2b */
+  --info: oklch(0.513 0.065 249.9); /* #4a6a8b */
+
+  --border: oklch(0.285 0 0); /* #2a2a2a */
+  --input: oklch(0.285 0 0);
+  --ring: oklch(0.743 0.117 89.5); /* gold focus ring */
 }
 
-body {
-  font-family: 'Georgia', serif;
-  overflow-x: hidden;
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Georgia', serif;
+    overflow-x: hidden;
+  }
 }
 
 /* ── Gold gradient text ── */
@@ -58,7 +112,7 @@ body {
   display: flex;
   align-items: center;
   gap: 1rem;
-  color: var(--color-primary);
+  color: var(--primary);
 }
 
 .ornament::before,
@@ -71,7 +125,6 @@ body {
 
 /* ── Stat loading pulse ── */
 @keyframes stat-pulse {
-
   0%,
   100% {
     opacity: 0.3;
@@ -89,7 +142,6 @@ body {
   background-clip: text;
 }
 
-
 .stat-loading {
   animation: stat-pulse 1.5s ease-in-out infinite;
 }
@@ -98,9 +150,8 @@ body {
 .hero-glow {
   background:
     radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201, 168, 76, 0.07) 0%, transparent 70%),
-    var(--color-base-100);
+    var(--background);
 }
-
 
 /* ── Scroll reveal ── */
 @keyframes scroll-banner {
@@ -123,7 +174,7 @@ body {
 
 /* ── Leaderboard row hover ── */
 .lb-row {
-  border-bottom: 1px solid var(--color-base-300);
+  border-bottom: 1px solid var(--border);
   transition: background 0.15s;
 }
 
@@ -137,14 +188,13 @@ body {
 }
 
 @keyframes pulse-dot {
-
   0%,
   100% {
-    opacity: 1
+    opacity: 1;
   }
 
   50% {
-    opacity: 0.35
+    opacity: 0.35;
   }
 }
 
@@ -168,98 +218,7 @@ body {
   animation: ticker-scroll 30s linear infinite;
 }
 
-.ticker-track>span {
+.ticker-track > span {
   flex-shrink: 0;
   padding-right: 2rem;
-}
-
-/* ── Page Layout ── */
-.page-layout {
-  @apply flex flex-col items-center -mt-72 pt-72 min-h-screen w-full;
-}
-
-.page-container {
-  @apply w-full px-4 py-12;
-}
-
-.page-content {
-  @apply mx-auto max-w-4xl;
-}
-
-/* ── Typography ── */
-h1, .text-h1 {
-  @apply text-3xl font-bold;
-}
-
-h2, .text-h2 {
-  @apply text-xl font-bold;
-}
-
-h3, .text-h3 {
-  @apply text-lg font-semibold;
-}
-
-h4, .text-h4 {
-  @apply text-base font-semibold;
-}
-
-h5, .text-h5 {
-  @apply text-sm font-semibold;
-}
-
-h6, .text-h6 {
-  @apply text-xs font-semibold uppercase;
-}
-
-p, .text-body {
-  @apply text-base text-base-content/70;
-}
-
-.section-header {
-  @apply mb-4 text-sm font-semibold uppercase tracking-widest;
-}
-
-.label-meta {
-  @apply text-xs font-medium uppercase text-base-content/50;
-}
-
-.empty-text {
-  @apply text-base-content/50 italic;
-}
-
-/* ── Forms ── */
-.form-section {
-  @apply fieldset bg-base-300 rounded-box p-5;
-}
-
-.form-grid {
-  @apply grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1;
-}
-
-.form-error {
-  @apply mt-1 text-sm text-error;
-}
-
-.checkbox {
-  --radius-selector: 0.5rem;
-  @apply checkbox
-}
-
-/* ── Cards ── */
-.card-interactive {
-  @apply card bg-base-200 shadow-sm transition-shadow hover:shadow-md;
-}
-
-.info-row {
-  @apply flex items-center justify-between gap-2 rounded-lg bg-base-300 p-3;
-}
-
-/* ── Tables ── */
-.data-table {
-  @apply table table-zebra bg-base-200 rounded-box;
-}
-
-/* ── Buttons & Navigation ── */
-.btn-back {
-  @apply btn btn-ghost btn-sm mb-4 -ml-2;
 }
