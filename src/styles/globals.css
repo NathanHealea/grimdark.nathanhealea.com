@@ -2,13 +2,13 @@
 @import 'tw-animate-css';
 
 /* ── Component stylesheets (semantic DaisyUI-style aliases on shadcn tokens) ── */
-@import '../styles/components/layout.css' layer(components);
-@import '../styles/components/typography.css' layer(components);
-@import '../styles/components/form.css' layer(components);
-@import '../styles/components/checkbox.css' layer(components);
-@import '../styles/components/card.css' layer(components);
-@import '../styles/components/table.css' layer(components);
-@import '../styles/components/button.css' layer(components);
+@import './components/layout.css' layer(components);
+@import './components/typography.css' layer(components);
+@import './components/form.css' layer(components);
+@import './components/checkbox.css' layer(components);
+@import './components/card.css' layer(components);
+@import './components/table.css' layer(components);
+@import './components/button.css' layer(components);
 
 /*
  * Theme token mapping — exposes the shadcn CSS variables below as Tailwind
