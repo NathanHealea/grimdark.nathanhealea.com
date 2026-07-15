@@ -170,3 +170,17 @@ Epic Template:
 - [x] [Filter by current season](./09-standings-and-leaderboard/03-filter-by-season.md)
 - [x] [Leaderboard ranking improvement](./09-standings-and-leaderboard/04-leaderboard-ranking-improvement.md)
 - [ ] [Leaderboard position tracking](./09-standings-and-leaderboard/05-leaderboard-position-tracking.md)
+
+### Epic 10: UI Refactor
+
+**Goal:** Migrate the UI layer from DaisyUI to shadcn/ui with no change to behavior, routing, or data — preserving the current dark grimdark look (admin section excepted, redesigned as a dashboard).
+
+**High-Level Scope:**
+
+- [ ] [shadcn setup & theme foundation](./10-ui-refactor/01-shadcn-setup-and-theme-foundation.md)
+- [ ] [Shared UI primitives](./10-ui-refactor/02-shared-primitives.md)
+- [ ] [Shared app components](./10-ui-refactor/03-shared-app-components.md)
+- [ ] [Auth & profile domain](./10-ui-refactor/04-auth-and-profile.md)
+- [ ] [Battle reports & factions domain](./10-ui-refactor/05-battle-reports-and-factions.md)
+- [ ] [Home, leaderboard, seasons & guides](./10-ui-refactor/06-home-leaderboard-seasons-guides.md)
+- [ ] [Admin dashboard redesign](./10-ui-refactor/07-admin-dashboard-redesign.md)
