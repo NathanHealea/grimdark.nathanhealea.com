@@ -5,6 +5,11 @@
 **Status:** Done
 **Merge Into:** epic/ui-refactor
 
+## Pull Request
+
+- **PR:** [#73](https://github.com/NathanHealea/grimdark.nathanhealea.com/pull/73) — `refactor/01-shadcn-setup-and-theme-foundation` → `epic/ui-refactor`
+- **Version:** 2.13.1 → 2.13.2 (patch)
+
 ## Summary
 
 Initialize shadcn/ui on the existing Tailwind CSS v4 setup, replace the DaisyUI plugin/theme in `globals.css` with shadcn CSS-variable theme tokens that reproduce the current dark-only **grimdark** look exactly, scaffold the `src/styles/components/` per-component stylesheet directory, and codify the migration's standing development standards in `CLAUDE.md`. This is the foundation every other doc in the epic depends on.
