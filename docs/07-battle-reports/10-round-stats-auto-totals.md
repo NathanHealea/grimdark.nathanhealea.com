@@ -10,7 +10,7 @@ Auto-compute battle report scores and casualty totals from per-round stats. When
 
 ## Motivation
 
-The [Battle Report Round Stats](battle-report-round-stats.md) feature lets users record per-round stats (points earned, units lost, models lost) but the existing attacker/defender score fields remain manual. This creates a disconnect: a user might enter round-by-round points that don't match the manually entered total score. Additionally, there's no way to track aggregate unit and model losses at the report level — only per-round. Auto-computing these totals from round data eliminates manual math, prevents inconsistencies, and surfaces aggregate casualty data that's useful for future stats and analytics.
+The [Battle Report Round Stats](09-battle-report-round-stats.md) feature lets users record per-round stats (points earned, units lost, models lost) but the existing attacker/defender score fields remain manual. This creates a disconnect: a user might enter round-by-round points that don't match the manually entered total score. Additionally, there's no way to track aggregate unit and model losses at the report level — only per-round. Auto-computing these totals from round data eliminates manual math, prevents inconsistencies, and surfaces aggregate casualty data that's useful for future stats and analytics.
 
 ## Acceptance Criteria
 
@@ -133,7 +133,7 @@ Run `npm run build` and `npm run lint` to verify no errors.
 
 ## Notes
 
-- **Depends on**: [Battle Report Round Stats](battle-report-round-stats.md) — the round stats table and form UI must be implemented first.
+- **Depends on**: [Battle Report Round Stats](09-battle-report-round-stats.md) — the round stats table and form UI must be implemented first.
 - The `attacker_score` and `defender_score` columns already exist on `battle_reports`. This enhancement changes how they're populated (auto-computed vs manual) but does not alter the column schema.
 - Future enhancement: use the total units/models lost data for player analytics (e.g., "most destructive player", "most resilient army").
 - The 4 new total columns live on `battle_reports` rather than being computed via a database view or trigger because the existing codebase pattern is to compute in server actions and store directly.

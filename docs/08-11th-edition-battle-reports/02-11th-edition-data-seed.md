@@ -8,7 +8,7 @@
 
 ## Summary
 
-Seed the 11th edition's playable reference data from `docs/editions/11th-edition-mission-data.md`: the six deployments and the twenty-five primary missions, each mission mapped to its Force Disposition deck and opponent disposition. After this migration, the edition-aware battle report form has real 11th edition options and the admin pages show the full catalog.
+Seed the 11th edition's playable reference data from `docs/04-editions/05-11th-edition-mission-data.md`: the six deployments and the twenty-five primary missions, each mission mapped to its Force Disposition deck and opponent disposition. After this migration, the edition-aware battle report form has real 11th edition options and the admin pages show the full catalog.
 
 ## Acceptance Criteria
 
@@ -40,7 +40,7 @@ Read: the mission belongs to the **row** disposition's deck and is scored agains
 | **Priority Assets** | Secure Asset | Vital Link | Vanguard Operation | Sabotage | Extract Relic |
 | **Disruption** | Death Trap | Delaying Action | Smoke and Mirrors | Locate and Deny | Outmanoeuvre |
 
-Source: `docs/editions/11th-edition-mission-data.md` (Combinations / Pairings — transcribed from gdmissions.app/11th/matrix).
+Source: `docs/04-editions/05-11th-edition-mission-data.md` (Combinations / Pairings — transcribed from gdmissions.app/11th/matrix).
 
 #### Mission insert pattern
 

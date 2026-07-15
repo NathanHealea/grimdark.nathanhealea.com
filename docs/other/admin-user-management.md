@@ -127,7 +127,7 @@ Fixed the admin role check in `src/middleware.ts` to use `roles!inner(name)` ins
 
 ## Notes
 
-- The first admin must be seeded manually in the database (see [User Roles](../authentication-and-user-accounts/user-roles.md) for details).
+- The first admin must be seeded manually in the database (see [User Roles](../01-authentication-and-user-accounts/04-user-roles.md) for details).
 - The `user` role is permanently assigned via a database trigger on profile creation and cannot be removed through the UI.
 - The table shows all users including the current admin, but the admin's own row has role modifications disabled.
 - The Actions column "Edit User" link points to `/admin/user-management/{profile_id}/edit` which is not yet implemented.

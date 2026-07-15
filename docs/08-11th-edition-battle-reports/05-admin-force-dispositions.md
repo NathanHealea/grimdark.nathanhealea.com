@@ -74,5 +74,5 @@ The `on delete restrict` FKs from the data-model feature are the backstop.
 ## Notes
 
 - Depends on `force-dispositions-data-model.md`; land after `battle-report-force-dispositions.md` so the battle-report delete guard can be unconditional.
-- The `/admin/editions` list and edition CRUD pages referenced by the back-buttons still don't exist (pre-existing gap tracked by `docs/editions/admin-edition-management.md`, outside this epic).
+- The `/admin/editions` list and edition CRUD pages referenced by the back-buttons still don't exist (pre-existing gap tracked by `docs/04-editions/02-admin-edition-management.md`, outside this epic).
 - Manual verification: add/rename/delete a disposition on a scratch edition; confirm delete blocks on a mapped disposition; create a duplicate pairing and confirm the friendly error; confirm the 10th edition mission form shows no disposition fields.

@@ -45,7 +45,7 @@ Allow users to create an account and log in using email and password through Sup
    - Creates a `createServerClient` inline using request/response cookie accessors (sets cookies on both the request and a new `NextResponse`).
    - Calls `supabase.auth.getUser()` to refresh the session and rewrite expired tokens into the response cookies.
    - Matcher excludes static assets: `_next/static`, `_next/image`, `favicon.ico`, and common image extensions (`svg|png|jpg|jpeg|gif|webp`).
-   - Does **not** handle redirects or route protection — that is handled separately in the [protected routes](./protected-routes.md) feature.
+   - Does **not** handle redirects or route protection — that is handled separately in the [protected routes](./03-protected-routes.md) feature.
 
 3. **Auth layout** — `src/app/(auth)/layout.tsx`
    - Uses a `(auth)` route group so sign-up/sign-in pages share a minimal layout without the main app navigation.

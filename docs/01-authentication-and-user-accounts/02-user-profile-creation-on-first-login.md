@@ -41,7 +41,7 @@ Automatically prompt new users to create their profile after their first success
 
 4. **Server action** — Validates display name (required, 2-50 chars, alphanumeric/hyphens/underscores only), checks for existing display name (case-insensitive via `ilike`), inserts profile, and redirects to `/`. Handles duplicate constraint violation (`23505`) as a fallback for race conditions.
 
-5. **Auto-assign user role** — A database trigger on `profiles` insert automatically assigns the `user` role via the `user_roles` table (see [User Roles](./user-roles.md)).
+5. **Auto-assign user role** — A database trigger on `profiles` insert automatically assigns the `user` role via the `user_roles` table (see [User Roles](./04-user-roles.md)).
 
 ### Notes
 

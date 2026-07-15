@@ -64,7 +64,7 @@ create unique index missions_disposition_pairing_unique
 
 Insert the five dispositions for the 11th Edition row seeded by `20260508000000_create_editions_table.sql` (look up by `short_name = '11th'`):
 
-Take and Hold, Purge the Foe, Reconnaissance, Priority Assets, Disruption — descriptions from the deck themes in `docs/editions/11th-edition-mission-data.md` (Force Dispositions section).
+Take and Hold, Purge the Foe, Reconnaissance, Priority Assets, Disruption — descriptions from the deck themes in `docs/04-editions/05-11th-edition-mission-data.md` (Force Dispositions section).
 
 ### RLS Policies
 

@@ -32,7 +32,7 @@ Restrict access to authenticated-only pages so that unauthenticated users are re
 
 2. **Public routes** — Sign-in, sign-up, and the auth callback are accessible without authentication. The home page (`/`) renders different content based on auth state (server component checks `supabase.auth.getUser()`).
 
-3. **Role-based route protection** — Admin routes are additionally gated by role. See [User Roles](./user-roles.md) for details.
+3. **Role-based route protection** — Admin routes are additionally gated by role. See [User Roles](./04-user-roles.md) for details.
 
 ### Notes
 
