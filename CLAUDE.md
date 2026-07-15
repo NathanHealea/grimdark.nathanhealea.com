@@ -75,7 +75,7 @@ src/modules/<module>/
 
 ## Styling
 
-- **Tailwind CSS v4 + shadcn/ui** (Radix primitives + `class-variance-authority`). Global styles and theme tokens in `src/styles/globals.css` (imported in the root layout via the `@/styles` alias); per-component stylesheets live in `src/styles/components/`. The `cn()` class-merge helper lives in `src/lib/utils.ts`.
+- **Tailwind CSS v4 + shadcn/ui** (Radix primitives + `class-variance-authority`). Global styles and theme tokens in `src/styles/globals.css` (imported into the root layout with a relative path — a side-effect CSS import via the `@/styles` alias trips TS2882); per-component stylesheets live in `src/styles/components/`. The `cn()` class-merge helper lives in `src/lib/utils.ts`.
 - Dark-only "grimdark" theme via `color-scheme: dark`. Gold brand `#c9a84c`, near-black bases, Georgia serif body.
 - **Fonts**: Geist Sans and Geist Mono via `next/font`, exposed as CSS variables `--font-geist-sans` and `--font-geist-mono`.
 - **Icons**: `@heroicons/react` v2 (kept — not migrated to lucide).
