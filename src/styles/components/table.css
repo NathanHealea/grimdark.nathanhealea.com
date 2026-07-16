@@ -1,0 +1,26 @@
+/*
+ * Data table
+ *
+ * Zebra-striped data table migrated from the DaisyUI globals (was
+ * table table-zebra bg-base-200). Reimplemented on shadcn tokens.
+ */
+
+.data-table {
+  @apply w-full overflow-hidden rounded-xl bg-card text-sm;
+}
+
+.data-table th {
+  @apply px-3 py-2 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground;
+}
+
+.data-table td {
+  @apply px-3 py-2;
+}
+
+.data-table tbody tr {
+  @apply border-t border-border;
+}
+
+.data-table tbody tr:nth-child(even) {
+  @apply bg-muted/40;
+}

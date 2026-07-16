@@ -1,0 +1,10 @@
+/*
+ * Card
+ *
+ * Interactive card surface migrated from the DaisyUI globals. Uses the card
+ * token pair plus a hover shadow lift (was card bg-base-200).
+ */
+
+.card-interactive {
+  @apply rounded-xl border border-border bg-card text-card-foreground shadow-sm transition-shadow hover:shadow-md;
+}

@@ -75,15 +75,43 @@ src/modules/<module>/
 
 ## Styling
 
-- **Tailwind CSS v4 + DaisyUI v5** component library. Global styles in `src/app/globals.css`.
-- Dark mode via `prefers-color-scheme`.
+- **Tailwind CSS v4 + shadcn/ui** (Radix primitives + `class-variance-authority`). Global styles and theme tokens in `src/styles/globals.css` (imported into the root layout with a relative path — a side-effect CSS import via the `@/styles` alias trips TS2882); per-component stylesheets live in `src/styles/components/`. The `cn()` class-merge helper lives in `src/lib/utils.ts`.
+- Dark-only "grimdark" theme via `color-scheme: dark`. Gold brand `#c9a84c`, near-black bases, Georgia serif body.
 - **Fonts**: Geist Sans and Geist Mono via `next/font`, exposed as CSS variables `--font-geist-sans` and `--font-geist-mono`.
-- **Icons**: `@heroicons/react` v2.
+- **Icons**: `@heroicons/react` v2 (kept — not migrated to lucide).
 - Prettier auto-sorts Tailwind classes.
+
+### UI Refactor Standards (DaisyUI → shadcn/ui)
+
+The UI layer is being migrated from DaisyUI to shadcn/ui under the `ui-refactor` epic (`docs/10-ui-refactor/`). These standards are standing rules for all UI work:
+
+1. **Build via shadcn where possible** — add primitives with the shadcn CLI into `src/components/ui/`; wrap Radix behavior rather than hand-rolling.
+2. **Keep DaisyUI-style semantic class names** — `btn`, `card`, `badge`, `data-table`, etc. remain the public API in JSX; they are reimplemented on top of shadcn tokens underneath.
+3. **One CSS file per component** under `src/styles/components/` (e.g. `button.css`, `card.css`, `form.css`). Imported into `globals.css` via `@import '../styles/components/<name>.css' layer(components);`.
+4. **Style with `@apply` on theme CSS variables** in those per-component files — not inline Tailwind utility soup in JSX. Layout one-offs (flex/grid/spacing on a specific page) may stay inline in JSX.
+5. **Use the shadcn tokens** (`--primary`, `--background`, `--foreground`, `--muted`, `--border`, `--radius`, …) — never reintroduce DaisyUI token names (`base-100`, `base-content`, `rounded-box`, etc.).
+6. **Preserve current visual styling** except admin pages, which are being redesigned as a dashboard (see doc 07, modeled on `../grimify`).
+7. **Migrate incrementally** — shared primitives first, then domain components.
+
+**Kept as-is (not migrated):** Headless UI `Menu` for dropdowns (restyled only), native `<select>` / `<input type="checkbox">` styled via CSS, `@heroicons/react` icons.
+
+**Token / theme reference:** tokens are OKLch equivalents of the original grimdark palette, defined in `:root` and mapped to Tailwind theme colors via `@theme inline` in `globals.css`.
+
+| DaisyUI token | shadcn token | JSX class example |
+| ------------- | ------------ | ----------------- |
+| `base-100` | `--background` | `bg-background` |
+| `base-200` | `--card` / `--popover` | `bg-card` |
+| `base-300` | `--muted` / `--secondary` / `--accent` / `--border` / `--input` | `bg-muted`, `border-border` |
+| `base-content` | `--foreground` / `--card-foreground` | `text-foreground` |
+| `base-content/70`, `neutral-content` | `--muted-foreground` | `text-muted-foreground` |
+| `primary` (gold) | `--primary` / `--primary-foreground` | `bg-primary text-primary-foreground` |
+| `error` | `--destructive` / `--destructive-foreground` | `text-destructive` |
+| `success` / `warning` / `info` | `--success` / `--warning` / `--info` | `text-success` |
+| `rounded-box` / `rounded-field` | `--radius` scale (`rounded-lg`/`-md`/`-sm`/`-xl`) | `rounded-xl` |
 
 ### UI Patterns
 
-- **Dropdowns**: Use Headless UI `Menu` (`@headlessui/react`) for all dropdown menus instead of DaisyUI's native `dropdown` class — it auto-closes on item click and provides proper focus management and keyboard navigation. See `src/components/user-menu.tsx`, `src/components/admin-menu.tsx`, and `src/components/actions-menu.tsx`.
+- **Dropdowns**: Use Headless UI `Menu` (`@headlessui/react`) for all dropdown menus — it auto-closes on item click and provides proper focus management and keyboard navigation. See `src/components/user-menu.tsx`, `src/components/admin-menu.tsx`, and `src/components/actions-menu.tsx`.
 
 ## Testing
 

@@ -1,0 +1,37 @@
+/*
+ * Layout & shared page helpers
+ *
+ * Semantic layout aliases migrated from the DaisyUI globals. Styled with @apply
+ * on shadcn theme tokens (no DaisyUI primitives/tokens).
+ */
+
+/* ── Page scaffolding ── */
+.page-layout {
+  @apply -mt-72 flex min-h-screen w-full flex-col items-center pt-72;
+}
+
+.page-container {
+  @apply w-full px-4 py-12;
+}
+
+.page-content {
+  @apply mx-auto max-w-4xl;
+}
+
+/* ── Section + meta labels ── */
+.section-header {
+  @apply mb-4 text-sm font-semibold uppercase tracking-widest;
+}
+
+.label-meta {
+  @apply text-xs font-medium uppercase text-muted-foreground;
+}
+
+.empty-text {
+  @apply italic text-muted-foreground;
+}
+
+/* ── Info row (key/value strip) ── */
+.info-row {
+  @apply flex items-center justify-between gap-2 rounded-lg bg-muted p-3;
+}

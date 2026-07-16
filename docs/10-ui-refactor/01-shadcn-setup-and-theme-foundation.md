@@ -2,8 +2,13 @@
 
 **Epic:** UI Refactor
 **Type:** Refactor
-**Status:** Todo
+**Status:** Done
 **Merge Into:** epic/ui-refactor
+
+## Pull Request
+
+- **PR:** [#73](https://github.com/NathanHealea/grimdark.nathanhealea.com/pull/73) — `refactor/01-shadcn-setup-and-theme-foundation` → `epic/ui-refactor`
+- **Version:** 2.13.1 → 2.13.2 (patch)
 
 ## Summary
 
@@ -11,14 +16,14 @@ Initialize shadcn/ui on the existing Tailwind CSS v4 setup, replace the DaisyUI 
 
 ## Acceptance Criteria
 
-- [ ] `shadcn` is initialized: `components.json` exists (style, `rsc: true`, `tailwind.config: ""` for v4, `css: src/app/globals.css`, `cssVariables: true`, aliases for `@/components/ui` and `@/lib/utils`, `iconLibrary: lucide` is irrelevant — we keep heroicons).
-- [ ] Dependencies added: `class-variance-authority`, `clsx`, `tailwind-merge`, `tw-animate-css`, and Radix primitives needed by kept-native components (`@radix-ui/react-label`, `@radix-ui/react-avatar`, `@radix-ui/react-separator`). `daisyui` remains installed until the last domain doc removes it (kept during migration so un-migrated pages keep rendering).
-- [ ] `src/lib/utils.ts` exports `cn()` = `twMerge(clsx(inputs))`.
-- [ ] `globals.css` no longer registers the DaisyUI `@plugin`; it imports `tailwindcss` + `tw-animate-css`, defines `@theme inline` token mappings and a `--radius`-derived radius scale, and declares `:root` semantic tokens in OKLch that visually match the grimdark palette. Dark is the default (the app is dark-only today).
-- [ ] The existing `@apply` alias classes (`page-layout`, `page-container`, `page-content`, `section-header`, `card-interactive`, `data-table`, `form-section`, `form-grid`, `form-error`, `btn-back`, `empty-text`, `label-meta`, `info-row`, custom `.checkbox`) are rewritten against shadcn tokens and moved into appropriate `src/styles/components/*.css` files (or a `layout.css`), no longer referencing DaisyUI primitives/tokens.
-- [ ] `src/styles/components/` exists; each component stylesheet is imported from `globals.css` with `layer(components)`.
-- [ ] `CLAUDE.md` documents the standing standards: DaisyUI→shadcn mapping table, the semantic-class + `@apply` + one-file-per-component conventions, the `src/styles/components/` layout, the token/theme system, and the three kept-as-is decisions (Headless UI dropdowns, native select/checkbox, Heroicons).
-- [ ] `npm run build` and `npm run lint` pass. The app renders with no visible change (custom `.hero-glow`, `.scroll-banner-track`, `.text-gold`, `.stat-num` utilities preserved).
+- [x] `shadcn` is initialized: `components.json` exists (style, `rsc: true`, `tailwind.config: ""` for v4, `css: src/app/globals.css`, `cssVariables: true`, aliases for `@/components/ui` and `@/lib/utils`, `iconLibrary: lucide` is irrelevant — we keep heroicons).
+- [x] Dependencies added: `class-variance-authority`, `clsx`, `tailwind-merge`, `tw-animate-css`, and Radix primitives needed by kept-native components (`@radix-ui/react-label`, `@radix-ui/react-avatar`, `@radix-ui/react-separator`). `daisyui` remains installed until the last domain doc removes it (kept during migration so un-migrated pages keep rendering).
+- [x] `src/lib/utils.ts` exports `cn()` = `twMerge(clsx(inputs))`.
+- [x] `globals.css` no longer registers the DaisyUI `@plugin`; it imports `tailwindcss` + `tw-animate-css`, defines `@theme inline` token mappings and a `--radius`-derived radius scale, and declares `:root` semantic tokens in OKLch that visually match the grimdark palette. Dark is the default (the app is dark-only today).
+- [x] The existing `@apply` alias classes (`page-layout`, `page-container`, `page-content`, `section-header`, `card-interactive`, `data-table`, `form-section`, `form-grid`, `form-error`, `btn-back`, `empty-text`, `label-meta`, `info-row`, custom `.checkbox`) are rewritten against shadcn tokens and moved into appropriate `src/styles/components/*.css` files (or a `layout.css`), no longer referencing DaisyUI primitives/tokens.
+- [x] `src/styles/components/` exists; each component stylesheet is imported from `globals.css` with `layer(components)`.
+- [x] `CLAUDE.md` documents the standing standards: DaisyUI→shadcn mapping table, the semantic-class + `@apply` + one-file-per-component conventions, the `src/styles/components/` layout, the token/theme system, and the three kept-as-is decisions (Headless UI dropdowns, native select/checkbox, Heroicons).
+- [x] `npm run build` and `npm run lint` pass. The app renders with no visible change (custom `.hero-glow`, `.scroll-banner-track`, `.text-gold`, `.stat-num` utilities preserved).
 
 ## Approach
 

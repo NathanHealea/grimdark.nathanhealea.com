@@ -1,0 +1,11 @@
+/*
+ * Checkbox
+ *
+ * Native <input type="checkbox"> styled to the grimdark theme. The gold primary
+ * token drives the checked accent color (was DaisyUI .checkbox).
+ */
+
+.checkbox {
+  @apply size-4 shrink-0 rounded-sm;
+  accent-color: var(--primary);
+}

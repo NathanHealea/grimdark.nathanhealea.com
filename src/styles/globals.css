@@ -1,0 +1,224 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+/* ── Component stylesheets (semantic DaisyUI-style aliases on shadcn tokens) ── */
+@import './components/layout.css' layer(components);
+@import './components/typography.css' layer(components);
+@import './components/form.css' layer(components);
+@import './components/checkbox.css' layer(components);
+@import './components/card.css' layer(components);
+@import './components/table.css' layer(components);
+@import './components/button.css' layer(components);
+
+/*
+ * Theme token mapping — exposes the shadcn CSS variables below as Tailwind
+ * theme colors (bg-background, text-foreground, border-border, etc.) and the
+ * derived radius scale.
+ */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+/*
+ * Grimdark theme — dark-only. OKLch equivalents of the original DaisyUI palette:
+ * near-black bases (#0a0a0a / #141414 / #2a2a2a), light content (#e5e5e5),
+ * gold brand (#c9a84c), and the muted status hues.
+ */
+:root {
+  color-scheme: dark;
+  --radius: 0.5rem;
+
+  --background: oklch(0.145 0 0); /* #0a0a0a — base-100 */
+  --foreground: oklch(0.922 0 0); /* #e5e5e5 — base-content */
+
+  --card: oklch(0.191 0 0); /* #141414 — base-200 */
+  --card-foreground: oklch(0.922 0 0);
+
+  --popover: oklch(0.191 0 0);
+  --popover-foreground: oklch(0.922 0 0);
+
+  --primary: oklch(0.743 0.117 89.5); /* #c9a84c — gold brand */
+  --primary-foreground: oklch(0.145 0 0);
+
+  --secondary: oklch(0.285 0 0); /* #2a2a2a — base-300 */
+  --secondary-foreground: oklch(0.922 0 0);
+
+  --muted: oklch(0.285 0 0);
+  --muted-foreground: oklch(0.715 0 0); /* #a3a3a3 — neutral-content */
+
+  --accent: oklch(0.285 0 0);
+  --accent-foreground: oklch(0.922 0 0);
+
+  --destructive: oklch(0.422 0.143 25.8); /* #8b2020 — error */
+  --destructive-foreground: oklch(0.922 0 0);
+
+  --success: oklch(0.541 0.077 152.7); /* #4a7c59 */
+  --warning: oklch(0.576 0.106 66.1); /* #a36b2b */
+  --info: oklch(0.513 0.065 249.9); /* #4a6a8b */
+
+  --border: oklch(0.285 0 0); /* #2a2a2a */
+  --input: oklch(0.285 0 0);
+  --ring: oklch(0.743 0.117 89.5); /* gold focus ring */
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Georgia', serif;
+    overflow-x: hidden;
+  }
+}
+
+/* ── Gold gradient text ── */
+.text-gold {
+  background: linear-gradient(135deg, #c9a84c 0%, #f0d080 50%, #a0793a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Ornamental divider ── */
+.ornament {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--primary);
+}
+
+.ornament::before,
+.ornament::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #c9a84c, transparent);
+}
+
+/* ── Stat loading pulse ── */
+@keyframes stat-pulse {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.stat-num {
+  background: linear-gradient(135deg, #c9a84c, #f0d080);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-loading {
+  animation: stat-pulse 1.5s ease-in-out infinite;
+}
+
+/* ── Hero atmospheric glow ── */
+.hero-glow {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201, 168, 76, 0.07) 0%, transparent 70%),
+    var(--background);
+}
+
+/* ── Scroll reveal ── */
+@keyframes scroll-banner {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.scroll-banner-track {
+  animation: scroll-banner 240s linear infinite;
+}
+
+.scroll-banner-track:hover {
+  animation-play-state: paused;
+}
+
+/* ── Leaderboard row hover ── */
+.lb-row {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+
+.lb-row:hover {
+  background: rgba(201, 168, 76, 0.04);
+}
+
+/* ── Army card faction banner ── */
+.faction-banner {
+  height: 5px;
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.pulse-dot {
+  animation: pulse-dot 2s infinite;
+}
+
+/* ── Ticker marquee ── */
+@keyframes ticker-scroll {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.ticker-track {
+  display: inline-flex;
+  animation: ticker-scroll 30s linear infinite;
+}
+
+.ticker-track > span {
+  flex-shrink: 0;
+  padding-right: 2rem;
+}
