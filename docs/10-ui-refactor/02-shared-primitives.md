@@ -2,7 +2,7 @@
 
 **Epic:** UI Refactor
 **Type:** Refactor
-**Status:** Todo
+**Status:** Completed
 **Merge Into:** epic/ui-refactor
 
 ## Summary
@@ -11,25 +11,25 @@ Establish the shadcn `src/components/ui/*` primitive layer plus its matching `sr
 
 ## Acceptance Criteria
 
-- [ ] Each primitive has a thin wrapper in `src/components/ui/` (where a component is warranted) and a dedicated stylesheet in `src/styles/components/`:
-  - [ ] `button` — `btn`, `btn-primary/secondary/outline/ghost/error/link/sm/lg/xs/circle`
-  - [ ] `card` — `card`, `card-body`, `card-title`, plus `card-interactive`
-  - [ ] `badge` — `badge`, `badge-outline/soft/sm/success/warning/error/ghost`
-  - [ ] `alert` — `alert`, `alert-error/success/warning/info`
-  - [ ] `input` — `input`, `input-bordered` (native `<input>`)
-  - [ ] `textarea` — `textarea`, `textarea-bordered` (native `<textarea>`)
-  - [ ] `select` — `select`, `select-bordered` (native `<select>`, kept per decision)
-  - [ ] `checkbox` — `.checkbox` (native `<input type="checkbox">`, kept per decision)
-  - [ ] `label` — `label` (Radix Label)
-  - [ ] `avatar` — `avatar`, `avatar-placeholder` (Radix Avatar)
-  - [ ] `separator` — replaces `divider` (Radix Separator; text-in-divider variant handled with a small custom rule)
-  - [ ] `spinner` — replaces DaisyUI `loading`/`loading-spinner`/`loading-sm` (CSS-animated, no new icon dep)
-  - [ ] `link` — `link`, `link-primary`, `link-hover`
-  - [ ] `table` — `table`, `table-zebra`, `data-table` (hand-rolled, grimify-style)
-  - [ ] `tooltip` — keep existing custom portal tooltip; align its classes to tokens (optional Radix Tooltip swap deferred)
-- [ ] Every stylesheet is added under `layer(components)` in `globals.css` and carries a header (component name, DaisyUI reference, class inventory).
-- [ ] No inline Tailwind utilities in JSX for these primitives except layout one-offs; visual output matches `main`.
-- [ ] `npm run build` + `npm run lint` pass; primitives render identically in a scratch smoke test.
+- [x] Each primitive has a thin wrapper in `src/components/ui/` (where a component is warranted) and a dedicated stylesheet in `src/styles/components/`:
+  - [x] `button` — `btn`, `btn-primary/secondary/outline/ghost/error/link/sm/lg/xs/circle` (plus `btn-success`)
+  - [x] `card` — `card`, `card-body`, `card-title`, plus `card-interactive`
+  - [x] `badge` — `badge`, `badge-outline/soft/sm/success/warning/error/ghost` (plus `neutral/primary/info/xs/lg`)
+  - [x] `alert` — `alert`, `alert-error/success/warning/info`
+  - [x] `input` — `input`, `input-bordered` (native `<input>`)
+  - [x] `textarea` — `textarea`, `textarea-bordered` (native `<textarea>`)
+  - [x] `select` — `select`, `select-bordered` (native `<select>`, kept per decision)
+  - [x] `checkbox` — `.checkbox` (native `<input type="checkbox">`, kept per decision — from doc 01)
+  - [x] `label` — `label` (Radix Label)
+  - [x] `avatar` — `avatar`, `avatar-placeholder` (Radix Avatar)
+  - [x] `separator` — replaces `divider` (Radix Separator; text-in-divider variant handled with a small custom rule)
+  - [x] `spinner` — replaces DaisyUI `loading`/`loading-spinner`/`loading-sm` (CSS-animated, no new icon dep)
+  - [x] `link` — `link`, `link-primary`, `link-hover`
+  - [x] `table` — `table`, `table-zebra`, `data-table` (hand-rolled, grimify-style)
+  - [x] `tooltip` — keep existing custom portal tooltip; align its classes to tokens (optional Radix Tooltip swap deferred)
+- [x] Every stylesheet is added under `layer(components)` in `globals.css` and carries a header (component name, DaisyUI reference, class inventory).
+- [x] No inline Tailwind utilities in JSX for these primitives except layout one-offs; visual output matches `main`.
+- [x] `npm run build` + `npm run lint` pass; primitives render identically in a scratch smoke test.
 
 ## Approach
 
