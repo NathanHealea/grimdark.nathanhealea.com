@@ -9,6 +9,7 @@
 @import './components/textarea.css' layer(components);
 @import './components/select.css' layer(components);
 @import './components/checkbox.css' layer(components);
+@import './components/label.css' layer(components);
 @import './components/card.css' layer(components);
 @import './components/table.css' layer(components);
 @import './components/button.css' layer(components);

@@ -1,0 +1,16 @@
+/*
+ * Label — DaisyUI ref: label
+ *
+ * Form field label built on Radix Label, styled on shadcn tokens.
+ *
+ * Classes: label
+ */
+
+.label {
+  @apply inline-flex items-center gap-2 text-sm font-medium leading-none text-foreground;
+}
+
+.label:has(:disabled),
+.label[data-disabled='true'] {
+  @apply cursor-not-allowed opacity-50;
+}
