@@ -11,6 +11,7 @@
 @import './components/checkbox.css' layer(components);
 @import './components/label.css' layer(components);
 @import './components/avatar.css' layer(components);
+@import './components/separator.css' layer(components);
 @import './components/card.css' layer(components);
 @import './components/table.css' layer(components);
 @import './components/button.css' layer(components);

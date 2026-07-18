@@ -1,0 +1,32 @@
+/*
+ * Separator — DaisyUI ref: divider
+ *
+ * Radix Separator styled as a 1px rule on the border token (both orientations).
+ * `.divider` is the text-in-divider variant (a centered label flanked by rules),
+ * reproducing DaisyUI's `divider` behavior on shadcn tokens.
+ *
+ * Classes: separator, divider
+ */
+
+.separator {
+  @apply shrink-0 bg-border;
+}
+
+.separator[data-orientation='horizontal'] {
+  @apply h-px w-full;
+}
+
+.separator[data-orientation='vertical'] {
+  @apply h-full w-px;
+}
+
+/* ── Text-in-divider (was DaisyUI .divider) ── */
+.divider {
+  @apply my-2 flex items-center gap-3 text-xs uppercase tracking-wide text-muted-foreground;
+}
+
+.divider::before,
+.divider::after {
+  @apply h-px flex-1 bg-border;
+  content: '';
+}
