@@ -1,0 +1,41 @@
+/*
+ * Input — DaisyUI ref: input, input-bordered
+ *
+ * Native <input> styled to the grimdark theme on shadcn tokens. The bordered
+ * variant is the default look; error/success recolor the border; sm/lg resize.
+ *
+ * Classes: input, input-bordered, input-error, input-success, input-sm, input-lg
+ */
+
+.input {
+  @apply border-input bg-background text-foreground h-10 w-full rounded-md border px-3 text-sm transition-colors;
+  @apply placeholder:text-muted-foreground;
+}
+
+.input:focus-visible {
+  @apply ring-ring ring-2 ring-offset-0 outline-none;
+}
+
+.input:disabled {
+  @apply cursor-not-allowed opacity-50;
+}
+
+.input-bordered {
+  @apply border-input;
+}
+
+.input-error {
+  border-color: var(--destructive);
+}
+
+.input-success {
+  border-color: var(--success);
+}
+
+.input-sm {
+  @apply h-8 px-2.5 text-xs;
+}
+
+.input-lg {
+  @apply h-12 px-4 text-base;
+}

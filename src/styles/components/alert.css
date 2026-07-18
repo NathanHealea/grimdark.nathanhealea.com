@@ -1,0 +1,33 @@
+/*
+ * Alert — DaisyUI ref: alert
+ *
+ * Inline notification banner reimplemented on shadcn tokens. A single
+ * `--alert-color` custom property drives the tinted background + border via
+ * color-mix, so status variants compose without repeated rules.
+ *
+ * Classes: alert, alert-error, alert-success, alert-warning, alert-info
+ */
+
+.alert {
+  --alert-color: var(--muted-foreground);
+
+  @apply text-foreground flex items-center gap-3 rounded-lg border px-4 py-3 text-sm;
+  border-color: color-mix(in oklab, var(--alert-color) 40%, transparent);
+  background-color: color-mix(in oklab, var(--alert-color) 15%, var(--card));
+}
+
+.alert-error {
+  --alert-color: var(--destructive);
+}
+
+.alert-success {
+  --alert-color: var(--success);
+}
+
+.alert-warning {
+  --alert-color: var(--warning);
+}
+
+.alert-info {
+  --alert-color: var(--info);
+}

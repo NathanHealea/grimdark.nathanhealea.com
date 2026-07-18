@@ -1,0 +1,30 @@
+/*
+ * Spinner — DaisyUI ref: loading, loading-spinner, loading-sm/md/xs
+ *
+ * CSS-animated spinner (no icon dependency) replacing DaisyUI's loading widget.
+ * A rotating ring drawn with a transparent top border; color follows
+ * currentColor so it inherits the surrounding text color. Sizes mirror
+ * DaisyUI's loading scale.
+ *
+ * Classes: spinner, spinner-xs, spinner-sm, spinner-md, spinner-lg
+ */
+
+.spinner {
+  @apply inline-block size-6 animate-spin rounded-full border-2 border-current border-t-transparent align-[-0.125em];
+}
+
+.spinner-xs {
+  @apply size-4 border-2;
+}
+
+.spinner-sm {
+  @apply size-5 border-2;
+}
+
+.spinner-md {
+  @apply size-6 border-2;
+}
+
+.spinner-lg {
+  @apply size-8 border-4;
+}

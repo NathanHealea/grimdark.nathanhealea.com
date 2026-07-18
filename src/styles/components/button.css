@@ -1,10 +1,124 @@
 /*
- * Button
+ * Button — DaisyUI ref: btn
  *
- * Back-link button migrated from the DaisyUI globals (was btn btn-ghost btn-sm).
- * Ghost styling on shadcn tokens; the full button family lands in doc 02.
+ * Semantic `btn` family reimplemented on shadcn tokens. Color × style variants
+ * compose without compound rules via a `--btn-*` custom-property layer
+ * (grimify pattern): color modifiers set the palette; style modifiers
+ * (outline/ghost/link) reinterpret it; size modifiers adjust the box.
+ *
+ * Classes: btn, btn-primary, btn-secondary, btn-error, btn-success,
+ *          btn-outline, btn-ghost, btn-link, btn-sm, btn-lg, btn-xs,
+ *          btn-circle, btn-back
  */
 
+.btn {
+  --btn-bg: var(--secondary);
+  --btn-fg: var(--secondary-foreground);
+  --btn-accent: var(--foreground);
+
+  @apply inline-flex h-10 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-md border border-transparent px-4 text-sm font-semibold whitespace-nowrap transition-colors select-none;
+  background-color: var(--btn-bg);
+  color: var(--btn-fg);
+}
+
+.btn:hover {
+  background-color: color-mix(in oklab, var(--btn-bg) 88%, black);
+}
+
+.btn:focus-visible {
+  @apply ring-ring ring-offset-background ring-2 ring-offset-2 outline-none;
+}
+
+.btn:disabled,
+.btn[disabled],
+.btn[aria-disabled='true'] {
+  @apply pointer-events-none opacity-50;
+}
+
+/* ── Color modifiers ── */
+.btn-primary {
+  --btn-bg: var(--primary);
+  --btn-fg: var(--primary-foreground);
+  --btn-accent: var(--primary);
+}
+
+.btn-secondary {
+  --btn-bg: var(--secondary);
+  --btn-fg: var(--secondary-foreground);
+  --btn-accent: var(--secondary-foreground);
+}
+
+.btn-error {
+  --btn-bg: var(--destructive);
+  --btn-fg: var(--destructive-foreground);
+  --btn-accent: var(--destructive);
+}
+
+.btn-success {
+  --btn-bg: var(--success);
+  --btn-fg: var(--foreground);
+  --btn-accent: var(--success);
+}
+
+/* ── Style modifiers ── */
+.btn-outline {
+  background-color: transparent;
+  border-color: color-mix(in oklab, var(--btn-accent) 55%, transparent);
+  color: var(--btn-accent);
+}
+
+.btn-outline:hover {
+  background-color: var(--btn-accent);
+  border-color: var(--btn-accent);
+  color: var(--btn-fg);
+}
+
+.btn-ghost {
+  background-color: transparent;
+  border-color: transparent;
+  color: var(--btn-accent);
+}
+
+.btn-ghost:hover {
+  @apply bg-muted text-foreground;
+}
+
+.btn-link {
+  @apply h-auto border-transparent bg-transparent p-0 underline-offset-4 hover:underline;
+  color: var(--primary);
+}
+
+.btn-link:hover {
+  background-color: transparent;
+}
+
+/* ── Size modifiers ── */
+.btn-xs {
+  @apply h-6 gap-1 rounded-sm px-2 text-xs;
+}
+
+.btn-sm {
+  @apply h-8 gap-1.5 px-3 text-xs;
+}
+
+.btn-lg {
+  @apply h-12 gap-2 px-6 text-base;
+}
+
+/* ── Shape ── */
+.btn-circle {
+  @apply size-10 rounded-full p-0;
+}
+
+.btn-circle.btn-sm {
+  @apply size-8;
+}
+
+.btn-circle.btn-xs {
+  @apply size-6;
+}
+
+/* ── Back-link (ghost sm, migrated from the DaisyUI globals) ── */
 .btn-back {
-  @apply -ml-2 mb-4 inline-flex h-7 items-center gap-1 rounded-md px-2.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground;
+  @apply text-muted-foreground hover:bg-muted hover:text-foreground mb-4 -ml-2 inline-flex h-7 items-center gap-1 rounded-md px-2.5 text-xs font-medium transition-colors;
 }

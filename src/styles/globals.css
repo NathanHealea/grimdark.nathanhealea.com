@@ -5,10 +5,20 @@
 @import './components/layout.css' layer(components);
 @import './components/typography.css' layer(components);
 @import './components/form.css' layer(components);
+@import './components/input.css' layer(components);
+@import './components/textarea.css' layer(components);
+@import './components/select.css' layer(components);
 @import './components/checkbox.css' layer(components);
+@import './components/label.css' layer(components);
+@import './components/avatar.css' layer(components);
+@import './components/separator.css' layer(components);
+@import './components/spinner.css' layer(components);
+@import './components/link.css' layer(components);
 @import './components/card.css' layer(components);
 @import './components/table.css' layer(components);
 @import './components/button.css' layer(components);
+@import './components/badge.css' layer(components);
+@import './components/alert.css' layer(components);
 
 /*
  * Theme token mapping — exposes the shadcn CSS variables below as Tailwind
@@ -149,8 +159,7 @@
 /* ── Hero atmospheric glow ── */
 .hero-glow {
   background:
-    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201, 168, 76, 0.07) 0%, transparent 70%),
-    var(--background);
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201, 168, 76, 0.07) 0%, transparent 70%), var(--background);
 }
 
 /* ── Scroll reveal ── */

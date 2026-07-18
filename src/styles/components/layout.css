@@ -20,18 +20,18 @@
 
 /* ── Section + meta labels ── */
 .section-header {
-  @apply mb-4 text-sm font-semibold uppercase tracking-widest;
+  @apply mb-4 text-sm font-semibold tracking-widest uppercase;
 }
 
 .label-meta {
-  @apply text-xs font-medium uppercase text-muted-foreground;
+  @apply text-muted-foreground text-xs font-medium uppercase;
 }
 
 .empty-text {
-  @apply italic text-muted-foreground;
+  @apply text-muted-foreground italic;
 }
 
 /* ── Info row (key/value strip) ── */
 .info-row {
-  @apply flex items-center justify-between gap-2 rounded-lg bg-muted p-3;
+  @apply bg-muted flex items-center justify-between gap-2 rounded-lg p-3;
 }
