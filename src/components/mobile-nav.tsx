@@ -31,14 +31,14 @@ export default function MobileNav({
       </button>
 
       <Dialog open={open} onClose={setOpen} className="lg:hidden">
-        <DialogPanel className="fixed inset-x-0 top-0 bottom-0 z-[60] bg-base-200 transition duration-200 ease-out data-[closed]:opacity-0">
-          <div className="flex items-center  border-b border-base-300 px-4 h-16">
+        <DialogPanel className="bg-popover fixed inset-x-0 top-0 bottom-0 z-[60] transition duration-200 ease-out data-[closed]:opacity-0">
+          <div className="border-border flex h-16 items-center border-b px-4">
             <button className="btn btn-ghost" onClick={() => setOpen(false)} aria-label="Close menu">
               <XMarkIcon className="size-6" />
             </button>
             <CloseButton as={Link} href="/" className="btn btn-ghost ml-2 p-0">
-              <span className="font-bold tracking-widest text-primary text-sm uppercase">
-                Grimdark<span className="text-base-content font-light ml-1">League</span>
+              <span className="nav-brand">
+                Grimdark<span className="nav-brand-accent">League</span>
               </span>
             </CloseButton>
           </div>
@@ -54,8 +54,8 @@ export default function MobileNav({
 
             {adminLinks.length > 0 && (
               <>
-                <div className="divider my-1" />
-                <li className="menu-title text-xs font-semibold uppercase tracking-widest text-primary">Admin</li>
+                <div className="divider" />
+                <li className="menu-title">Admin</li>
                 {adminLinks.map((link) => (
                   <li key={link.href}>
                     <CloseButton as={Link} href={link.href} className={link.className}>
@@ -66,21 +66,19 @@ export default function MobileNav({
               </>
             )}
 
-            <div className="divider my-1" />
+            <div className="divider" />
 
             {isAuthenticated ? (
               <>
-                <li className="menu-title text-xs font-semibold uppercase tracking-widest text-primary">
-                  Battle Reports
-                </li>
+                <li className="menu-title">Battle Reports</li>
                 <li>
                   <CloseButton as={Link} href={`/battle-reports/drafts`}>
                     My Drafts
                   </CloseButton>
                 </li>
-                <div className="divider my-1" />
+                <div className="divider" />
 
-                <li className="menu-title text-xs font-semibold uppercase tracking-widest text-primary">Profile</li>
+                <li className="menu-title">Profile</li>
                 {profileId && (
                   <li>
                     <CloseButton as={Link} href={`/profile/${profileId}`}>
@@ -93,14 +91,19 @@ export default function MobileNav({
                     Edit Profile
                   </CloseButton>
                 </li>
-                <li className="rounded-md bg-error">
+                <li className="bg-destructive rounded-md">
                   <form
                     action={async () => {
                       setOpen(false)
                       await signOutAction?.()
                     }}
                   >
-                    <button type="submit">Sign Out</button>
+                    <button
+                      type="submit"
+                      className="text-destructive-foreground w-full rounded-md px-4 py-2 text-left text-sm font-medium"
+                    >
+                      Sign Out
+                    </button>
                   </form>
                 </li>
               </>
@@ -112,7 +115,7 @@ export default function MobileNav({
                   </CloseButton>
                 </li>
                 <li>
-                  <CloseButton as={Link} href="/sign-up" className="btn btn-primary text-primary-content">
+                  <CloseButton as={Link} href="/sign-up" className="btn btn-primary">
                     Sign Up
                   </CloseButton>
                 </li>

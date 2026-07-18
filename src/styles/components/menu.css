@@ -11,6 +11,35 @@
  *          menu-dropdown, menu-dropdown-body, menu-item, menu-item-danger
  */
 
+/* ── List menus (navbar horizontal nav + mobile nav) ── */
+.menu {
+  @apply flex list-none flex-col p-0;
+}
+
+.menu-horizontal {
+  @apply flex-row;
+}
+
+.menu li {
+  @apply flex flex-col;
+}
+
+.menu li > a:not(.btn) {
+  @apply text-foreground flex items-center rounded-md px-4 py-2 text-sm font-medium transition-colors;
+}
+
+.menu li > a:not(.btn):hover {
+  @apply bg-muted;
+}
+
+.menu-title {
+  @apply text-primary px-4 py-2 text-xs font-semibold tracking-widest uppercase;
+}
+
+.divider {
+  @apply border-border my-2 border-t;
+}
+
 /* ── Dropdown panel (Headless UI Menu) ── */
 .menu-dropdown {
   --anchor-gap: 0.5rem;
