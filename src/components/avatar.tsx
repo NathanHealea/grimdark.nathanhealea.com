@@ -1,5 +1,8 @@
 import { UserIcon } from '@heroicons/react/24/solid'
 
+import { AvatarFallback, AvatarImage, Avatar as AvatarRoot } from '@/components/ui/avatar'
+import { cn } from '@/lib/utils'
+
 type AvatarProps = {
   src: string | null
   displayName: string
@@ -17,21 +20,15 @@ const iconClasses = {
 } as const
 
 export default function Avatar({ src, displayName, size = 'sm' }: AvatarProps) {
-  if (src) {
-    return (
-      <div className={`avatar ${sizeClasses[size]} mx-auto`}>
-        <div className="rounded-full">
-          <img src={src} alt={displayName} />
-        </div>
-      </div>
-    )
-  }
-
   return (
-    <div className={`avatar avatar-placeholder ${sizeClasses[size]} justify-center mx-auto`}>
-      <div className="bg-neutral text-neutral-content rounded-full flex items-center justify-center">
-        <UserIcon className={iconClasses[size]} />
-      </div>
-    </div>
+    <AvatarRoot className={cn(sizeClasses[size], 'mx-auto', !src && 'avatar-placeholder justify-center')}>
+      {src ? (
+        <AvatarImage src={src} alt={displayName} />
+      ) : (
+        <AvatarFallback>
+          <UserIcon className={iconClasses[size]} />
+        </AvatarFallback>
+      )}
+    </AvatarRoot>
   )
 }

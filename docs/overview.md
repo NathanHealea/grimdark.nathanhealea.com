@@ -179,7 +179,7 @@ Epic Template:
 
 - [x] [shadcn setup & theme foundation](./10-ui-refactor/01-shadcn-setup-and-theme-foundation.md)
 - [x] [Shared UI primitives](./10-ui-refactor/02-shared-primitives.md)
-- [ ] [Shared app components](./10-ui-refactor/03-shared-app-components.md)
+- [x] [Shared app components](./10-ui-refactor/03-shared-app-components.md)
 - [ ] [Auth & profile domain](./10-ui-refactor/04-auth-and-profile.md)
 - [ ] [Battle reports & factions domain](./10-ui-refactor/05-battle-reports-and-factions.md)
 - [ ] [Home, leaderboard, seasons & guides](./10-ui-refactor/06-home-leaderboard-seasons-guides.md)

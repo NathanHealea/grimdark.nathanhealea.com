@@ -1,7 +1,7 @@
 import { signOut } from '@/app/(auth)/actions'
 import { getAuthUser } from '@/lib/supabase/auth'
 import { hasAnyRole, hasRole } from '@/lib/supabase/roles'
-import { publicLinks, memberLinks, adminLinks, adminOnlyLinks } from '@/routes'
+import { adminLinks, adminOnlyLinks, memberLinks, publicLinks } from '@/routes'
 import Link from 'next/link'
 import AdminMenu from './admin-menu'
 import MobileNav from './mobile-nav'
@@ -14,15 +14,14 @@ export default async function Navbar() {
 
   const isAdmin = user ? await hasRole(user.id, 'admin') : false
   const hasAdminAccess = isAdmin || (user ? await hasAnyRole(user.id, ['admin', 'organizer']) : false)
-  const isMember = profile ? isAdmin || hasAdminAccess || profile.role === 'member' || profile.role === 'organizer' : false
-  const navLinks = [
-    ...publicLinks,
-    ...(isMember ? memberLinks : []),
-  ]
+  const isMember = profile
+    ? isAdmin || hasAdminAccess || profile.role === 'member' || profile.role === 'organizer'
+    : false
+  const navLinks = [...publicLinks, ...(isMember ? memberLinks : [])]
   const visibleAdminLinks = isAdmin ? [...adminLinks, ...adminOnlyLinks] : adminLinks
 
   return (
-    <nav className="navbar bg-base-100/90 backdrop-blur-md border-b border-base-300 sticky top-0 z-50">
+    <nav className="navbar">
       <div className="navbar-start">
         <MobileNav
           links={navLinks}
@@ -32,23 +31,25 @@ export default async function Navbar() {
           signOutAction={signOut}
         />
         <Link href="/" className="btn btn-ghost text-xl">
-          <span className="font-bold tracking-widest text-primary text-sm uppercase">
-            Grimdark<span className="text-base-content font-light ml-1">League</span>
+          <span className="nav-brand">
+            Grimdark<span className="nav-brand-accent">League</span>
           </span>
         </Link>
       </div>
 
-      <div className="navbar-center hidden lg:flex gap-4">
+      <div className="navbar-center hidden gap-4 lg:flex">
         <ul className="menu menu-horizontal gap-2">
           {navLinks.map((link) => (
             <li key={link.href}>
-              <Link href={link.href} className={link.className}>{link.label}</Link>
+              <Link href={link.href} className={link.className}>
+                {link.label}
+              </Link>
             </li>
           ))}
         </ul>
         {hasAdminAccess && <AdminMenu links={visibleAdminLinks} />}
       </div>
-      <div className="navbar-end hidden lg:flex gap-4">
+      <div className="navbar-end hidden gap-4 lg:flex">
         {user ? (
           <UserMenu
             profileId={profile?.profile_id}

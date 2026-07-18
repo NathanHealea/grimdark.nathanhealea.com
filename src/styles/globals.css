@@ -19,6 +19,8 @@
 @import './components/button.css' layer(components);
 @import './components/badge.css' layer(components);
 @import './components/alert.css' layer(components);
+@import './components/menu.css' layer(components);
+@import './components/navbar.css' layer(components);
 
 /*
  * Theme token mapping — exposes the shadcn CSS variables below as Tailwind

@@ -1,0 +1,34 @@
+/*
+ * Navbar — DaisyUI ref: navbar, navbar-start, navbar-center, navbar-end
+ *
+ * App nav shell on shadcn tokens. A sticky, blurred, translucent bar spans the
+ * top; the three regions split the row (start/end take half each, center sits
+ * between them). The brand mark is gold with a light-weight accent word.
+ *
+ * Classes: navbar, navbar-start, navbar-center, navbar-end,
+ *          nav-brand, nav-brand-accent
+ */
+
+.navbar {
+  @apply bg-background/90 border-border sticky top-0 z-50 flex min-h-16 w-full items-center border-b px-2 backdrop-blur-md;
+}
+
+.navbar-start {
+  @apply inline-flex w-1/2 items-center justify-start;
+}
+
+.navbar-center {
+  @apply inline-flex shrink-0 items-center;
+}
+
+.navbar-end {
+  @apply inline-flex w-1/2 items-center justify-end;
+}
+
+.nav-brand {
+  @apply text-primary text-sm font-bold tracking-widest uppercase;
+}
+
+.nav-brand-accent {
+  @apply text-foreground ml-1 font-light;
+}
