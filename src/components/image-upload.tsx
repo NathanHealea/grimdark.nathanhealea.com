@@ -81,7 +81,7 @@ export default function ImageUpload({ currentImageUrl, displayName, onFileSelect
   return (
     <div className="flex flex-col items-center gap-3">
       <div
-        className={`relative cursor-pointer rounded-full transition-all ${dragOver ? 'ring-2 ring-primary ring-offset-2 ring-offset-base-100' : ''}`}
+        className={`relative cursor-pointer rounded-full transition-all ${dragOver ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' : ''}`}
         onClick={() => inputRef.current?.click()}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
@@ -107,7 +107,7 @@ export default function ImageUpload({ currentImageUrl, displayName, onFileSelect
         </button>
       )}
 
-      {displayError && <p className="text-sm text-error">{displayError}</p>}
+      {displayError && <p className="text-destructive text-sm">{displayError}</p>}
     </div>
   )
 }
