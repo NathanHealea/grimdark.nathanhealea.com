@@ -1,0 +1,88 @@
+/*
+ * Badge — DaisyUI ref: badge
+ *
+ * Small status pill reimplemented on shadcn tokens. Color modifiers set a
+ * `--badge-*` custom-property layer; style modifiers (outline/soft/ghost)
+ * reinterpret the accent so color × style compose without compound rules.
+ *
+ * Classes: badge, badge-neutral, badge-primary, badge-success, badge-warning,
+ *          badge-error, badge-info, badge-outline, badge-soft, badge-ghost,
+ *          badge-xs, badge-sm, badge-lg
+ */
+
+.badge {
+  --badge-bg: var(--secondary);
+  --badge-fg: var(--secondary-foreground);
+  --badge-accent: var(--muted-foreground);
+
+  @apply inline-flex items-center gap-1 whitespace-nowrap rounded-md border border-transparent px-2 py-0.5 text-xs font-medium;
+  background-color: var(--badge-bg);
+  color: var(--badge-fg);
+}
+
+/* ── Color modifiers ── */
+.badge-neutral {
+  --badge-bg: var(--secondary);
+  --badge-fg: var(--secondary-foreground);
+  --badge-accent: var(--secondary-foreground);
+}
+
+.badge-primary {
+  --badge-bg: var(--primary);
+  --badge-fg: var(--primary-foreground);
+  --badge-accent: var(--primary);
+}
+
+.badge-success {
+  --badge-bg: var(--success);
+  --badge-fg: var(--foreground);
+  --badge-accent: var(--success);
+}
+
+.badge-warning {
+  --badge-bg: var(--warning);
+  --badge-fg: var(--foreground);
+  --badge-accent: var(--warning);
+}
+
+.badge-error {
+  --badge-bg: var(--destructive);
+  --badge-fg: var(--destructive-foreground);
+  --badge-accent: var(--destructive);
+}
+
+.badge-info {
+  --badge-bg: var(--info);
+  --badge-fg: var(--foreground);
+  --badge-accent: var(--info);
+}
+
+/* ── Style modifiers ── */
+.badge-outline {
+  background-color: transparent;
+  border-color: color-mix(in oklab, var(--badge-accent) 55%, transparent);
+  color: var(--badge-accent);
+}
+
+.badge-soft {
+  background-color: color-mix(in oklab, var(--badge-accent) 18%, transparent);
+  border-color: transparent;
+  color: var(--badge-accent);
+}
+
+.badge-ghost {
+  @apply border-transparent bg-muted text-muted-foreground;
+}
+
+/* ── Size modifiers ── */
+.badge-xs {
+  @apply px-1 py-0 text-[0.65rem];
+}
+
+.badge-sm {
+  @apply px-1.5 py-0 text-[0.7rem];
+}
+
+.badge-lg {
+  @apply px-2.5 py-1 text-sm;
+}
