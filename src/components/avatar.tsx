@@ -1,6 +1,6 @@
 import { UserIcon } from '@heroicons/react/24/solid'
 
-import { Avatar as AvatarRoot, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { AvatarFallback, AvatarImage, Avatar as AvatarRoot } from '@/components/ui/avatar'
 import { cn } from '@/lib/utils'
 
 type AvatarProps = {

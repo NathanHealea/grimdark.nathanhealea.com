@@ -1,7 +1,7 @@
 import { signOut } from '@/app/(auth)/actions'
 import { getAuthUser } from '@/lib/supabase/auth'
 import { hasAnyRole, hasRole } from '@/lib/supabase/roles'
-import { publicLinks, memberLinks, adminLinks, adminOnlyLinks } from '@/routes'
+import { adminLinks, adminOnlyLinks, memberLinks, publicLinks } from '@/routes'
 import Link from 'next/link'
 import AdminMenu from './admin-menu'
 import MobileNav from './mobile-nav'
@@ -14,11 +14,10 @@ export default async function Navbar() {
 
   const isAdmin = user ? await hasRole(user.id, 'admin') : false
   const hasAdminAccess = isAdmin || (user ? await hasAnyRole(user.id, ['admin', 'organizer']) : false)
-  const isMember = profile ? isAdmin || hasAdminAccess || profile.role === 'member' || profile.role === 'organizer' : false
-  const navLinks = [
-    ...publicLinks,
-    ...(isMember ? memberLinks : []),
-  ]
+  const isMember = profile
+    ? isAdmin || hasAdminAccess || profile.role === 'member' || profile.role === 'organizer'
+    : false
+  const navLinks = [...publicLinks, ...(isMember ? memberLinks : [])]
   const visibleAdminLinks = isAdmin ? [...adminLinks, ...adminOnlyLinks] : adminLinks
 
   return (
@@ -42,7 +41,9 @@ export default async function Navbar() {
         <ul className="menu menu-horizontal gap-2">
           {navLinks.map((link) => (
             <li key={link.href}>
-              <Link href={link.href} className={link.className}>{link.label}</Link>
+              <Link href={link.href} className={link.className}>
+                {link.label}
+              </Link>
             </li>
           ))}
         </ul>

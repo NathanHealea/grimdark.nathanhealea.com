@@ -1,7 +1,7 @@
 'use client'
 
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
-import { Cog6ToothIcon, ChevronDownIcon } from '@heroicons/react/24/solid'
+import { ChevronDownIcon, Cog6ToothIcon } from '@heroicons/react/24/solid'
 import Link from 'next/link'
 
 import type { NavLink } from '@/routes'

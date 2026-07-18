@@ -1,7 +1,7 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
 import Avatar from '@/components/avatar'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 const MAX_SIZE_BYTES = 2 * 1024 * 1024 // 2 MB
@@ -43,7 +43,7 @@ export default function ImageUpload({ currentImageUrl, displayName, onFileSelect
       setPreview(URL.createObjectURL(file))
       onFileSelect(file)
     },
-    [preview, onFileSelect],
+    [preview, onFileSelect]
   )
 
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
