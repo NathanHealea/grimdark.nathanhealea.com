@@ -1,9 +1,27 @@
 /*
- * Card
+ * Card — DaisyUI ref: card, card-body, card-title
  *
- * Interactive card surface migrated from the DaisyUI globals. Uses the card
- * token pair plus a hover shadow lift (was card bg-base-200).
+ * Card surface reimplemented on the shadcn card token pair. `card-interactive`
+ * adds a hover shadow lift; `card-bordered` is an explicit border alias.
+ *
+ * Classes: card, card-body, card-title, card-bordered, card-interactive
  */
+
+.card {
+  @apply flex flex-col rounded-xl border border-border bg-card text-card-foreground;
+}
+
+.card-body {
+  @apply flex flex-col gap-2 p-6;
+}
+
+.card-title {
+  @apply text-lg font-semibold;
+}
+
+.card-bordered {
+  @apply border border-border;
+}
 
 .card-interactive {
   @apply rounded-xl border border-border bg-card text-card-foreground shadow-sm transition-shadow hover:shadow-md;
