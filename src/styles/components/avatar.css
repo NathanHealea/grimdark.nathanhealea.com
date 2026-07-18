@@ -1,0 +1,25 @@
+/*
+ * Avatar — DaisyUI ref: avatar, avatar-placeholder
+ *
+ * Avatar container reimplemented on shadcn tokens. Sizing comes from a width
+ * utility on the container (e.g. `w-10`); the inner wrapper keeps a 1:1 aspect
+ * ratio and clips the image. `avatar-placeholder` fills with the muted token.
+ *
+ * Classes: avatar, avatar-placeholder
+ */
+
+.avatar {
+  @apply relative inline-flex shrink-0;
+}
+
+.avatar > div {
+  @apply block aspect-square h-full w-full overflow-hidden;
+}
+
+.avatar img {
+  @apply h-full w-full object-cover;
+}
+
+.avatar-placeholder > div {
+  @apply flex items-center justify-center bg-muted text-muted-foreground;
+}
