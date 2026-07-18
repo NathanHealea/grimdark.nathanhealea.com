@@ -82,7 +82,7 @@ export default function Tooltip({ content, children }: TooltipProps) {
         onPointerLeave={(e) => {
           if (e.pointerType === 'mouse') hide()
         }}
-        className="cursor-help underline decoration-dotted underline-offset-4 decoration-base-content/30"
+        className="cursor-help underline decoration-dotted underline-offset-4 decoration-muted-foreground/50"
       >
         {children}
       </button>
@@ -93,10 +93,10 @@ export default function Tooltip({ content, children }: TooltipProps) {
             id={id}
             role="tooltip"
             style={{ top: coords.top, left: coords.left }}
-            className="pointer-events-none fixed z-50 -translate-x-1/2 -translate-y-full -mt-2 whitespace-nowrap rounded bg-neutral px-2.5 py-1.5 text-xs font-normal text-neutral-content shadow-lg"
+            className="pointer-events-none fixed z-50 -translate-x-1/2 -translate-y-full -mt-2 whitespace-nowrap rounded bg-secondary px-2.5 py-1.5 text-xs font-normal text-secondary-foreground shadow-lg"
           >
             {content}
-            <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-neutral" />
+            <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-secondary" />
           </div>,
           document.body,
         )}
