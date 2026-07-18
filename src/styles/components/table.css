@@ -1,10 +1,35 @@
 /*
- * Data table
+ * Table — DaisyUI ref: table, table-zebra
  *
- * Zebra-striped data table migrated from the DaisyUI globals (was
- * table table-zebra bg-base-200). Reimplemented on shadcn tokens.
+ * Hand-rolled table styling on shadcn tokens. `table` is the base grid;
+ * `table-zebra` adds alternating row tints. `data-table` is the grimify-style
+ * rounded card container (used by the leaderboard and guides) and is kept
+ * self-contained so it renders identically to `main`.
+ *
+ * Classes: table, table-zebra, data-table
  */
 
+.table {
+  @apply w-full text-sm;
+}
+
+.table th {
+  @apply px-3 py-2 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground;
+}
+
+.table td {
+  @apply px-3 py-2;
+}
+
+.table tbody tr {
+  @apply border-t border-border;
+}
+
+.table-zebra tbody tr:nth-child(even) {
+  @apply bg-muted/40;
+}
+
+/* ── Rounded card container (grimify-style) ── */
 .data-table {
   @apply w-full overflow-hidden rounded-xl bg-card text-sm;
 }
