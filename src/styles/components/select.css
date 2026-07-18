@@ -1,0 +1,45 @@
+/*
+ * Select — DaisyUI ref: select, select-bordered
+ *
+ * Native <select> (kept per decision) styled to match the input primitive on
+ * shadcn tokens, with a custom chevron so the control matches the DaisyUI look.
+ *
+ * Classes: select, select-bordered, select-error, select-success,
+ *          select-sm, select-lg
+ */
+
+.select {
+  @apply h-10 w-full appearance-none rounded-md border border-input bg-background px-3 pr-8 text-sm text-foreground transition-colors;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a3a3a3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.625rem center;
+  background-size: 1rem;
+}
+
+.select:focus-visible {
+  @apply outline-none ring-2 ring-ring ring-offset-0;
+}
+
+.select:disabled {
+  @apply cursor-not-allowed opacity-50;
+}
+
+.select-bordered {
+  @apply border-input;
+}
+
+.select-error {
+  border-color: var(--destructive);
+}
+
+.select-success {
+  border-color: var(--success);
+}
+
+.select-sm {
+  @apply h-8 px-2.5 pr-7 text-xs;
+}
+
+.select-lg {
+  @apply h-12 px-4 pr-9 text-base;
+}

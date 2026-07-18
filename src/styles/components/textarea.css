@@ -1,0 +1,32 @@
+/*
+ * Textarea — DaisyUI ref: textarea, textarea-bordered
+ *
+ * Native <textarea> styled to match the input primitive on shadcn tokens.
+ *
+ * Classes: textarea, textarea-bordered, textarea-error, textarea-lg
+ */
+
+.textarea {
+  @apply min-h-20 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground transition-colors;
+  @apply placeholder:text-muted-foreground;
+}
+
+.textarea:focus-visible {
+  @apply outline-none ring-2 ring-ring ring-offset-0;
+}
+
+.textarea:disabled {
+  @apply cursor-not-allowed opacity-50;
+}
+
+.textarea-bordered {
+  @apply border-input;
+}
+
+.textarea-error {
+  border-color: var(--destructive);
+}
+
+.textarea-lg {
+  @apply min-h-28 px-4 text-base;
+}

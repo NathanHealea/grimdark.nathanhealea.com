@@ -5,6 +5,9 @@
 @import './components/layout.css' layer(components);
 @import './components/typography.css' layer(components);
 @import './components/form.css' layer(components);
+@import './components/input.css' layer(components);
+@import './components/textarea.css' layer(components);
+@import './components/select.css' layer(components);
 @import './components/checkbox.css' layer(components);
 @import './components/card.css' layer(components);
 @import './components/table.css' layer(components);
