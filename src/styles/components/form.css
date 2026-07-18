@@ -6,7 +6,7 @@
  */
 
 .form-section {
-  @apply flex flex-col gap-2 rounded-xl bg-muted p-5;
+  @apply bg-muted flex flex-col gap-2 rounded-xl p-5;
 }
 
 .form-grid {
@@ -14,5 +14,5 @@
 }
 
 .form-error {
-  @apply mt-1 text-sm text-destructive;
+  @apply text-destructive mt-1 text-sm;
 }

@@ -8,7 +8,7 @@
  */
 
 .card {
-  @apply flex flex-col rounded-xl border border-border bg-card text-card-foreground;
+  @apply border-border bg-card text-card-foreground flex flex-col rounded-xl border;
 }
 
 .card-body {
@@ -20,9 +20,9 @@
 }
 
 .card-bordered {
-  @apply border border-border;
+  @apply border-border border;
 }
 
 .card-interactive {
-  @apply rounded-xl border border-border bg-card text-card-foreground shadow-sm transition-shadow hover:shadow-md;
+  @apply border-border bg-card text-card-foreground rounded-xl border shadow-sm transition-shadow hover:shadow-md;
 }

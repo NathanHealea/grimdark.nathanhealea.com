@@ -8,12 +8,12 @@
  */
 
 .input {
-  @apply h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground transition-colors;
+  @apply border-input bg-background text-foreground h-10 w-full rounded-md border px-3 text-sm transition-colors;
   @apply placeholder:text-muted-foreground;
 }
 
 .input:focus-visible {
-  @apply outline-none ring-2 ring-ring ring-offset-0;
+  @apply ring-ring ring-2 ring-offset-0 outline-none;
 }
 
 .input:disabled {

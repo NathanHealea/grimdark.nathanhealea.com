@@ -20,7 +20,5 @@ type SpinnerProps = ComponentProps<'span'> & {
  * `spinner.css`; inherits the surrounding text color via `currentColor`.
  */
 export function Spinner({ size = 'md', className, ...props }: SpinnerProps) {
-  return (
-    <span role="status" aria-label="Loading" className={cn('spinner', sizeClass[size], className)} {...props} />
-  )
+  return <span role="status" aria-label="Loading" className={cn('spinner', sizeClass[size], className)} {...props} />
 }

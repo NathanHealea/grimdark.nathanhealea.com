@@ -15,7 +15,7 @@
   --badge-fg: var(--secondary-foreground);
   --badge-accent: var(--muted-foreground);
 
-  @apply inline-flex items-center gap-1 whitespace-nowrap rounded-md border border-transparent px-2 py-0.5 text-xs font-medium;
+  @apply inline-flex items-center gap-1 rounded-md border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap;
   background-color: var(--badge-bg);
   color: var(--badge-fg);
 }
@@ -71,7 +71,7 @@
 }
 
 .badge-ghost {
-  @apply border-transparent bg-muted text-muted-foreground;
+  @apply bg-muted text-muted-foreground border-transparent;
 }
 
 /* ── Size modifiers ── */

@@ -7,7 +7,7 @@
  */
 
 .label {
-  @apply inline-flex items-center gap-2 text-sm font-medium leading-none text-foreground;
+  @apply text-foreground inline-flex items-center gap-2 text-sm leading-none font-medium;
 }
 
 .label:has(:disabled),

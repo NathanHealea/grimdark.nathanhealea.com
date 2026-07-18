@@ -7,12 +7,12 @@
  */
 
 .textarea {
-  @apply min-h-20 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground transition-colors;
+  @apply border-input bg-background text-foreground min-h-20 w-full rounded-md border px-3 py-2 text-sm transition-colors;
   @apply placeholder:text-muted-foreground;
 }
 
 .textarea:focus-visible {
-  @apply outline-none ring-2 ring-ring ring-offset-0;
+  @apply ring-ring ring-2 ring-offset-0 outline-none;
 }
 
 .textarea:disabled {

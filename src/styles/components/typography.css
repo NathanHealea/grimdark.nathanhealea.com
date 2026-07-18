@@ -37,5 +37,5 @@ h6,
 
 p,
 .text-body {
-  @apply text-base text-muted-foreground;
+  @apply text-muted-foreground text-base;
 }

@@ -21,5 +21,5 @@
 }
 
 .avatar-placeholder > div {
-  @apply flex items-center justify-center bg-muted text-muted-foreground;
+  @apply bg-muted text-muted-foreground flex items-center justify-center;
 }

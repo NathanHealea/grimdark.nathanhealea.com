@@ -16,7 +16,7 @@ export default function Tooltip({ content, children }: TooltipProps) {
   const mounted = useSyncExternalStore(
     () => () => {},
     () => true,
-    () => false,
+    () => false
   )
 
   const updatePosition = useCallback(() => {
@@ -98,7 +98,7 @@ export default function Tooltip({ content, children }: TooltipProps) {
             {content}
             <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-secondary" />
           </div>,
-          document.body,
+          document.body
         )}
     </>
   )

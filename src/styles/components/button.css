@@ -16,7 +16,7 @@
   --btn-fg: var(--secondary-foreground);
   --btn-accent: var(--foreground);
 
-  @apply inline-flex h-10 shrink-0 cursor-pointer select-none items-center justify-center gap-2 whitespace-nowrap rounded-md border border-transparent px-4 text-sm font-semibold transition-colors;
+  @apply inline-flex h-10 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-md border border-transparent px-4 text-sm font-semibold whitespace-nowrap transition-colors select-none;
   background-color: var(--btn-bg);
   color: var(--btn-fg);
 }
@@ -26,7 +26,7 @@
 }
 
 .btn:focus-visible {
-  @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  @apply ring-ring ring-offset-background ring-2 ring-offset-2 outline-none;
 }
 
 .btn:disabled,
@@ -120,5 +120,5 @@
 
 /* ── Back-link (ghost sm, migrated from the DaisyUI globals) ── */
 .btn-back {
-  @apply -ml-2 mb-4 inline-flex h-7 items-center gap-1 rounded-md px-2.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground;
+  @apply text-muted-foreground hover:bg-muted hover:text-foreground mb-4 -ml-2 inline-flex h-7 items-center gap-1 rounded-md px-2.5 text-xs font-medium transition-colors;
 }

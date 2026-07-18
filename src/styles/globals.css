@@ -159,8 +159,7 @@
 /* ── Hero atmospheric glow ── */
 .hero-glow {
   background:
-    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201, 168, 76, 0.07) 0%, transparent 70%),
-    var(--background);
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201, 168, 76, 0.07) 0%, transparent 70%), var(--background);
 }
 
 /* ── Scroll reveal ── */
