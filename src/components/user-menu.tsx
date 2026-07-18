@@ -23,42 +23,28 @@ export default function UserMenu({ profileId, avatarUrl, displayName, signOutAct
         )}
       </MenuButton>
 
-      <MenuItems
-        anchor="bottom end"
-        modal={false}
-        transition
-        className="z-50 mt-2 w-60 origin-top-right rounded-box bg-base-200 shadow-lg ring-1 ring-base-300 transition duration-100 ease-out [--anchor-gap:0.5rem] data-[closed]:scale-95 data-[closed]:opacity-0"
-      >
-        <div className="p-2">
+      <MenuItems anchor="bottom end" modal={false} transition className="menu-dropdown w-60">
+        <div className="menu-dropdown-body">
           <MenuItem>
-            <Link
-              href={`/battle-reports/drafts`}
-              className="btn btn-ghost block w-full rounded-btn px-3 py-2 text-left text-sm data-[focus]:bg-base-300"
-            >
+            <Link href={`/battle-reports/drafts`} className="menu-item">
               My Drafts
             </Link>
           </MenuItem>
           {profileId && (
             <MenuItem>
-              <Link
-                href={`/profile/${profileId}`}
-                className="btn btn-ghost block w-full rounded-btn px-3 py-2 text-left text-sm data-[focus]:bg-base-300"
-              >
+              <Link href={`/profile/${profileId}`} className="menu-item">
                 My Profile
               </Link>
             </MenuItem>
           )}
           <MenuItem>
-            <Link
-              href="/profile/edit"
-              className="btn btn-ghost block w-full rounded-btn px-3 py-2 text-left text-sm data-[focus]:bg-base-300"
-            >
+            <Link href="/profile/edit" className="menu-item">
               Edit Profile
             </Link>
           </MenuItem>
           <MenuItem>
             <form action={signOutAction}>
-              <button type="submit" className="btn btn-error btn-outline block w-full rounded-btn px-3 py-2 text-left text-sm ">
+              <button type="submit" className="menu-item menu-item-danger">
                 Sign Out
               </button>
             </form>
